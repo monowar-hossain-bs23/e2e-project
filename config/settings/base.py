@@ -36,6 +36,13 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Local apps
     "apps.core",
+    "apps.accounts",
+]
+
+AUTH_USER_MODEL = "accounts.User"
+
+AUTHENTICATION_BACKENDS = [
+    "apps.accounts.backends.CaseInsensitiveModelBackend",
 ]
 
 MIDDLEWARE = [
@@ -91,7 +98,22 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
+    {
+        "NAME": "apps.accounts.validators.PasswordComplexityValidator",
+    },
 ]
+
+# Session configuration (30-day persistent session per PRD §4.1 & AD-8)
+SESSION_COOKIE_AGE = 2592000  # 30 days
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = "Lax"
+
+# Email configuration
+EMAIL_BACKEND = env(
+    "EMAIL_BACKEND",
+    default="django.core.mail.backends.console.EmailBackend",
+)
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="noreply@bashapass.com")
 
 # Internationalization
 LANGUAGE_CODE = "en-us"

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Basha Pass — Secure Authentication{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-shell">
+  <!-- Left brand context pane -->
+  <aside class="auth-brand-pane" aria-label="Brand context">
+    <header class="d-flex align-items-center justify-content-between">
+      <a href="{% url 'landing' %}" class="brand-mark">
+        <span class="logo-dot" aria-hidden="true"></span>
+        Basha Pass
+      </a>
+      <span class="badge bg-white bg-opacity-10 text-white border border-white border-opacity-25 px-2 py-1 small">
+        Dhaka Only
+      </span>
+    </header>
+
+    <div class="brand-pane-hero">
+      <h2>Find a verified roommate in Dhaka — without handing your NID to strangers.</h2>
+      <p>One passport, verified once. Use it for every move in the city.</p>
+      
+      <div class="brand-pane-pillars" role="list">
+        <div class="pillar" role="listitem">
+          <div class="num">1</div>
+          <div class="label">Verify your NID + selfie</div>
+        </div>
+        <div class="pillar" role="listitem">
+          <div class="num">2</div>
+          <div class="label">Browse verified listings</div>
+        </div>
+        <div class="pillar" role="listitem">
+          <div class="num">3</div>
+          <div class="label">Connect off-platform</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="brand-pane-footer">
+      &copy; 2026 Basha Pass &middot; Free at launch &middot; Dhaka, Bangladesh
+    </div>
+  </aside>
+
+  <!-- Right form pane -->
+  <main class="auth-form-pane">
+    <div class="auth-form">
+      {% if messages %}
+        <div class="mb-3">
+          {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'info' %}info{% elif message.tags == 'success' %}success{% else %}warning{% endif %} alert-dismissible fade show py-2 small" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% block auth_content %}{% endblock %}
+    </div>
+  </main>
+</div>
+{% endblock %}

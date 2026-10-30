@@ -10,5 +10,6 @@ from config.urls_public import public_urlpatterns
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("accounts/", include("apps.accounts.urls")),
     path("", include(public_urlpatterns)),
 ]

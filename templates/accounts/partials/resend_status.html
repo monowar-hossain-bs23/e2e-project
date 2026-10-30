@@ -1,0 +1,29 @@
+<div id="resend-container">
+  {% if result.ok %}
+    <div class="alert alert-success py-2 small mb-2">
+      <i class="bi bi-check-circle me-1"></i> A fresh verification code was sent to your email!
+    </div>
+  {% else %}
+    <div class="alert alert-danger py-2 small mb-2">
+      <i class="bi bi-exclamation-triangle me-1"></i> {{ result.message }}
+    </div>
+  {% endif %}
+
+  {% if attempts_left > 0 %}
+    <p class="small text-muted mb-0">
+      Didn't receive the email?
+      <button type="button"
+              class="btn btn-link p-0 text-decoration-none small fw-semibold"
+              hx-post="{% url 'resend_otp' %}"
+              hx-target="#resend-container"
+              hx-swap="outerHTML"
+              hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+        Resend code ({{ attempts_left }} left)
+      </button>
+    </p>
+  {% else %}
+    <p class="small text-danger mb-0">
+      <i class="bi bi-lock me-1"></i> Resend limit reached. Please <a href="{% url 'signup' %}">restart signup</a>.
+    </p>
+  {% endif %}
+</div>

@@ -1,0 +1,125 @@
+{% extends "accounts/auth_base.html" %}
+
+{% block title %}Basha Pass — Create account{% endblock %}
+
+{% block auth_content %}
+<h1>Create your account</h1>
+<p class="subtitle">We'll send a 6-digit code to confirm your email.</p>
+
+<form action="{% url 'signup' %}" method="post" novalidate id="signup-form">
+  {% csrf_token %}
+
+  {% if form.non_field_errors %}
+    <div class="alert alert-danger py-2 small mb-3">
+      {% for error in form.non_field_errors %}{{ error }}<br>{% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="mb-3">
+    <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
+    {{ form.email }}
+    {% if form.email.errors %}
+      <div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>
+    {% else %}
+      <div class="form-helper">Use an email you check — we'll send a code there.</div>
+    {% endif %}
+  </div>
+
+  <div class="mb-3">
+    <label for="{{ form.display_name.id_for_label }}" class="form-label">Display name</label>
+    {{ form.display_name }}
+    {% if form.display_name.errors %}
+      <div class="text-danger small mt-1">{{ form.display_name.errors.0 }}</div>
+    {% else %}
+      <div class="form-helper">What other tenants will see on your listings. 2–32 characters.</div>
+    {% endif %}
+  </div>
+
+  <div class="mb-3">
+    <label for="password-input" class="form-label">Password</label>
+    {{ form.password }}
+    {% if form.password.errors %}
+      <div class="text-danger small mt-1">{{ form.password.errors.0 }}</div>
+    {% endif %}
+
+    <div class="pw-meter" aria-hidden="true">
+      <div class="pw-meter-bar" id="pw-bar"></div>
+    </div>
+    <div class="form-helper mt-2" id="pw-meter-label">Strength: <strong id="pw-strength-text">Empty</strong></div>
+
+    <ul class="list-unstyled mt-2 mb-0" id="password-rules" aria-label="Password rules">
+      <li class="pw-rule unmet" id="rule-len">8+ characters</li>
+      <li class="pw-rule unmet" id="rule-upper">One uppercase letter</li>
+      <li class="pw-rule unmet" id="rule-lower">One lowercase letter</li>
+      <li class="pw-rule unmet" id="rule-digit">One number</li>
+      <li class="pw-rule unmet" id="rule-symbol">One symbol (e.g. ! @ # $ %)</li>
+    </ul>
+  </div>
+
+  <button type="submit" class="btn btn-primary w-100 mt-2">Create account</button>
+</form>
+
+<p class="alt-link">
+  Already have an account? <a href="{% url 'login' %}">Log in</a>
+</p>
+
+<script>
+  (function() {
+    const pwInput = document.getElementById("password-input");
+    const pwBar = document.getElementById("pw-bar");
+    const pwText = document.getElementById("pw-strength-text");
+
+    const rules = {
+      len: document.getElementById("rule-len"),
+      upper: document.getElementById("rule-upper"),
+      lower: document.getElementById("rule-lower"),
+      digit: document.getElementById("rule-digit"),
+      symbol: document.getElementById("rule-symbol")
+    };
+
+    const symbols = "!@#$%^&*(),.?\":{}|<>";
+
+    function evaluate() {
+      const val = pwInput.value;
+      const checks = {
+        len: val.length >= 8,
+        upper: /[A-Z]/.test(val),
+        lower: /[a-z]/.test(val),
+        digit: /[0-9]/.test(val),
+        symbol: Array.from(val).some(c => symbols.includes(c))
+      };
+
+      let passed = 0;
+      for (const [key, el] of Object.entries(rules)) {
+        if (checks[key]) {
+          el.classList.add("met");
+          el.classList.remove("unmet");
+          passed++;
+        } else {
+          el.classList.remove("met");
+          el.classList.add("unmet");
+        }
+      }
+
+      pwBar.className = "pw-meter-bar";
+      if (val.length === 0) {
+        pwBar.style.width = "0%";
+        pwText.textContent = "Empty";
+      } else if (passed <= 2) {
+        pwBar.classList.add("fair");
+        pwText.textContent = "Weak";
+      } else if (passed <= 4) {
+        pwBar.classList.add("good");
+        pwText.textContent = "Fair";
+      } else {
+        pwBar.classList.add("strong");
+        pwText.textContent = "Strong";
+      }
+    }
+
+    if (pwInput) {
+      pwInput.addEventListener("input", evaluate);
+    }
+  })();
+</script>
+{% endblock %}

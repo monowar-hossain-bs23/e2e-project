@@ -1,0 +1,66 @@
+{% extends "accounts/auth_base.html" %}
+
+{% block title %}Basha Pass — Verify your email{% endblock %}
+
+{% block auth_content %}
+<h1>Verify your email</h1>
+<p class="subtitle">
+  We've sent a 6-digit code to <strong>{{ target_email }}</strong>.<br>
+  Enter it below to activate your account.
+</p>
+
+<form action="{% url 'verify_email' %}" method="post" novalidate id="otp-form">
+  {% csrf_token %}
+
+  {% if form.non_field_errors %}
+    <div class="alert alert-danger py-2 small mb-3">
+      {% for error in form.non_field_errors %}{{ error }}<br>{% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="mb-4 text-center">
+    <label for="otp-input" class="form-label d-block text-start">6-digit code</label>
+    
+    <!-- Unified 6-digit input -->
+    <div class="otp-container">
+      {{ form.code }}
+    </div>
+
+    {% if form.code.errors %}
+      <div class="text-danger small mt-2">{{ form.code.errors.0 }}</div>
+    {% endif %}
+
+    <div class="otp-status-badge">
+      <i class="bi bi-clock me-1"></i> Code expires in <strong>5 minutes</strong>
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary w-100">Verify & Continue</button>
+</form>
+
+<div class="mt-4 text-center">
+  <div id="resend-container">
+    {% if attempts_left > 0 %}
+      <p class="small text-muted mb-0">
+        Didn't receive the email?
+        <button type="button"
+                class="btn btn-link p-0 text-decoration-none small fw-semibold"
+                hx-post="{% url 'resend_otp' %}"
+                hx-target="#resend-container"
+                hx-swap="outerHTML"
+                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+          Resend code ({{ attempts_left }} left)
+        </button>
+      </p>
+    {% else %}
+      <p class="small text-danger mb-0">
+        <i class="bi bi-lock me-1"></i> Resend limit reached. Please <a href="{% url 'signup' %}">restart signup</a>.
+      </p>
+    {% endif %}
+  </div>
+</div>
+
+<p class="alt-link mt-4">
+  Entered the wrong email? <a href="{% url 'signup' %}">Change email</a>
+</p>
+{% endblock %}

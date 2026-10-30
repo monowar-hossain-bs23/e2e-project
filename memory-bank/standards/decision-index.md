@@ -1,6 +1,6 @@
 ---
-last_updated: 2026-10-30T06:39:06Z
-total_decisions: 0
+last_updated: '2026-10-30T11:08:00Z'
+total_decisions: 1
 ---
 
 # Decision Index
@@ -18,4 +18,10 @@ Use this to find relevant prior decisions when working on related features.
 
 ## Decisions
 
-<!-- Entries are appended below in reverse chronological order (newest first) -->
+### ADR-001: Store 6-Digit Email Verification Tokens as SHA-256 Hashes
+- **Status**: accepted
+- **Date**: 2026-10-30
+- **Bolt**: `003-account-identity-service` (`001-account-identity-service`)
+- **Path**: [`bolts/003-account-identity-service/adr-001-hashed-email-otp-storage.md`](file:///home/bs01496/Documents/LMS/basa-pass/memory-bank/bolts/003-account-identity-service/adr-001-hashed-email-otp-storage.md)
+- **Summary**: Basha Pass requires tenants to verify their email address during signup by submitting a 6-digit numeric OTP token. We will store only the SHA-256 hex digest of the OTP in the database, verifying incoming submissions via constant-time comparison.
+- **Read when**: Implementing or modifying token generation, email verification, password reset, or OTP handling across identity and auth services.
