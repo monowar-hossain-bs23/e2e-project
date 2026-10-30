@@ -1,0 +1,932 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280">
+<title>Browse listings — Basha Pass</title>
+<!-- Bootstrap (vanilla) — native button styles; brand colors re-painted via CSS vars -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+  /* Brand tokens — re-paint Bootstrap primary/secondary to Trust Teal + Warm.
+     Pattern matches 01-landing.html. */
+  :root,
+  [data-bs-theme="light"] {
+    /* Brand palette */
+    --bp-primary: #0F6E7A;          /* Trust Teal */
+    --bp-primary-rgb: 15, 110, 122;
+    --bp-primary-fg: #FFFFFF;
+    --bp-primary-soft: #E6F2F4;
+    --bp-secondary: #C56B4F;        /* Warm secondary */
+    --bp-secondary-rgb: 197, 107, 79;
+    --bp-secondary-soft: #FBEFE9;
+    --bp-success: #16A34A;
+    --bp-success-fg: #15803D;
+    --bp-ink: #0F172A;
+    --bp-ink-2: #334155;
+    --bp-muted: #5A6878;
+    --bp-border: #E2E8F0;
+    --bp-surface: #FAFBFD;
+    --bp-canvas: #F4F6F9;
+
+    /* Re-paint Bootstrap defaults to brand palette */
+    --bs-primary: var(--bp-primary);
+    --bs-primary-rgb: var(--bp-primary-rgb);
+    --bs-secondary: var(--bp-secondary);
+    --bs-secondary-rgb: var(--bp-secondary-rgb);
+    --bs-link-color: var(--bp-primary);
+    --bs-link-hover-color: #0a525b;
+    --bs-body-color: var(--bp-ink);
+    --bs-body-font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Bengali", "SolaimanLipi", sans-serif;
+    --bs-border-color: var(--bp-border);
+    --bs-border-color-translucent: var(--bp-border);
+  }
+
+  /* Re-paint Bootstrap buttons so brand colors flow through correctly.
+     Bootstrap declares --bs-btn-bg inside .btn-primary with hardcoded values,
+     so setting --bs-primary at :root doesn't reach the button. */
+  .btn-primary {
+    --bs-btn-bg: var(--bp-primary);
+    --bs-btn-border-color: var(--bp-primary);
+    --bs-btn-hover-bg: #0a525b;
+    --bs-btn-hover-border-color: #083f47;
+    --bs-btn-active-bg: #083f47;
+    --bs-btn-active-border-color: #063238;
+    --bs-btn-disabled-bg: var(--bp-primary);
+    --bs-btn-disabled-border-color: var(--bp-primary);
+  }
+  .btn-outline-secondary {
+    --bs-btn-color: var(--bp-secondary);
+    --bs-btn-border-color: var(--bp-secondary);
+    --bs-btn-hover-bg: var(--bp-secondary);
+    --bs-btn-hover-border-color: var(--bp-secondary);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-bg: var(--bp-secondary);
+    --bs-btn-active-border-color: var(--bp-secondary);
+    --bs-btn-active-color: #fff;
+  }
+
+  html, body { background: var(--bp-canvas); color: var(--bp-ink); }
+  body { font-size: 16px; line-height: 1.55; }
+
+  /* Global focus ring */
+  :focus-visible {
+    outline: 2px solid var(--bp-primary);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  /* ---------- Top nav ---------- */
+  .bp-nav {
+    background: rgba(250, 251, 253, 0.85);
+    backdrop-filter: saturate(180%) blur(12px);
+    -webkit-backdrop-filter: saturate(180%) blur(12px);
+    border-bottom: 1px solid var(--bp-border);
+    position: sticky; top: 0; z-index: 50;
+  }
+  .bp-brand {
+    font-weight: 700; letter-spacing: -0.01em; font-size: 18px;
+    color: var(--bp-ink); text-decoration: none;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .bp-brand__mark {
+    width: 32px; height: 32px;
+    background: var(--bp-primary); color: #fff;
+    border-radius: 8px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 16px;
+  }
+  .bp-nav__link {
+    color: var(--bp-ink-2); font-weight: 500; font-size: 15px;
+    padding: 8px 14px; border-radius: 8px; text-decoration: none;
+  }
+  .bp-nav__link:hover { background: var(--bp-surface); color: var(--bp-ink); }
+  .bp-nav__link[aria-current="page"] {
+    background: var(--bp-primary-soft); color: var(--bp-primary);
+  }
+
+  /* ---------- Page header ---------- */
+  .bp-pagehead {
+    padding: 56px 0 24px;
+  }
+  .bp-pagehead__title {
+    font-weight: 700; font-size: 36px; line-height: 1.1;
+    letter-spacing: -0.02em; color: var(--bp-ink);
+    margin: 0 0 8px;
+  }
+  .bp-pagehead__sub {
+    font-size: 17px; color: var(--bp-ink-2); margin: 0; max-width: 640px;
+  }
+
+  /* ---------- Filter drawer (offcanvas sidebar) ---------- */
+  .bp-filter-drawer {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: 360px; max-width: 90vw;
+    background: #fff;
+    border-right: 1px solid var(--bp-border);
+    box-shadow: 0 24px 48px -12px rgba(15,23,42,0.18);
+    z-index: 1040;
+    transform: translateX(-100%);
+    transition: transform 220ms cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex; flex-direction: column;
+  }
+  .bp-filter-drawer.is-open { transform: translateX(0); }
+
+  .bp-filter-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(15, 23, 42, 0.40);
+    z-index: 1030;
+    opacity: 0; pointer-events: none;
+    transition: opacity 220ms ease;
+  }
+  .bp-filter-backdrop.is-open { opacity: 1; pointer-events: auto; }
+
+  .bp-filter-drawer__head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--bp-border);
+  }
+  .bp-filter-drawer__title {
+    font-weight: 700; font-size: 18px; color: var(--bp-ink);
+    margin: 0;
+  }
+  .bp-filter-drawer__close {
+    width: 36px; height: 36px;
+    background: transparent;
+    border: 1px solid var(--bp-border);
+    border-radius: 8px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--bp-ink-2);
+    cursor: pointer;
+  }
+  .bp-filter-drawer__close:hover {
+    background: var(--bp-surface); color: var(--bp-ink);
+  }
+
+  .bp-filter-drawer__body {
+    flex: 1; overflow-y: auto;
+    padding: 20px 24px 24px;
+  }
+
+  .bp-filter-label {
+    font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--bp-muted); margin: 0 0 8px;
+  }
+  .bp-chip-row {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-bottom: 22px;
+  }
+  .bp-chip-row:last-of-type { margin-bottom: 0; }
+  .bp-chip {
+    height: 36px;
+    display: inline-flex; align-items: center;
+    padding: 0 16px;
+    background: #fff;
+    border: 1px solid var(--bp-border);
+    border-radius: 999px;
+    color: var(--bp-ink-2);
+    font-size: 13px; font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+  }
+  .bp-chip:hover { border-color: var(--bp-primary); color: var(--bp-primary); }
+  .bp-chip[aria-pressed="true"] {
+    background: rgba(15, 110, 122, 0.10);
+    border-color: rgba(15, 110, 122, 0.40);
+    color: var(--bp-primary);
+    font-weight: 600;
+  }
+
+  /* Slider */
+  .bp-budget {
+    border-top: 1px dashed var(--bp-border);
+    padding-top: 20px;
+    margin-top: 6px;
+  }
+  .bp-budget__row {
+    display: flex; align-items: center; gap: 14px;
+    margin-top: 6px;
+  }
+  .bp-budget__row input[type="range"] {
+    flex: 1;
+    accent-color: var(--bp-primary);
+  }
+  .bp-budget__cap {
+    font-size: 13px; color: var(--bp-muted);
+    font-variant-numeric: tabular-nums;
+    min-width: 60px;
+  }
+
+  .bp-filter-drawer__foot {
+    border-top: 1px solid var(--bp-border);
+    padding: 16px 24px;
+    display: flex; gap: 12px; justify-content: space-between; align-items: center;
+    background: var(--bp-surface);
+  }
+  .bp-filter-drawer__clear {
+    color: var(--bp-primary); text-decoration: none;
+    font-size: 14px; font-weight: 600;
+    background: none; border: none; padding: 0;
+    cursor: pointer; font-family: inherit;
+  }
+  .bp-filter-drawer__clear:hover { text-decoration: underline; }
+  .bp-filter-drawer__apply {
+    /* sized via .btn .btn-primary */
+  }
+
+  /* ---------- Filter trigger button (sits in result bar) ---------- */
+  .bp-filter-trigger {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 40px; padding: 0 14px;
+    background: #fff;
+    border: 1px solid var(--bp-border);
+    border-radius: 8px;
+    color: var(--bp-ink); font-size: 14px; font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .bp-filter-trigger:hover {
+    border-color: var(--bp-primary);
+    color: var(--bp-primary);
+  }
+  .bp-filter-trigger__count {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 22px; height: 22px; padding: 0 6px;
+    background: var(--bp-primary); color: #fff;
+    border-radius: 999px;
+    font-size: 11px; font-weight: 700;
+    margin-left: 2px;
+  }
+
+  /* ---------- Result bar ---------- */
+  .bp-resultbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 0 16px; gap: 16px;
+  }
+  .bp-resultbar__count {
+    font-size: 15px; color: var(--bp-ink-2);
+    font-weight: 500;
+  }
+  .bp-resultbar__count strong { color: var(--bp-ink); font-weight: 700; }
+  .bp-sort {
+    position: relative;
+  }
+  .bp-sort__btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 40px; padding: 0 14px;
+    background: #fff;
+    border: 1px solid var(--bp-border);
+    border-radius: 8px;
+    color: var(--bp-ink); font-size: 14px; font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .bp-sort__btn::after {
+    content: "\F282"; /* bi-chevron-down */
+    font-family: "bootstrap-icons";
+    font-size: 14px; color: var(--bp-muted);
+  }
+  .bp-sort__menu {
+    position: absolute; right: 0; top: calc(100% + 6px);
+    background: #fff; border: 1px solid var(--bp-border);
+    border-radius: 10px;
+    box-shadow: 0 10px 24px rgba(15,23,42,0.08), 0 1px 2px rgba(15,23,42,0.04);
+    min-width: 220px;
+    padding: 6px;
+    z-index: 10;
+    list-style: none; margin: 0;
+  }
+  .bp-sort__menu li[role="option"][aria-selected="true"] a {
+    color: var(--bp-primary); font-weight: 600;
+    background: var(--bp-primary-soft);
+  }
+  .bp-sort__menu a {
+    display: block; padding: 8px 12px;
+    color: var(--bp-ink-2); text-decoration: none;
+    font-size: 14px; border-radius: 6px;
+  }
+  .bp-sort__menu a:hover { background: var(--bp-surface); color: var(--bp-ink); }
+
+  /* ---------- Listing card ---------- */
+  .bp-listing-card {
+    background: #fff;
+    border: 1px solid var(--bp-border);
+    border-radius: 16px;
+    box-shadow: 0 1px 2px rgba(15,23,42,0.04), 0 1px 3px rgba(15,23,42,0.06);
+    overflow: hidden;
+    height: 100%;
+    display: flex; flex-direction: column;
+    transition: transform 160ms ease, box-shadow 160ms ease;
+  }
+  .bp-listing-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 1px 2px rgba(15,23,42,0.04),
+                0 10px 24px rgba(15,23,42,0.08),
+                0 24px 48px -20px rgba(15,110,122,0.14);
+  }
+  .bp-listing-card__photo {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    background:
+      linear-gradient(135deg, rgba(15,110,122,0.20), rgba(15,110,122,0.04)),
+      linear-gradient(180deg, #EEF1F5, #DCE3EC);
+    border-bottom: 1px solid var(--bp-border);
+  }
+  .bp-listing-card__photo--alt {
+    background:
+      linear-gradient(135deg, rgba(197,107,79,0.20), rgba(197,107,79,0.04)),
+      linear-gradient(180deg, #EEF1F5, #DCE3EC);
+  }
+  .bp-listing-card__photo--soft {
+    background:
+      linear-gradient(135deg, rgba(22,163,74,0.16), rgba(22,163,74,0.03)),
+      linear-gradient(180deg, #EEF1F5, #DCE3EC);
+  }
+  .bp-listing-card__kind {
+    position: absolute; top: 12px; left: 12px;
+    background: #fff;
+    border: 1px solid var(--bp-border);
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--bp-muted);
+  }
+  .bp-verified-badge {
+    position: absolute; top: 12px; right: 12px;
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 28px; padding: 0 12px 0 10px;
+    background: var(--bp-primary);
+    color: #fff;
+    border-radius: 999px;
+    font-family: "Inter", sans-serif;
+    font-weight: 600; font-size: 12px;
+    border: none; cursor: pointer;
+  }
+  .bp-verified-badge i { font-size: 12px; }
+
+  .bp-listing-card__body {
+    padding: 24px;
+    display: flex; flex-direction: column;
+    flex: 1;
+    gap: 12px;
+  }
+  .bp-price-row {
+    display: flex; align-items: baseline; gap: 10px;
+    flex-wrap: wrap;
+  }
+  .bp-price {
+    font-family: "Inter", sans-serif;
+    font-weight: 700; font-size: 22px;
+    line-height: 1.2; letter-spacing: -0.01em;
+    color: var(--bp-ink);
+  }
+  .bp-price__unit {
+    font-size: 13px; color: var(--bp-muted); font-weight: 500;
+  }
+  .bp-price__area {
+    display: inline-flex; align-items: center; gap: 4px;
+    margin-left: auto;
+    font-size: 13px; font-weight: 500; color: var(--bp-muted);
+  }
+
+  .bp-listing-card__excerpt {
+    margin: 0;
+    font-size: 14px; color: var(--bp-ink-2);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .bp-lifestyle {
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .bp-lifestyle__chip {
+    font-size: 12px; font-weight: 600;
+    background: rgba(197, 107, 79, 0.10);
+    color: var(--bp-secondary);
+    padding: 4px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .bp-author {
+    display: flex; align-items: center; gap: 10px;
+    margin-top: 4px;
+  }
+  .bp-avatar-sm {
+    width: 32px; height: 32px;
+    border-radius: 999px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 700; font-size: 13px;
+    font-family: "Inter", sans-serif;
+    flex-shrink: 0;
+  }
+  .bp-author__meta { line-height: 1.3; }
+  .bp-author__name { font-weight: 600; font-size: 14px; color: var(--bp-ink); margin: 0; }
+  .bp-author__tenure { font-size: 12px; color: var(--bp-muted); margin: 0; }
+
+  .bp-match {
+    display: flex; align-items: center; gap: 12px;
+    padding-top: 6px;
+  }
+  .bp-match__dots {
+    display: inline-flex; gap: 4px;
+  }
+  .bp-match__dot {
+    width: 14px; height: 14px;
+    border-radius: 999px;
+    background: var(--bp-border);
+  }
+  .bp-match__dot--on {
+    background: var(--bp-success);
+  }
+  .bp-match__label {
+    font-size: 13px; font-weight: 500;
+  }
+  .bp-match__label--strong { color: var(--bp-success-fg); }
+  .bp-match__label--muted { color: var(--bp-muted); }
+
+  .bp-listing-card__cta {
+    margin-top: auto; padding-top: 14px;
+    border-top: 1px solid var(--bp-border);
+    display: flex; justify-content: flex-end;
+  }
+  .bp-listing-card__cta a {
+    color: var(--bp-primary);
+    text-decoration: none;
+    font-weight: 600; font-size: 14px;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .bp-listing-card__cta a:hover {
+    text-decoration: underline;
+  }
+  .bp-listing-card__cta a i { font-size: 14px; }
+
+  /* ---------- Pagination ---------- */
+  .bp-pager-wrap {
+    padding: 48px 0 80px;
+    display: flex; justify-content: center;
+  }
+  .bp-pager-wrap .pagination .page-link {
+    color: var(--bp-ink);
+    border-color: var(--bp-border);
+    background: #fff;
+    font-weight: 500;
+  }
+  .bp-pager-wrap .pagination .page-item.active .page-link {
+    background: var(--bp-primary);
+    border-color: var(--bp-primary);
+    color: #fff;
+  }
+  .bp-pager-wrap .pagination .page-link:hover:not(.active) {
+    background: var(--bp-primary-soft);
+    color: var(--bp-primary);
+    border-color: rgba(15,110,122,0.40);
+  }
+
+  /* Bengali-friendly content */
+  [lang="bn"] {
+    font-family: "Noto Sans Bengali", "SolaimanLipi", sans-serif;
+  }
+
+  /* Mobile fallback — at narrow widths, single column */
+  @media (max-width: 991.98px) {
+    .bp-pagehead { padding: 32px 0 16px; }
+    .bp-pagehead__title { font-size: 28px; }
+    .bp-listing-card__body { padding: 18px; }
+    .bp-price { font-size: 20px; }
+  }
+  @media (max-width: 767.98px) {
+    .bp-resultbar { flex-direction: column; align-items: flex-start; }
+    .bp-sort__menu { right: auto; left: 0; }
+  }
+
+  /* Reduced-motion: kill hover lift transitions */
+  @media (prefers-reduced-motion: reduce) {
+    .bp-listing-card { transition: none; }
+    .bp-listing-card:hover { transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="bp-nav">
+  <div class="container-xl py-3">
+    <div class="d-flex align-items-center justify-content-between">
+      <a class="bp-brand" href="#">
+        <span class="bp-brand__mark" aria-hidden="true">B</span>
+        Basha Pass
+      </a>
+      <div class="d-flex align-items-center gap-1">
+        <a class="bp-nav__link d-none d-lg-inline-block" href="#dashboard">Dashboard</a>
+        <a class="bp-nav__link d-none d-lg-inline-block" href="#browse" aria-current="page">Browse</a>
+        <a class="bp-nav__link d-none d-lg-inline-block" href="#post">Post a listing</a>
+        <a class="bp-nav__link d-none d-lg-inline-block" href="#profile">Profile</a>
+        <a class="bp-nav__link d-none d-lg-inline-block" href="#logout">Logout</a>
+        <button class="btn btn-primary btn-sm ms-2 d-lg-none" type="button" aria-label="Open menu">
+          <i class="bi bi-list"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div class="container-xl">
+
+    <!-- PAGE HEADER -->
+    <header class="bp-pagehead">
+      <h1 class="bp-pagehead__title">Browse listings</h1>
+      <p class="bp-pagehead__sub">Verified listers only. Tap any card for full detail and contact info.</p>
+    </header>
+
+    <!-- RESULT COUNT + FILTER + SORT -->
+    <div class="bp-resultbar">
+      <p class="bp-resultbar__count">
+        <strong>23</strong> verified listings
+      </p>
+      <div class="d-flex align-items-center gap-2">
+        <button class="bp-filter-trigger" type="button" id="openFilters" aria-controls="filterDrawer" aria-expanded="true">
+          <i class="bi bi-sliders2" aria-hidden="true"></i>
+          Filters
+          <span class="bp-filter-trigger__count" aria-label="3 filters active">3</span>
+        </button>
+        <div class="bp-sort">
+          <button class="bp-sort__btn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="Sort listings">
+            Sort: Match score
+          </button>
+          <ul class="bp-sort__menu" role="listbox" aria-label="Sort options">
+            <li role="option" aria-selected="true"><a href="#sort-match">Match score</a></li>
+            <li role="option" aria-selected="false"><a href="#sort-new">Newest first</a></li>
+            <li role="option" aria-selected="false"><a href="#sort-price-asc">Rent: low to high</a></li>
+            <li role="option" aria-selected="false"><a href="#sort-price-desc">Rent: high to low</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- FILTER DRAWER (offcanvas sidebar, slides in from the left) -->
+    <!-- Mock is rendered with the drawer OPEN to show both states in one screenshot -->
+    <div class="bp-filter-backdrop" id="filterBackdrop"></div>
+    <aside class="bp-filter-drawer is-open" id="filterDrawer" role="dialog" aria-modal="true" aria-labelledby="filterDrawerTitle">
+      <header class="bp-filter-drawer__head">
+        <h2 class="bp-filter-drawer__title" id="filterDrawerTitle">Filters</h2>
+        <button class="bp-filter-drawer__close" type="button" id="closeFilters" aria-label="Close filters">
+          <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+      </header>
+      <div class="bp-filter-drawer__body">
+
+        <div>
+          <p class="bp-filter-label" id="lbl-area">Area</p>
+          <div class="bp-chip-row" role="group" aria-labelledby="lbl-area">
+            <button type="button" class="bp-chip" aria-pressed="true">Mirpur</button>
+            <button type="button" class="bp-chip" aria-pressed="true">Mohammadpur</button>
+            <button type="button" class="bp-chip" aria-pressed="false">Dhanmondi</button>
+            <button type="button" class="bp-chip" aria-pressed="false">Uttara</button>
+            <button type="button" class="bp-chip" aria-pressed="false">Banani</button>
+          </div>
+        </div>
+
+        <div>
+          <p class="bp-filter-label" id="lbl-kind">Kind</p>
+          <div class="bp-chip-row" role="group" aria-labelledby="lbl-kind">
+            <button type="button" class="bp-chip" aria-pressed="true">Seat</button>
+            <button type="button" class="bp-chip" aria-pressed="false">Room</button>
+          </div>
+        </div>
+
+        <div>
+          <p class="bp-filter-label" id="lbl-rentunit">Rent unit</p>
+          <div class="bp-chip-row" role="group" aria-labelledby="lbl-rentunit">
+            <button type="button" class="bp-chip" aria-pressed="true">Per seat</button>
+            <button type="button" class="bp-chip" aria-pressed="false">Per room</button>
+          </div>
+        </div>
+
+        <div>
+          <p class="bp-filter-label" id="lbl-gender">Gender</p>
+          <div class="bp-chip-row" role="group" aria-labelledby="lbl-gender">
+            <button type="button" class="bp-chip" aria-pressed="false">Male</button>
+            <button type="button" class="bp-chip" aria-pressed="false">Female</button>
+            <button type="button" class="bp-chip" aria-pressed="false">Other</button>
+          </div>
+        </div>
+
+        <div>
+          <p class="bp-filter-label" id="lbl-occ">Occupation</p>
+          <div class="bp-chip-row" role="group" aria-labelledby="lbl-occ">
+            <button type="button" class="bp-chip" aria-pressed="false">Student</button>
+            <button type="button" class="bp-chip" aria-pressed="false">Garments</button>
+            <button type="button" class="bp-chip" aria-pressed="false">Private job</button>
+            <button type="button" class="bp-chip" aria-pressed="false">Freelancer</button>
+          </div>
+        </div>
+
+        <div>
+          <p class="bp-filter-label" id="lbl-smoke">Smoking</p>
+          <div class="bp-chip-row" role="group" aria-labelledby="lbl-smoke">
+            <button type="button" class="bp-chip" aria-pressed="false">No</button>
+            <button type="button" class="bp-chip" aria-pressed="false">Yes</button>
+            <button type="button" class="bp-chip" aria-pressed="false">Occasionally</button>
+          </div>
+        </div>
+
+        <div>
+          <p class="bp-filter-label" id="lbl-sleep">Sleep</p>
+          <div class="bp-chip-row" role="group" aria-labelledby="lbl-sleep">
+            <button type="button" class="bp-chip" aria-pressed="true">Early bird</button>
+            <button type="button" class="bp-chip" aria-pressed="false">Night owl</button>
+            <button type="button" class="bp-chip" aria-pressed="false">Flexible</button>
+          </div>
+        </div>
+
+        <div class="bp-budget">
+          <p class="bp-filter-label" id="lbl-budget">Budget</p>
+          <div class="bp-budget__row">
+            <span class="bp-budget__cap">৳3,500</span>
+            <input type="range" min="500" max="50000" value="5000" step="100" aria-label="Budget max">
+            <span class="bp-budget__cap">৳5,000</span>
+          </div>
+        </div>
+
+      </div>
+      <footer class="bp-filter-drawer__foot">
+        <button class="bp-filter-drawer__clear" type="button">Clear filters</button>
+        <button class="btn btn-primary bp-filter-drawer__apply" type="button" id="applyFilters">Show 23 results</button>
+      </footer>
+    </aside>
+
+    <!-- LISTING GRID -->
+    <section aria-label="Listings">
+      <div class="row g-4">
+
+        <!-- Card 1 -->
+        <div class="col-12 col-lg-6">
+          <article class="bp-listing-card" aria-labelledby="l1-title" aria-describedby="l1-hint">
+            <div class="bp-listing-card__photo" role="img" aria-label="Seat in Mirpur, ৳4,500 per seat">
+              <span class="bp-listing-card__kind">Seat</span>
+              <button class="bp-verified-badge" type="button" aria-label="NID verified — tap for verification date and tenure">
+                <i class="bi bi-shield-fill-check" aria-hidden="true"></i>
+                Verified
+              </button>
+            </div>
+            <div class="bp-listing-card__body">
+              <div class="bp-price-row">
+                <span id="l1-title" class="bp-price">৳4,500</span>
+                <span class="bp-price__unit">per seat</span>
+                <span class="bp-price__area"><i class="bi bi-geo-alt" aria-hidden="true"></i> Mirpur</span>
+              </div>
+              <p class="bp-listing-card__excerpt">Quiet mess, 2-min walk to campus. Two seats available from Sept 15.</p>
+              <ul class="bp-lifestyle" aria-label="Author lifestyle">
+                <li class="bp-lifestyle__chip">Non-smoker</li>
+                <li class="bp-lifestyle__chip">Early bird</li>
+                <li class="bp-lifestyle__chip">Student</li>
+              </ul>
+              <div class="bp-author">
+                <span class="bp-avatar-sm" style="background: #0F6E7A;" aria-hidden="true">T</span>
+                <div class="bp-author__meta">
+                  <p class="bp-author__name">Tanvir H.</p>
+                  <p class="bp-author__tenure">verified 4 months</p>
+                </div>
+              </div>
+              <div class="bp-match">
+                <span class="bp-match__dots" aria-label="5 of 6 preferences matched">
+                  <span class="bp-match__dot bp-match__dot--on"></span>
+                  <span class="bp-match__dot bp-match__dot--on"></span>
+                  <span class="bp-match__dot bp-match__dot--on"></span>
+                  <span class="bp-match__dot bp-match__dot--on"></span>
+                  <span class="bp-match__dot bp-match__dot--on"></span>
+                  <span class="bp-match__dot"></span>
+                </span>
+                <span id="l1-hint" class="bp-match__label bp-match__label--strong">matches 5 of 6 preferences</span>
+              </div>
+              <div class="bp-listing-card__cta">
+                <a href="#listing-1">View listing <i class="bi bi-arrow-right-circle-fill" aria-hidden="true"></i></a>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="col-12 col-lg-6">
+          <article class="bp-listing-card" aria-labelledby="l2-title" aria-describedby="l2-hint">
+            <div class="bp-listing-card__photo bp-listing-card__photo--alt" role="img" aria-label="Seat in Mohammadpur, ৳5,000 per seat">
+              <span class="bp-listing-card__kind">Seat</span>
+              <button class="bp-verified-badge" type="button" aria-label="NID verified — tap for verification date and tenure">
+                <i class="bi bi-shield-fill-check" aria-hidden="true"></i>
+                Verified
+              </button>
+            </div>
+            <div class="bp-listing-card__body">
+              <div class="bp-price-row">
+                <span id="l2-title" class="bp-price">৳5,000</span>
+                <span class="bp-price__unit">per seat</span>
+                <span class="bp-price__area"><i class="bi bi-geo-alt" aria-hidden="true"></i> Mohammadpur</span>
+              </div>
+              <p class="bp-listing-card__excerpt">Three seats, shared kitchen, bills split. Friends of the current tenant preferred.</p>
+              <ul class="bp-lifestyle" aria-label="Author lifestyle">
+                <li class="bp-lifestyle__chip">Non-smoker</li>
+                <li class="bp-lifestyle__chip">Student</li>
+                <li class="bp-lifestyle__chip">Early bird</li>
+              </ul>
+              <div class="bp-author">
+                <span class="bp-avatar-sm" style="background: #C56B4F;" aria-hidden="true">S</span>
+                <div class="bp-author__meta">
+                  <p class="bp-author__name">Sadia R.</p>
+                  <p class="bp-author__tenure">verified 6 months</p>
+                </div>
+              </div>
+              <div class="bp-match">
+                <span class="bp-match__dots" aria-label="4 of 6 preferences matched">
+                  <span class="bp-match__dot bp-match__dot--on"></span>
+                  <span class="bp-match__dot bp-match__dot--on"></span>
+                  <span class="bp-match__dot bp-match__dot--on"></span>
+                  <span class="bp-match__dot bp-match__dot--on"></span>
+                  <span class="bp-match__dot"></span>
+                  <span class="bp-match__dot"></span>
+                </span>
+                <span id="l2-hint" class="bp-match__label bp-match__label--strong">matches 4 of 6 preferences</span>
+              </div>
+              <div class="bp-listing-card__cta">
+                <a href="#listing-2">View listing <i class="bi bi-arrow-right-circle-fill" aria-hidden="true"></i></a>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="col-12 col-lg-6">
+          <article class="bp-listing-card" aria-labelledby="l3-title" aria-describedby="l3-hint">
+            <div class="bp-listing-card__photo bp-listing-card__photo--soft" role="img" aria-label="Seat in Mirpur, ৳3,800 per seat">
+              <span class="bp-listing-card__kind">Seat</span>
+              <button class="bp-verified-badge" type="button" aria-label="NID verified — tap for verification date and tenure">
+                <i class="bi bi-shield-fill-check" aria-hidden="true"></i>
+                Verified
+              </button>
+            </div>
+            <div class="bp-listing-card__body">
+              <div class="bp-price-row">
+                <span id="l3-title" class="bp-price">৳3,800</span>
+                <span class="bp-price__unit">per seat</span>
+                <span class="bp-price__area"><i class="bi bi-geo-alt" aria-hidden="true"></i> Mirpur</span>
+              </div>
+              <p class="bp-listing-card__excerpt">One seat available now. Bachelor mess, vegetarian cooking twice a day.</p>
+              <ul class="bp-lifestyle" aria-label="Author lifestyle">
+                <li class="bp-lifestyle__chip">Non-smoker</li>
+                <li class="bp-lifestyle__chip">Night owl</li>
+                <li class="bp-lifestyle__chip">Garments</li>
+              </ul>
+              <div class="bp-author">
+                <span class="bp-avatar-sm" style="background: #16A34A;" aria-hidden="true">I</span>
+                <div class="bp-author__meta">
+                  <p class="bp-author__name">Imran K.</p>
+                  <p class="bp-author__tenure">verified 2 months</p>
+                </div>
+              </div>
+              <div class="bp-match">
+                <span class="bp-match__dots" aria-label="3 of 6 preferences matched">
+                  <span class="bp-match__dot bp-match__dot--on"></span>
+                  <span class="bp-match__dot bp-match__dot--on"></span>
+                  <span class="bp-match__dot bp-match__dot--on"></span>
+                  <span class="bp-match__dot"></span>
+                  <span class="bp-match__dot"></span>
+                  <span class="bp-match__dot"></span>
+                </span>
+                <span id="l3-hint" class="bp-match__label bp-match__label--muted">matches 3 of 6 preferences</span>
+              </div>
+              <div class="bp-listing-card__cta">
+                <a href="#listing-3">View listing <i class="bi bi-arrow-right-circle-fill" aria-hidden="true"></i></a>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- Card 4 (with Bengali script) -->
+        <div class="col-12 col-lg-6">
+          <article class="bp-listing-card" aria-labelledby="l4-title" aria-describedby="l4-hint">
+            <div class="bp-listing-card__photo" role="img" aria-label="Room in Mohammadpur, ৳9,000 per room">
+              <span class="bp-listing-card__kind">Room</span>
+              <button class="bp-verified-badge" type="button" aria-label="NID verified — tap for verification date and tenure">
+                <i class="bi bi-shield-fill-check" aria-hidden="true"></i>
+                Verified
+              </button>
+            </div>
+            <div class="bp-listing-card__body">
+              <div class="bp-price-row">
+                <span id="l4-title" class="bp-price">৳9,000</span>
+                <span class="bp-price__unit">per room</span>
+                <span class="bp-price__area"><i class="bi bi-geo-alt" aria-hidden="true"></i> Mohammadpur</span>
+              </div>
+              <p class="bp-listing-card__excerpt">
+                <span lang="bn">আনিকা</span> — one furnished room, attached bath, separate entrance. Couple or single.
+              </p>
+              <ul class="bp-lifestyle" aria-label="Author lifestyle">
+                <li class="bp-lifestyle__chip">Non-smoker</li>
+                <li class="bp-lifestyle__chip">Flexible</li>
+                <li class="bp-lifestyle__chip">Private job</li>
+              </ul>
+              <div class="bp-author">
+                <span class="bp-avatar-sm" style="background: #C56B4F;" aria-hidden="true">A</span>
+                <div class="bp-author__meta">
+                  <p class="bp-author__name" lang="bn">আনিকা তানজিলা</p>
+                  <p class="bp-author__tenure">verified 9 months</p>
+                </div>
+              </div>
+              <div class="bp-match">
+                <span class="bp-match__dots" aria-label="3 of 6 preferences matched">
+                  <span class="bp-match__dot bp-match__dot--on"></span>
+                  <span class="bp-match__dot bp-match__dot--on"></span>
+                  <span class="bp-match__dot bp-match__dot--on"></span>
+                  <span class="bp-match__dot"></span>
+                  <span class="bp-match__dot"></span>
+                  <span class="bp-match__dot"></span>
+                </span>
+                <span id="l4-hint" class="bp-match__label bp-match__label--muted">matches 3 of 6 preferences</span>
+              </div>
+              <div class="bp-listing-card__cta">
+                <a href="#listing-4">View listing <i class="bi bi-arrow-right-circle-fill" aria-hidden="true"></i></a>
+              </div>
+            </div>
+          </article>
+        </div>
+
+      </div>
+
+      <!-- PAGINATION -->
+      <nav class="bp-pager-wrap" aria-label="Listing pagination">
+        <ul class="pagination mb-0">
+          <li class="page-item disabled">
+            <a class="page-link" href="#prev" tabindex="-1" aria-disabled="true">
+              <i class="bi bi-chevron-left" aria-hidden="true"></i>
+              <span class="visually-hidden">Previous page</span>
+            </a>
+          </li>
+          <li class="page-item active" aria-current="page">
+            <span class="page-link">1</span>
+          </li>
+          <li class="page-item"><a class="page-link" href="#page-2">2</a></li>
+          <li class="page-item"><a class="page-link" href="#page-3">3</a></li>
+          <li class="page-item">
+            <a class="page-link" href="#next" aria-label="Next page">
+              <i class="bi bi-chevron-right" aria-hidden="true"></i>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+    </section>
+
+  </div>
+</main>
+
+<script>
+  /* Filter drawer open/close — static-mock only.
+     In production this is replaced by an HTMX-driven swap per AD-1. */
+  (function () {
+    var drawer    = document.getElementById('filterDrawer');
+    var backdrop  = document.getElementById('filterBackdrop');
+    var openBtn   = document.getElementById('openFilters');
+    var closeBtn  = document.getElementById('closeFilters');
+    var applyBtn  = document.getElementById('applyFilters');
+
+    function open () {
+      drawer.removeAttribute('hidden');
+      backdrop.removeAttribute('hidden');
+      /* force reflow so the transition picks up the initial state */
+      void drawer.offsetWidth;
+      drawer.classList.add('is-open');
+      backdrop.classList.add('is-open');
+      openBtn.setAttribute('aria-expanded', 'true');
+      closeBtn.focus();
+    }
+    function close () {
+      drawer.classList.remove('is-open');
+      backdrop.classList.remove('is-open');
+      openBtn.setAttribute('aria-expanded', 'false');
+      /* hide after transition so the elements are not focusable */
+      setTimeout(function () {
+        drawer.setAttribute('hidden', '');
+        backdrop.setAttribute('hidden', '');
+        openBtn.focus();
+      }, 240);
+    }
+
+    openBtn.addEventListener('click', open);
+    closeBtn.addEventListener('click', close);
+    backdrop.addEventListener('click', close);
+    applyBtn.addEventListener('click', close);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && drawer.classList.contains('is-open')) close();
+    });
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,869 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280">
+<title>Post a listing — Basha Pass</title>
+<!-- Bootstrap (vanilla) — native button styles; brand colors re-painted via CSS vars -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+  /* Brand tokens — re-paint Bootstrap primary/secondary to Trust Teal + Warm */
+  :root,
+  [data-bs-theme="light"] {
+    --bp-primary: #0F6E7A;
+    --bp-primary-rgb: 15, 110, 122;
+    --bp-primary-fg: #FFFFFF;
+    --bp-primary-soft: #E6F2F4;
+    --bp-secondary: #C56B4F;
+    --bp-secondary-rgb: 197, 107, 79;
+    --bp-secondary-soft: #FBEFE9;
+    --bp-success: #16A34A;
+    --bp-ink: #0F172A;
+    --bp-ink-2: #334155;
+    --bp-muted: #5A6878;
+    --bp-border: #E2E8F0;
+    --bp-surface: #FAFBFD;
+    --bp-canvas: #F4F6F9;
+
+    --bs-primary: var(--bp-primary);
+    --bs-primary-rgb: var(--bp-primary-rgb);
+    --bs-secondary: var(--bp-secondary);
+    --bs-secondary-rgb: var(--bp-secondary-rgb);
+    --bs-link-color: var(--bp-primary);
+    --bs-link-hover-color: #0a525b;
+    --bs-body-color: var(--bp-ink);
+    --bs-body-font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Bengali", "SolaimanLipi", sans-serif;
+    --bs-border-color: var(--bp-border);
+  }
+
+  /* Re-paint Bootstrap component variables so buttons pick up brand colors */
+  .btn-primary {
+    --bs-btn-bg: var(--bp-primary);
+    --bs-btn-border-color: var(--bp-primary);
+    --bs-btn-hover-bg: #0a525b;
+    --bs-btn-hover-border-color: #083f47;
+    --bs-btn-active-bg: #083f47;
+    --bs-btn-active-border-color: #063238;
+    --bs-btn-disabled-bg: var(--bp-primary);
+    --bs-btn-disabled-border-color: var(--bp-primary);
+  }
+  .btn-secondary {
+    --bs-btn-bg: var(--bp-secondary);
+    --bs-btn-border-color: var(--bp-secondary);
+    --bs-btn-hover-bg: #a85639;
+    --bs-btn-hover-border-color: #9c4f37;
+    --bs-btn-active-bg: #9c4f37;
+    --bs-btn-active-border-color: #823f2a;
+    --bs-btn-disabled-bg: var(--bp-secondary);
+    --bs-btn-disabled-border-color: var(--bp-secondary);
+  }
+  .btn-outline-secondary {
+    --bs-btn-color: var(--bp-secondary);
+    --bs-btn-border-color: var(--bp-secondary);
+    --bs-btn-hover-bg: var(--bp-secondary);
+    --bs-btn-hover-border-color: var(--bp-secondary);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-bg: var(--bp-secondary);
+    --bs-btn-active-border-color: var(--bp-secondary);
+    --bs-btn-active-color: #fff;
+  }
+
+  html, body { background: var(--bp-canvas); color: var(--bp-ink); }
+  body { font-size: 16px; line-height: 1.55; }
+
+  /* Focus ring (WCAG 2.1 AA) */
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, .form-check-input:focus-visible, [role="button"]:focus-visible {
+    outline: 2px solid var(--bp-primary);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  /* Top nav */
+  .bp-nav {
+    background: rgba(250, 251, 253, 0.92);
+    backdrop-filter: saturate(180%) blur(12px);
+    -webkit-backdrop-filter: saturate(180%) blur(12px);
+    border-bottom: 1px solid var(--bp-border);
+  }
+  .bp-brand {
+    font-weight: 700; letter-spacing: -0.01em; font-size: 18px;
+    color: var(--bp-ink); text-decoration: none;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .bp-brand__mark {
+    width: 32px; height: 32px;
+    background: var(--bp-primary); color: #fff;
+    border-radius: 8px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 16px;
+  }
+  .bp-nav__link {
+    color: var(--bp-ink-2); font-weight: 500; font-size: 15px;
+    padding: 8px 14px; border-radius: 8px; text-decoration: none;
+  }
+  .bp-nav__link:hover { background: var(--bp-surface); color: var(--bp-ink); }
+  .bp-nav__link[aria-current="page"] {
+    color: var(--bp-primary); background: var(--bp-primary-soft);
+    font-weight: 600;
+  }
+
+  /* Page header */
+  .bp-page-head {
+    padding: 40px 0 24px;
+  }
+  .bp-page-head h1 {
+    font-weight: 700; font-size: 32px; letter-spacing: -0.02em;
+    line-height: 1.15; margin: 0 0 8px;
+  }
+  .bp-page-head p {
+    color: var(--bp-ink-2); font-size: 17px; margin: 0;
+  }
+
+  /* Status pill — warm secondary */
+  .bp-status-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: var(--bp-secondary-soft);
+    color: var(--bp-secondary);
+    font-weight: 600; font-size: 14px;
+    border: 1px solid rgba(197, 107, 79, 0.20);
+  }
+  .bp-status-pill__icon {
+    width: 20px; height: 20px;
+    border-radius: 999px;
+    background: var(--bp-secondary);
+    color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 11px;
+  }
+
+  /* Section card */
+  .bp-section-card {
+    background: #fff;
+    border: 1px solid var(--bp-border);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  }
+  .bp-section-head {
+    display: flex; align-items: baseline; gap: 10px;
+    margin-bottom: 20px;
+  }
+  .bp-section-num {
+    font-size: 13px; font-weight: 700; color: var(--bp-muted);
+    letter-spacing: 0.06em;
+  }
+  .bp-section-title {
+    font-size: 18px; font-weight: 600;
+    margin: 0; color: var(--bp-ink);
+    letter-spacing: -0.01em;
+  }
+
+  /* Form labels */
+  .bp-label {
+    font-size: 14px; font-weight: 600; color: var(--bp-ink);
+    margin-bottom: 8px; display: block;
+  }
+  .bp-help {
+    font-size: 13px; color: var(--bp-muted);
+    margin: 4px 0 0;
+  }
+  .bp-field { margin-bottom: 24px; }
+  .bp-field:last-child { margin-bottom: 0; }
+
+  /* Bootstrap input/select overrides */
+  .form-control, .form-select {
+    border-color: var(--bp-border);
+    color: var(--bp-ink);
+    font-size: 15px;
+    padding: 0.625rem 0.875rem;
+    border-radius: 10px;
+    background: #fff;
+  }
+  .form-control:focus, .form-select:focus {
+    border-color: var(--bp-primary);
+    box-shadow: 0 0 0 3px rgba(15, 110, 122, 0.15);
+  }
+  textarea.form-control { line-height: 1.5; resize: vertical; min-height: 132px; }
+
+  /* Radio + check chips (label-as-button) */
+  .bp-chipgroup {
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .bp-chip {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 44px;
+    padding: 0 16px;
+    background: #fff;
+    border: 1px solid var(--bp-border);
+    border-radius: 999px;
+    color: var(--bp-ink);
+    font-size: 14px; font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+  }
+  .bp-chip input {
+    position: absolute; opacity: 0; pointer-events: none;
+    width: 1px; height: 1px;
+  }
+  .bp-chip:has(input:checked) {
+    background: var(--bp-primary-soft);
+    border-color: rgba(15, 110, 122, 0.50);
+    color: var(--bp-primary);
+    font-weight: 600;
+  }
+  .bp-chip:hover { border-color: rgba(15, 110, 122, 0.40); }
+
+  /* Photo upload drop zone */
+  .bp-upload {
+    border: 1.5px dashed var(--bp-border);
+    background: var(--bp-surface);
+    border-radius: 14px;
+    min-height: 200px;
+    padding: 28px;
+    text-align: center;
+    display: flex; flex-direction: column;
+    gap: 10px; align-items: center; justify-content: center;
+    transition: border-color 120ms ease, background-color 120ms ease;
+  }
+  .bp-upload__icon {
+    width: 56px; height: 56px;
+    background: var(--bp-primary-soft);
+    color: var(--bp-primary);
+    border-radius: 14px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 28px;
+  }
+  .bp-upload__title { font-size: 16px; font-weight: 600; color: var(--bp-ink); margin: 4px 0 0; }
+  .bp-upload__hint { font-size: 13px; color: var(--bp-muted); margin: 0; }
+
+  /* Photo thumbnails */
+  .bp-photos-row {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+    margin-top: 16px;
+  }
+  .bp-thumb {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 10px;
+    background:
+      linear-gradient(135deg, rgba(15, 110, 122, 0.20), rgba(15, 110, 122, 0.06)),
+      linear-gradient(180deg, #E5EAF0, #D1D9E2);
+    border: 1px solid var(--bp-border);
+  }
+  .bp-thumb--add {
+    background: var(--bp-surface);
+    border: 1.5px dashed var(--bp-border);
+    color: var(--bp-muted);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+  }
+  .bp-thumb__remove {
+    position: absolute; top: 6px; right: 6px;
+    width: 24px; height: 24px;
+    background: rgba(15, 23, 42, 0.70);
+    color: #fff;
+    border: 0; border-radius: 999px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  /* Bengali hint */
+  .bp-bn-hint {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--bp-muted);
+    margin-top: 6px;
+    font-family: "Noto Sans Bengali", "SolaimanLipi", sans-serif;
+  }
+  .bp-bn-hint i { color: var(--bp-primary); }
+
+  /* Right column: sticky preview + tips */
+  .bp-side {
+    position: sticky; top: 88px;
+    display: flex; flex-direction: column; gap: 20px;
+  }
+  .bp-side-card {
+    background: #fff;
+    border: 1px solid var(--bp-border);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  }
+  .bp-side-card__title {
+    font-size: 15px; font-weight: 600; color: var(--bp-ink);
+    margin: 0 0 16px;
+    letter-spacing: -0.01em;
+  }
+
+  /* Preview card mock */
+  .bp-preview {
+    border: 1px solid var(--bp-border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .bp-preview__photo {
+    aspect-ratio: 16/10;
+    background:
+      linear-gradient(135deg, #0F6E7A 0%, #16A34A 100%);
+    position: relative;
+  }
+  .bp-preview__kind {
+    position: absolute; top: 10px; left: 10px;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--bp-ink);
+    font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+    padding: 4px 8px; border-radius: 4px;
+  }
+  .bp-preview__verified {
+    position: absolute; top: 10px; right: 10px;
+    background: var(--bp-primary); color: #fff;
+    font-size: 11px; font-weight: 600;
+    padding: 4px 10px; border-radius: 999px;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .bp-preview__verified i { font-size: 11px; }
+  .bp-preview__body { padding: 14px 16px 16px; }
+  .bp-preview__price {
+    font-weight: 700; font-size: 20px; letter-spacing: -0.01em;
+    color: var(--bp-ink);
+  }
+  .bp-preview__price small { font-weight: 500; font-size: 13px; color: var(--bp-muted); }
+  .bp-preview__area {
+    font-size: 13px; color: var(--bp-muted);
+    margin: 2px 0 10px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .bp-preview__excerpt {
+    font-size: 14px; color: var(--bp-ink-2);
+    line-height: 1.45;
+    margin: 0 0 12px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .bp-preview__chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .bp-preview__chips .bp-chip-static {
+    font-size: 11px; font-weight: 600;
+    padding: 4px 10px; border-radius: 999px;
+    background: var(--bp-primary-soft); color: var(--bp-primary);
+  }
+
+  /* Tips card */
+  .bp-tips {
+    background: var(--bp-surface);
+    border: 1px solid var(--bp-border);
+    border-radius: 16px;
+    padding: 24px;
+  }
+  .bp-tips__title {
+    font-size: 15px; font-weight: 600; color: var(--bp-ink);
+    margin: 0 0 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .bp-tips__list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
+  .bp-tips__item { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: var(--bp-ink-2); line-height: 1.5; }
+  .bp-tips__item i { color: var(--bp-success); font-size: 18px; line-height: 1.2; flex-shrink: 0; margin-top: 1px; }
+
+  /* Form actions footer */
+  .bp-form-actions {
+    background: #fff;
+    border: 1px solid var(--bp-border);
+    border-radius: 16px;
+    padding: 20px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    margin-top: 8px;
+  }
+  .bp-form-actions__note {
+    font-size: 13px; color: var(--bp-muted);
+    margin: 0; flex: 1 1 320px; min-width: 0;
+  }
+  .bp-form-actions__buttons {
+    display: flex; gap: 12px; flex-wrap: wrap;
+  }
+  .bp-form-actions__buttons .btn {
+    padding: 0.625rem 1.25rem;
+    font-weight: 600;
+    border-radius: 10px;
+  }
+
+  /* Page footer note about layout */
+  .bp-canvas-note {
+    font-size: 12px; color: var(--bp-muted);
+    margin: 32px 0 0;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="bp-nav sticky-top">
+  <div class="container-xl py-3">
+    <div class="d-flex align-items-center justify-content-between">
+      <a class="bp-brand" href="#">
+        <span class="bp-brand__mark">B</span>
+        Basha Pass
+      </a>
+      <div class="d-flex align-items-center gap-1">
+        <a class="bp-nav__link" href="#dashboard">Dashboard</a>
+        <a class="bp-nav__link" href="#browse">Browse</a>
+        <a class="bp-nav__link" href="#post" aria-current="page">Post a listing</a>
+        <a class="bp-nav__link" href="#profile">Profile</a>
+        <a class="bp-nav__link" href="#logout">Logout</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<header class="bp-page-head">
+  <div class="container-xl">
+    <div class="d-flex align-items-start justify-content-between gap-4 flex-wrap">
+      <div>
+        <h1>Post a listing</h1>
+        <p>Reach verified tenants in Dhaka. ~1 minute to fill out.</p>
+      </div>
+      <span class="bp-status-pill" aria-label="1 of 3 active listings used">
+        <span class="bp-status-pill__icon" aria-hidden="true">
+          <i class="bi bi-x-lg"></i>
+        </span>
+        1 of 3 active listings
+      </span>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN GRID -->
+<main>
+  <div class="container-xl">
+    <form novalidate>
+      <div class="row g-4">
+
+        <!-- LEFT COLUMN: FORM -->
+        <div class="col-lg-8">
+
+          <!-- Section 1: What you're listing -->
+          <section class="bp-section-card" aria-labelledby="sec-1-title">
+            <div class="bp-section-head">
+              <span class="bp-section-num">1.</span>
+              <h2 class="bp-section-title" id="sec-1-title">What you're listing</h2>
+            </div>
+
+            <!-- Kind -->
+            <div class="bp-field">
+              <span class="bp-label">Kind</span>
+              <div class="bp-chipgroup" role="radiogroup" aria-label="Kind of space">
+                <label class="bp-chip">
+                  <input type="radio" name="kind" value="seat" aria-pressed="true">
+                  <span>Seat</span>
+                </label>
+                <label class="bp-chip">
+                  <input type="radio" name="kind" value="room">
+                  <span>Room</span>
+                </label>
+              </div>
+              <p class="bp-help">A seat is one spot in a shared mess; a room is a private room for rent.</p>
+            </div>
+
+            <!-- Area -->
+            <div class="bp-field">
+              <span class="bp-label">Area</span>
+              <div class="bp-chipgroup" role="group" aria-label="Areas — multi-select">
+                <label class="bp-chip">
+                  <input type="checkbox" name="area" value="mirpur" checked>
+                  <span>Mirpur</span>
+                </label>
+                <label class="bp-chip">
+                  <input type="checkbox" name="area" value="mohammadpur" checked>
+                  <span>Mohammadpur</span>
+                </label>
+                <label class="bp-chip">
+                  <input type="checkbox" name="area" value="dhanmondi">
+                  <span>Dhanmondi</span>
+                </label>
+                <label class="bp-chip">
+                  <input type="checkbox" name="area" value="uttara">
+                  <span>Uttara</span>
+                </label>
+                <label class="bp-chip">
+                  <input type="checkbox" name="area" value="banani">
+                  <span>Banani</span>
+                </label>
+                <label class="bp-chip">
+                  <input type="checkbox" name="area" value="gulshan">
+                  <span>Gulshan</span>
+                </label>
+                <label class="bp-chip">
+                  <input type="checkbox" name="area" value="baridhara">
+                  <span>Baridhara</span>
+                </label>
+                <label class="bp-chip">
+                  <input type="checkbox" name="area" value="bashundhara">
+                  <span>Bashundhara</span>
+                </label>
+                <label class="bp-chip">
+                  <input type="checkbox" name="area" value="tejgaon">
+                  <span>Tejgaon</span>
+                </label>
+                <label class="bp-chip">
+                  <input type="checkbox" name="area" value="ramna">
+                  <span>Ramna</span>
+                </label>
+              </div>
+              <p class="bp-help">Select one or more sub-areas. Seekers filter by these.</p>
+            </div>
+
+            <!-- Rent + Rent unit -->
+            <div class="row g-3">
+              <div class="col-md-5">
+                <div class="bp-field" style="margin-bottom: 0;">
+                  <label class="bp-label" for="rent">Rent</label>
+                  <div class="input-group">
+                    <span class="input-group-text" style="background: var(--bp-surface); border-color: var(--bp-border); color: var(--bp-muted);">৳</span>
+                    <input type="number" class="form-control" id="rent" name="rent" inputmode="numeric" min="500" max="50000" step="1" value="4500" aria-describedby="rent-help">
+                  </div>
+                  <p class="bp-help" id="rent-help">Whole taka only — no paisa</p>
+                </div>
+              </div>
+              <div class="col-md-7">
+                <div class="bp-field" style="margin-bottom: 0;">
+                  <span class="bp-label">Rent unit</span>
+                  <div class="bp-chipgroup" role="radiogroup" aria-label="Rent unit">
+                    <label class="bp-chip">
+                      <input type="radio" name="rent_unit" value="per_seat" checked>
+                      <span>Per seat</span>
+                    </label>
+                    <label class="bp-chip">
+                      <input type="radio" name="rent_unit" value="per_room">
+                      <span>Per room</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Move-in date -->
+            <div class="bp-field" style="margin-top: 24px;">
+              <label class="bp-label" for="move-in">Move-in date</label>
+              <input type="date" class="form-control" id="move-in" name="move_in" value="2026-09-15" style="max-width: 240px;">
+            </div>
+          </section>
+
+          <!-- Section 2: Photos -->
+          <section class="bp-section-card" aria-labelledby="sec-2-title">
+            <div class="bp-section-head">
+              <span class="bp-section-num">2.</span>
+              <h2 class="bp-section-title" id="sec-2-title">Photos</h2>
+            </div>
+
+            <div class="bp-upload" role="button" tabindex="0" aria-label="Click or drag photos here">
+              <div class="bp-upload__icon" aria-hidden="true">
+                <i class="bi bi-camera"></i>
+              </div>
+              <p class="bp-upload__title">Click or drag photos here</p>
+              <p class="bp-upload__hint">Recommended 1200×800 px, JPG/PNG/WebP up to 5 MB</p>
+              <button type="button" class="btn btn-outline-secondary btn-sm mt-1">Browse files</button>
+            </div>
+            <p class="bp-help" style="margin-top: 12px;">Upload 1–7 photos — listings with photos get 2× more reach-outs.</p>
+
+            <!-- Placeholder thumbnails -->
+            <div class="bp-photos-row" aria-label="Selected photos">
+              <div class="bp-thumb" role="img" aria-label="Photo 1: living area">
+                <button type="button" class="bp-thumb__remove" aria-label="Remove photo 1">
+                  <i class="bi bi-x"></i>
+                </button>
+              </div>
+              <div class="bp-thumb" role="img" aria-label="Photo 2: bedroom" style="background: linear-gradient(135deg, rgba(197,107,79,0.20), rgba(197,107,79,0.04)), linear-gradient(180deg, #E5EAF0, #D1D9E2);">
+                <button type="button" class="bp-thumb__remove" aria-label="Remove photo 2">
+                  <i class="bi bi-x"></i>
+                </button>
+              </div>
+              <div class="bp-thumb" role="img" aria-label="Photo 3: kitchen" style="background: linear-gradient(135deg, rgba(22,163,74,0.20), rgba(22,163,74,0.04)), linear-gradient(180deg, #E5EAF0, #D1D9E2);">
+                <button type="button" class="bp-thumb__remove" aria-label="Remove photo 3">
+                  <i class="bi bi-x"></i>
+                </button>
+              </div>
+              <div class="bp-thumb bp-thumb--add" role="button" tabindex="0" aria-label="Add another photo">
+                <i class="bi bi-plus-lg" aria-hidden="true"></i>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 3: Description -->
+          <section class="bp-section-card" aria-labelledby="sec-3-title">
+            <div class="bp-section-head">
+              <span class="bp-section-num">3.</span>
+              <h2 class="bp-section-title" id="sec-3-title">Description</h2>
+            </div>
+
+            <div class="bp-field" style="margin-bottom: 0;">
+              <label class="bp-label" for="body">Body</label>
+              <textarea class="form-control" id="body" name="body" maxlength="500" lang="bn"
+                placeholder="Move-in Sept 15. Quiet mess, 2-min walk to campus. Bills included, kitchen shared with two working professionals."
+                aria-describedby="body-help bn-hint">Move-in Sept 15. Quiet mess, 2-min walk to campus. Bills included, kitchen shared with two working professionals.</textarea>
+              <p class="bp-help" id="body-help" style="margin-top: 8px;">500 characters max. Mention quiet hours, kitchen access, bills.</p>
+              <p class="bp-bn-hint" id="bn-hint" lang="bn">
+                <i class="bi bi-translate" aria-hidden="true"></i>
+                <span>আপনি বাংলায় লিখতে পারেন · You can write in Bengali</span>
+              </p>
+            </div>
+          </section>
+
+          <!-- Section 4: Who you're looking for -->
+          <section class="bp-section-card" aria-labelledby="sec-4-title">
+            <div class="bp-section-head">
+              <span class="bp-section-num">4.</span>
+              <h2 class="bp-section-title" id="sec-4-title">Who you're looking for</h2>
+            </div>
+
+            <!-- Preferred gender -->
+            <div class="bp-field">
+              <span class="bp-label">Preferred gender</span>
+              <div class="bp-chipgroup" role="radiogroup" aria-label="Preferred gender">
+                <label class="bp-chip">
+                  <input type="radio" name="pref_gender" value="male">
+                  <span>Male</span>
+                </label>
+                <label class="bp-chip">
+                  <input type="radio" name="pref_gender" value="female">
+                  <span>Female</span>
+                </label>
+                <label class="bp-chip">
+                  <input type="radio" name="pref_gender" value="any" checked>
+                  <span>Any</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Smoking -->
+            <div class="bp-field">
+              <span class="bp-label">Smoking preference</span>
+              <div class="bp-chipgroup" role="radiogroup" aria-label="Smoking preference">
+                <label class="bp-chip">
+                  <input type="radio" name="pref_smoking" value="no" checked>
+                  <span>Non-smoker</span>
+                </label>
+                <label class="bp-chip">
+                  <input type="radio" name="pref_smoking" value="yes">
+                  <span>Smoker okay</span>
+                </label>
+                <label class="bp-chip">
+                  <input type="radio" name="pref_smoking" value="any">
+                  <span>Any</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Sleep schedule -->
+            <div class="bp-field">
+              <span class="bp-label">Sleep schedule</span>
+              <div class="bp-chipgroup" role="radiogroup" aria-label="Sleep schedule preference">
+                <label class="bp-chip">
+                  <input type="radio" name="pref_sleep" value="early_bird">
+                  <span>Early bird</span>
+                </label>
+                <label class="bp-chip">
+                  <input type="radio" name="pref_sleep" value="night_owl">
+                  <span>Night owl</span>
+                </label>
+                <label class="bp-chip">
+                  <input type="radio" name="pref_sleep" value="flexible" checked>
+                  <span>Flexible</span>
+                </label>
+                <label class="bp-chip">
+                  <input type="radio" name="pref_sleep" value="any">
+                  <span>Any</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Occupation -->
+            <div class="bp-field" style="margin-bottom: 0;">
+              <span class="bp-label">Occupation</span>
+              <div class="bp-chipgroup" role="group" aria-label="Preferred occupation — multi-select">
+                <label class="bp-chip">
+                  <input type="checkbox" name="pref_occupation" value="any" checked>
+                  <span>Any</span>
+                </label>
+                <label class="bp-chip">
+                  <input type="checkbox" name="pref_occupation" value="student">
+                  <span>Student</span>
+                </label>
+                <label class="bp-chip">
+                  <input type="checkbox" name="pref_occupation" value="garments">
+                  <span>Garments worker</span>
+                </label>
+                <label class="bp-chip">
+                  <input type="checkbox" name="pref_occupation" value="private_job">
+                  <span>Private job</span>
+                </label>
+                <label class="bp-chip">
+                  <input type="checkbox" name="pref_occupation" value="freelancer">
+                  <span>Freelancer</span>
+                </label>
+                <label class="bp-chip">
+                  <input type="checkbox" name="pref_occupation" value="other">
+                  <span>Other</span>
+                </label>
+              </div>
+              <p class="bp-help">Select one or more. Pick "Any" alone to accept any occupation.</p>
+            </div>
+          </section>
+
+          <!-- Form actions -->
+          <div class="bp-form-actions" role="group" aria-label="Form actions">
+            <p class="bp-form-actions__note">By publishing you confirm the listing is accurate. Basha Pass will email you when verified seekers contact you.</p>
+            <div class="bp-form-actions__buttons">
+              <button type="button" class="btn btn-outline-secondary">Save draft</button>
+              <button type="submit" class="btn btn-primary">Publish listing</button>
+            </div>
+          </div>
+
+        </div>
+        <!-- /Left column -->
+
+        <!-- RIGHT COLUMN: PREVIEW + TIPS -->
+        <div class="col-lg-4">
+          <aside class="bp-side" aria-label="Listing preview and tips">
+
+            <!-- Preview card -->
+            <div class="bp-side-card">
+              <p class="bp-side-card__title">
+                <i class="bi bi-eye me-1" style="color: var(--bp-primary);"></i>
+                Preview
+              </p>
+
+              <div class="bp-preview" aria-label="Preview of how your listing will appear to seekers">
+                <div class="bp-preview__photo">
+                  <span class="bp-preview__kind">SEAT</span>
+                  <span class="bp-preview__verified">
+                    <i class="bi bi-shield-fill-check"></i> Verified
+                  </span>
+                </div>
+                <div class="bp-preview__body">
+                  <div class="bp-preview__price">৳4,500 <small>/ seat</small></div>
+                  <div class="bp-preview__area">
+                    <i class="bi bi-geo-alt"></i>
+                    Mirpur · Mohammadpur
+                  </div>
+                  <p class="bp-preview__excerpt">Move-in Sept 15. Quiet mess, 2-min walk to campus. Bills included, kitchen shared with two working professionals.</p>
+                  <div class="bp-preview__chips">
+                    <span class="bp-chip-static">Non-smoker</span>
+                    <span class="bp-chip-static">Flexible</span>
+                    <span class="bp-chip-static">Any</span>
+                  </div>
+                </div>
+              </div>
+
+              <p class="bp-help" style="margin-top: 14px;">This is how seekers will see your listing in the feed.</p>
+            </div>
+
+            <!-- Tips card -->
+            <div class="bp-tips">
+              <p class="bp-tips__title">
+                <i class="bi bi-lightbulb" style="color: var(--bp-primary);"></i>
+                Tips for a faster match
+              </p>
+              <ul class="bp-tips__list">
+                <li class="bp-tips__item">
+                  <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+                  <span>Add at least 3 photos — listings with photos get 2× more reach-outs</span>
+                </li>
+                <li class="bp-tips__item">
+                  <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+                  <span>Be specific in the body — quiet hours, kitchen access, bills</span>
+                </li>
+                <li class="bp-tips__item">
+                  <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+                  <span>Match lister preferences — they filter, just like you</span>
+                </li>
+              </ul>
+            </div>
+
+          </aside>
+        </div>
+
+      </div>
+    </form>
+
+    <p class="bp-canvas-note">Viewport 1280 · Bootstrap 5.3.8 + Bootstrap Icons · Active state: 1 of 3</p>
+  </div>
+</main>
+
+<script>
+  /* Multi-select chip group with mutually-exclusive "Any" option.
+     When "Any" is checked, every other option in the same group is unchecked.
+     When any non-"Any" option is checked, "Any" is unchecked. */
+  (function () {
+    document.querySelectorAll('.bp-chipgroup').forEach(function (group) {
+      var inputs = group.querySelectorAll('input[type="checkbox"], input[type="radio"]');
+      if (!inputs.length) return;
+      var anyInput = group.querySelector('input[value="any"]');
+
+      inputs.forEach(function (input) {
+        input.addEventListener('change', function () {
+          if (!anyInput) return;
+          if (input === anyInput && input.checked) {
+            inputs.forEach(function (other) {
+              if (other !== anyInput) other.checked = false;
+            });
+          } else if (input !== anyInput && input.checked) {
+            anyInput.checked = false;
+          }
+          /* if user just unchecked the last non-"Any", default back to "Any" */
+          if (anyInput && input !== anyInput && !input.checked) {
+            var anyOtherChecked = Array.prototype.some.call(
+              inputs, function (o) { return o !== anyInput && o.checked; }
+            );
+            if (!anyOtherChecked) anyInput.checked = true;
+          }
+        });
+      });
+    });
+  })();
+</script>
+
+<!--
+  ===================================================================
+  AT-CAP STATE: When user has 3 active listings, show this instead:
+  ===================================================================
+  - Replace the form (both columns) with a single explanatory card
+  - Disable the Publish CTA
+  - Primary CTA: "Withdraw one of your listings" → #your-listings
+  - Helper: "You can have up to 3 active listings. Free up one to post another."
+  - Status pill in header becomes warning-toned with "At cap" label.
+
+  Example swap-in (place inside the <main> <div class="container-xl">):
+
+    <div class="bp-cap-card" role="status" aria-live="polite">
+      <div class="bp-cap-card__icon"><i class="bi bi-flag-fill"></i></div>
+      <h2 class="bp-cap-card__title">You're at the 3-listing cap</h2>
+      <p class="bp-cap-card__body">
+        You can have up to 3 active listings on Basha Pass. Withdraw one to post another.
+      </p>
+      <div class="bp-cap-card__actions">
+        <a class="btn btn-primary" href="#your-listings">Withdraw one of your listings</a>
+        <a class="btn btn-outline-secondary" href="#dashboard">Back to dashboard</a>
+      </div>
+    </div>
+
+  And change the header status pill:
+
+    <span class="bp-status-pill bp-status-pill--cap" aria-label="At cap: 3 of 3 active listings">
+      <span class="bp-status-pill__icon"><i class="bi bi-exclamation-lg"></i></span>
+      3 of 3 active · at cap
+    </span>
+
+  Submit button in form-actions becomes disabled:
+
+    <button type="submit" class="btn btn-primary" disabled aria-disabled="true">Publish listing · at cap</button>
+-->
+
+</body>
+</html>

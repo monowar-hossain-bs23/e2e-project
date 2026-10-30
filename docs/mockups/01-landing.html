@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280">
+<title>Basha Pass — Find a verified roommate in Dhaka</title>
+<!-- Bootstrap (vanilla) — native button styles; brand colors re-painted via CSS vars -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+  /* Brand tokens — re-paint Bootstrap primary/secondary to Trust Teal + Warm.
+     All token names + hex values are normative; see DESIGN.md frontmatter. */
+  :root,
+  [data-bs-theme="light"] {
+    /* Brand palette */
+    --bp-primary: #0F6E7A;        /* Trust Teal */
+    --bp-primary-rgb: 15, 110, 122;
+    --bp-primary-fg: #FFFFFF;
+    --bp-primary-soft: #E6F2F4;
+    --bp-secondary: #C56B4F;       /* Warm secondary */
+    --bp-secondary-rgb: 197, 107, 79;
+    --bp-secondary-soft: #FBEFE9;
+    --bp-success: #16A34A;
+    --bp-success-fg: #15803D;      /* AA-passing success text (4.95:1 on surface) */
+    --bp-warning-fg: #B45309;      /* AA-passing warning text (4.55:1 on surface) */
+    --bp-ink: #0F172A;
+    --bp-ink-2: #334155;
+    --bp-muted: #5A6878;
+    --bp-border: #E2E8F0;
+    --bp-surface: #FAFBFD;
+    --bp-canvas: #F4F6F9;
+
+    /* Button state tokens (normative; see DESIGN.md `button-states:` block) */
+    --bp-btn-primary-bg: #0F6E7A;
+    --bp-btn-primary-bg-hover: #0a525b;
+    --bp-btn-primary-bg-active: #083f47;
+    --bp-btn-primary-border-hover: #083f47;
+    --bp-btn-primary-border-active: #063238;
+    --bp-btn-on-dark-primary-bg-hover: #138892;
+    --bp-btn-on-dark-primary-border-hover: #117a87;
+    --bp-btn-outline-light-border: rgba(255,255,255,0.55);
+    --bp-btn-outline-light-border-hover: rgba(255,255,255,0.75);
+    --bp-btn-outline-light-border-active: rgba(255,255,255,0.85);
+    --bp-btn-outline-light-hover-bg: rgba(255,255,255,0.12);
+    --bp-btn-outline-light-active-bg: rgba(255,255,255,0.20);
+
+    /* Elevation tokens (normative; see DESIGN.md `elevation:` block) */
+    --bp-elev-card: 0 1px 2px rgba(15,23,42,0.04), 0 1px 3px rgba(15,23,42,0.06);
+    --bp-elev-card-hover: 0 12px 32px rgba(15,23,42,0.06);
+    --bp-elev-modal: 0 8px 24px rgba(15,23,42,0.10);
+    --bp-elev-toast: 0 6px 18px rgba(15,23,42,0.08);
+    --bp-elev-focus-ring: 0 0 0 2px #FFFFFF, 0 0 0 4px #0F6E7A;
+    /* Passport card uses a layered shadow stack (token + accent) — keep accent as a one-off */
+    --bp-elev-passport-stack: 0 10px 30px rgba(15,23,42,0.08), 0 30px 60px -20px rgba(15,110,122,0.18);
+
+    /* Decorative gradients (normative; see DESIGN.md `decorative-gradients:` block) */
+    --bp-grad-passport-card-photo: linear-gradient(135deg, #0F6E7A, #16A34A);
+    --bp-grad-hero-radial-primary: radial-gradient(1100px 480px at 80% -10%, rgba(15,110,122,0.10), transparent 60%);
+    --bp-grad-hero-radial-secondary: radial-gradient(700px 380px at 10% 20%, rgba(197,107,79,0.08), transparent 60%);
+    --bp-grad-cta-panel-radial: radial-gradient(700px 320px at 95% 105%, rgba(15,110,122,0.20), transparent 60%);
+    --bp-grad-how-card-radial-hover: radial-gradient(circle at top right, rgba(15, 110, 122, 0.18), transparent 70%);
+    --bp-grad-how-card-radial-rest: radial-gradient(circle at top right, rgba(15, 110, 122, 0.10), transparent 70%);
+
+    /* Soft-border token for tinted outlines (e.g., explainer panel) */
+    --bp-primary-soft-border: rgba(15,110,122,0.18);
+
+    /* Re-paint Bootstrap default colors to brand palette */
+    --bs-primary: var(--bp-primary);
+    --bs-primary-rgb: var(--bp-primary-rgb);
+    --bs-secondary: var(--bp-secondary);
+    --bs-secondary-rgb: var(--bp-secondary-rgb);
+    --bs-link-color: var(--bp-primary);
+    --bs-link-hover-color: var(--bp-btn-primary-bg-hover);
+    --bs-body-color: var(--bp-ink);
+    --bs-body-font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --bs-border-color: var(--bp-border);
+  }
+
+  /* Re-paint Bootstrap component variables so buttons pick up brand colors.
+     Bootstrap declares --bs-btn-bg etc. inside .btn-primary with hardcoded values,
+     so setting --bs-primary at :root doesn't reach the button. We override the
+     button's own CSS vars here — minimal, no other button styling.
+     All hover/active values reference --bp-btn-* tokens (normative). */
+  .btn-primary {
+    --bs-btn-bg: var(--bp-primary);
+    --bs-btn-border-color: var(--bp-primary);
+    --bs-btn-hover-bg: var(--bp-btn-primary-bg-hover);
+    --bs-btn-hover-border-color: var(--bp-btn-primary-border-hover);
+    --bs-btn-active-bg: var(--bp-btn-primary-bg-active);
+    --bs-btn-active-border-color: var(--bp-btn-primary-border-active);
+    --bs-btn-disabled-bg: var(--bp-primary);
+    --bs-btn-disabled-border-color: var(--bp-primary);
+  }
+  .btn-secondary {
+    --bs-btn-bg: var(--bp-secondary);
+    --bs-btn-border-color: var(--bp-secondary);
+    --bs-btn-hover-bg: #a85639;
+    --bs-btn-hover-border-color: #9c4f37;
+    --bs-btn-active-bg: #9c4f37;
+    --bs-btn-active-border-color: #823f2a;
+    --bs-btn-disabled-bg: var(--bp-secondary);
+    --bs-btn-disabled-border-color: var(--bp-secondary);
+  }
+  .btn-outline-secondary {
+    --bs-btn-color: var(--bp-secondary);
+    --bs-btn-border-color: var(--bp-secondary);
+    --bs-btn-hover-bg: var(--bp-secondary);
+    --bs-btn-hover-border-color: var(--bp-secondary);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-bg: var(--bp-secondary);
+    --bs-btn-active-border-color: var(--bp-secondary);
+    --bs-btn-active-color: #fff;
+  }
+  html, body { background: var(--bp-canvas); color: var(--bp-ink); }
+  body { font-size: 16px; line-height: 1.55; }
+
+  /* Top nav */
+  .bp-nav {
+    background: rgba(250, 251, 253, 0.85);
+    backdrop-filter: saturate(180%) blur(12px);
+    -webkit-backdrop-filter: saturate(180%) blur(12px);
+    border-bottom: 1px solid var(--bp-border);
+  }
+  .bp-brand {
+    font-weight: 700; letter-spacing: -0.01em; font-size: 18px;
+    color: var(--bp-ink); text-decoration: none;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .bp-brand__mark {
+    width: 32px; height: 32px;
+    background: var(--bp-primary); color: #fff;
+    border-radius: 8px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 16px;
+  }
+  .bp-nav__link {
+    color: var(--bp-ink-2); font-weight: 500; font-size: 15px;
+    padding: 8px 14px; border-radius: 8px; text-decoration: none;
+  }
+  .bp-nav__link:hover { background: var(--bp-surface); color: var(--bp-ink); }
+
+  /* Buttons — Bootstrap Lux theme; no custom overrides */
+
+  /* Hero */
+  .bp-hero {
+    position: relative;
+    background:
+      var(--bp-grad-hero-radial-primary),
+      var(--bp-grad-hero-radial-secondary),
+      var(--bp-canvas);
+    padding: 88px 0 72px;
+    overflow: hidden;
+  }
+  .bp-hero__eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--bp-primary-soft); color: var(--bp-primary);
+    font-weight: 600; font-size: 13px; letter-spacing: 0.04em;
+    text-transform: uppercase; padding: 6px 12px; border-radius: 999px;
+  }
+  .bp-hero__eyebrow .dot {
+    width: 6px; height: 6px; border-radius: 999px; background: var(--bp-primary);
+  }
+  .bp-hero__title {
+    font-weight: 700; font-size: 56px; line-height: 1.05; letter-spacing: -0.025em;
+    color: var(--bp-ink); margin: 20px 0 18px;
+    max-width: 720px;
+  }
+  .bp-hero__sub {
+    font-size: 19px; color: var(--bp-ink-2); max-width: 580px; margin: 0 0 28px;
+  }
+  .bp-hero__ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+  .bp-hero__ctas .btn { padding: 0.85rem 1.6rem; font-size: 1rem; }
+
+  /* Trust strip */
+  .bp-trust {
+    display: flex; gap: 28px; flex-wrap: wrap;
+    margin-top: 36px; padding-top: 24px;
+    border-top: 1px dashed var(--bp-border);
+    color: var(--bp-muted); font-size: 14px;
+  }
+  .bp-trust__item { display: inline-flex; align-items: center; gap: 8px; }
+  .bp-trust__item i { color: var(--bp-primary); font-size: 16px; }
+
+  /* Hero side card (preview mockup) */
+  .bp-passport-card {
+    background: #fff;
+    border: 1px solid var(--bp-border);
+    border-radius: 18px;
+    box-shadow: var(--bp-elev-card), var(--bp-elev-passport-stack);
+    padding: 22px;
+    position: relative;
+    transform: rotate(-1.5deg);
+  }
+  .bp-passport-card__head {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 14px;
+  }
+  .bp-passport-card__photo {
+    width: 56px; height: 56px; border-radius: 12px;
+    background: var(--bp-grad-passport-card-photo);
+    color: #fff; display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 20px;
+  }
+  .bp-passport-card__name { font-weight: 600; font-size: 17px; color: var(--bp-ink); margin: 0; }
+  .bp-passport-card__meta { font-size: 13px; color: var(--bp-muted); margin: 2px 0 0; }
+  .bp-passport-card__price {
+    font-weight: 700; font-size: 22px; letter-spacing: -0.01em;
+    color: var(--bp-ink); margin: 14px 0 4px;
+  }
+  .bp-passport-card__price small {
+    font-weight: 500; font-size: 13px; color: var(--bp-muted);
+  }
+  .bp-passport-card__chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 14px; }
+  .bp-chip {
+    font-size: 12px; font-weight: 600;
+    padding: 4px 10px; border-radius: 999px;
+    background: var(--bp-secondary-soft); color: var(--bp-secondary);
+  }
+  .bp-chip--soft {
+    background: var(--bp-primary-soft); color: var(--bp-primary);
+  }
+  .bp-passport-card__foot {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 12px; border-top: 1px dashed var(--bp-border);
+    font-size: 13px; color: var(--bp-muted);
+  }
+  .bp-verified-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--bp-primary); color: #fff;
+    font-size: 12px; font-weight: 600;
+    padding: 4px 10px; border-radius: 999px;
+  }
+  .bp-verified-pill i { font-size: 12px; }
+
+  /* Hero floating badge */
+  .bp-hero__float {
+    position: absolute; right: 8%; bottom: 20px;
+    background: #fff; border: 1px solid var(--bp-border); border-radius: 14px;
+    padding: 12px 16px; display: inline-flex; align-items: center; gap: 10px;
+    box-shadow: var(--bp-elev-toast);
+    font-size: 14px; font-weight: 500; color: var(--bp-ink);
+    transform: rotate(2deg);
+  }
+  .bp-hero__float .num { font-weight: 700; color: var(--bp-primary); font-size: 18px; }
+
+  /* Section heading */
+  .bp-section { padding: 96px 0; }
+  .bp-section--alt { background: #fff; border-top: 1px solid var(--bp-border); border-bottom: 1px solid var(--bp-border); }
+  .bp-section__eyebrow {
+    color: var(--bp-primary); font-weight: 600; font-size: 13px;
+    letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px;
+  }
+  .bp-section__title {
+    font-weight: 700; font-size: 40px; line-height: 1.1; letter-spacing: -0.02em;
+    color: var(--bp-ink); margin: 0 0 14px; max-width: 640px;
+  }
+  .bp-section__sub {
+    font-size: 18px; color: var(--bp-ink-2); margin: 0 0 48px; max-width: 620px;
+  }
+
+  /* How it works cards */
+  .bp-how-card {
+    position: relative;
+    overflow: hidden;
+    background: #fff; border: 1px solid var(--bp-border); border-radius: 16px;
+    padding: 28px; height: 100%;
+    transition: transform 160ms ease, box-shadow 160ms ease;
+  }
+  .bp-how-card::before {
+    content: "";
+    position: absolute;
+    top: 0; right: 0;
+    width: 140px; height: 140px;
+    background: var(--bp-grad-how-card-radial-rest);
+    pointer-events: none;
+    transition: opacity 160ms ease;
+  }
+  .bp-how-card > * { position: relative; z-index: 1; }
+  .bp-how-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--bp-elev-card-hover);
+  }
+  .bp-how-card:hover::before {
+    background: var(--bp-grad-how-card-radial-hover);
+  }
+  .bp-how-card__num {
+    width: 40px; height: 40px; border-radius: 12px;
+    background: var(--bp-primary-soft); color: var(--bp-primary);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 16px; margin-bottom: 18px;
+  }
+  .bp-how-card__icon {
+    width: 56px; height: 56px; border-radius: 14px;
+    background: var(--bp-primary-soft); color: var(--bp-primary);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 24px; margin-bottom: 16px;
+  }
+  .bp-how-card__title {
+    font-weight: 600; font-size: 18px; color: var(--bp-ink); margin: 0 0 8px;
+  }
+  .bp-how-card__body { font-size: 15px; color: var(--bp-ink-2); margin: 0; }
+
+  /* Stats strip */
+  .bp-stats {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 0; background: var(--bp-primary); color: #fff;
+    border-radius: 18px; padding: 32px 24px; margin-top: 56px;
+  }
+  .bp-stat { padding: 8px 18px; border-right: 1px solid rgba(255,255,255,0.18); }
+  .bp-stat:last-child { border-right: none; }
+  .bp-stat__num { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; line-height: 1; }
+  .bp-stat__label { font-size: 13px; opacity: 0.85; margin-top: 6px; }
+
+  /* Testimonials */
+  .bp-quote {
+    background: #fff; border: 1px solid var(--bp-border); border-radius: 16px;
+    padding: 28px; height: 100%;
+    position: relative;
+  }
+  .bp-quote__mark {
+    position: absolute; top: 18px; right: 22px;
+    font-family: Georgia, serif; font-size: 64px; line-height: 1;
+    color: var(--bp-primary-soft);
+  }
+  .bp-quote__body {
+    font-size: 17px; color: var(--bp-ink); margin: 0 0 20px; line-height: 1.55;
+  }
+  .bp-quote__person { display: flex; align-items: center; gap: 12px; }
+  .bp-avatar {
+    width: 40px; height: 40px; border-radius: 999px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 700; font-size: 15px;
+  }
+  .bp-avatar--1 { background: var(--bp-primary); }
+  .bp-avatar--2 { background: var(--bp-secondary); }
+  .bp-avatar--3 { background: var(--bp-success); }
+  .bp-quote__name { font-weight: 600; font-size: 14px; color: var(--bp-ink); margin: 0; }
+  .bp-quote__meta { font-size: 13px; color: var(--bp-muted); margin: 0; }
+
+  /* CTA panel */
+  .bp-cta {
+    background:
+      var(--bp-grad-cta-panel-radial),
+      var(--bp-ink);
+    color: #fff; border-radius: 20px;
+    padding: 44px 48px;
+    display: flex; align-items: center; justify-content: space-between; gap: 40px;
+    flex-wrap: wrap;
+  }
+  .bp-cta__copy { flex: 1 1 320px; min-width: 0; }
+  .bp-cta__title { font-weight: 700; font-size: 30px; line-height: 1.2; letter-spacing: -0.02em; margin: 0 0 8px; max-width: 520px; }
+  .bp-cta__sub { font-size: 16px; opacity: 0.80; margin: 0; max-width: 480px; line-height: 1.5; }
+  .bp-cta__actions {
+    display: flex; flex-direction: row; gap: 12px; flex-wrap: wrap;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .bp-cta__actions .btn {
+    padding: 0.85rem 1.6rem;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 10px;
+    line-height: 1.2;
+  }
+
+  /* CTA panel: trust teal primary on dark (pops against ink panel),
+     white outline ghost as the secondary action.
+     All values reference --bp-btn-* tokens (normative; see DESIGN.md `button-states:`). */
+  .bp-cta .btn-primary {
+    --bs-btn-bg: var(--bp-primary);
+    --bs-btn-border-color: var(--bp-primary);
+    --bs-btn-hover-bg: var(--bp-btn-on-dark-primary-bg-hover);
+    --bs-btn-hover-border-color: var(--bp-btn-on-dark-primary-border-hover);
+    --bs-btn-active-bg: var(--bp-btn-primary-bg-hover);
+    --bs-btn-active-border-color: var(--bp-btn-primary-border-hover);
+  }
+  .bp-cta .btn-outline-light {
+    --bs-btn-color: #fff;
+    --bs-btn-border-color: var(--bp-btn-outline-light-border);
+    --bs-btn-hover-bg: var(--bp-btn-outline-light-hover-bg);
+    --bs-btn-hover-border-color: var(--bp-btn-outline-light-border-hover);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-bg: var(--bp-btn-outline-light-active-bg);
+    --bs-btn-active-border-color: var(--bp-btn-outline-light-border-active);
+    --bs-btn-active-color: #fff;
+  }
+
+  /* Verification explainer */
+  .bp-explainer {
+    background: var(--bp-primary-soft); border: 1px solid var(--bp-primary-soft-border);
+    border-radius: 18px; padding: 28px; margin-top: 48px;
+    display: flex; gap: 20px; align-items: flex-start;
+  }
+  .bp-explainer__icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: var(--bp-primary); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+  }
+  .bp-explainer__title { font-weight: 600; font-size: 17px; color: var(--bp-ink); margin: 0 0 4px; }
+  .bp-explainer__body { font-size: 15px; color: var(--bp-ink-2); margin: 0; }
+
+  /* Footer */
+  footer {
+    background: #fff; border-top: 1px solid var(--bp-border);
+    padding: 56px 0 32px; margin-top: 0;
+  }
+  .bp-foot__brand { font-weight: 700; font-size: 18px; color: var(--bp-ink); margin-bottom: 12px; }
+  .bp-foot__tag { font-size: 14px; color: var(--bp-muted); margin: 0; max-width: 280px; }
+  .bp-foot__heading {
+    font-weight: 600; font-size: 13px; color: var(--bp-ink);
+    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px;
+  }
+  .bp-foot__link {
+    display: block; color: var(--bp-ink-2); font-size: 14px;
+    text-decoration: none; padding: 4px 0;
+  }
+  .bp-foot__link:hover { color: var(--bp-primary); }
+  .bp-foot__bottom {
+    margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--bp-border);
+    display: flex; justify-content: space-between; font-size: 13px; color: var(--bp-muted);
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="bp-nav">
+  <div class="container-xl py-3">
+    <div class="d-flex align-items-center justify-content-between">
+      <a class="bp-brand" href="#">
+        <span class="bp-brand__mark">B</span>
+        Basha Pass
+      </a>
+      <div class="d-flex align-items-center gap-2">
+        <a class="bp-nav__link d-none d-lg-inline-block" href="#how">How it works</a>
+        <a class="bp-nav__link d-none d-lg-inline-block" href="#stories">Stories</a>
+        <a class="bp-nav__link d-none d-lg-inline-block" href="#about">About</a>
+        <a class="btn btn-outline-secondary btn-sm" href="#login">Log in</a>
+        <a class="btn btn-primary btn-sm" href="#signup">Create account</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="bp-hero">
+  <div class="container-xl">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-7">
+        <span class="bp-hero__eyebrow">
+          <span class="dot"></span> Verified tenants · Dhaka
+        </span>
+        <h1 class="bp-hero__title">
+          Find a verified roommate in Dhaka — without handing your NID to strangers.
+        </h1>
+        <p class="bp-hero__sub">
+          Verified tenants and verified listers, side by side. Browse seats and rooms, reach out off-platform, and skip the paperwork loop on every move.
+        </p>
+        <div class="bp-hero__ctas">
+          <a class="btn btn-primary" href="#signup">Create free account</a>
+          <a class="btn btn-outline-secondary" href="#how">See how it works</a>
+        </div>
+        <div class="bp-trust">
+          <span class="bp-trust__item"><i class="bi bi-shield-check"></i> NID verified by police portal</span>
+          <span class="bp-trust__item"><i class="bi bi-clock-history"></i> Reviewed in ~24 hours</span>
+          <span class="bp-trust__item"><i class="bi bi-chat-square-dots"></i> Off-platform contact</span>
+        </div>
+      </div>
+      <div class="col-lg-5 d-none d-lg-block">
+        <div class="bp-passport-card">
+          <div class="bp-passport-card__head">
+            <div class="d-flex gap-3 align-items-center">
+              <div class="bp-passport-card__photo">R</div>
+              <div>
+                <p class="bp-passport-card__name">Rimon H.</p>
+                <p class="bp-passport-card__meta">Mirpur · verified 4 months</p>
+              </div>
+            </div>
+            <span class="bp-verified-pill">
+              <i class="bi bi-shield-fill-check"></i> Verified
+            </span>
+          </div>
+          <div class="bp-passport-card__price">
+            ৳4,500 <small>/ seat · from Sept 15</small>
+          </div>
+          <div class="bp-passport-card__chips">
+            <span class="bp-chip">Non-smoker</span>
+            <span class="bp-chip">Early bird</span>
+            <span class="bp-chip">Student</span>
+            <span class="bp-chip bp-chip--soft">Matches 5 of 6</span>
+          </div>
+          <div class="bp-passport-card__foot">
+            <span><i class="bi bi-geo-alt me-1"></i> Near campus, 2-min walk</span>
+            <span><i class="bi bi-arrow-right-circle-fill me-1"></i> Reach out</span>
+          </div>
+        </div>
+        <div class="bp-hero__float">
+          <i class="bi bi-shield-fill-check" style="color: var(--bp-success); font-size: 18px;"></i>
+          <span><span class="num">142</span> verified listers live</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" class="bp-section">
+  <div class="container-xl">
+    <div class="text-center mx-auto" style="max-width: 720px;">
+      <p class="bp-section__eyebrow">How it works</p>
+      <h2 class="bp-section__title mx-auto">Three steps. No group posts, no NID handoffs.</h2>
+      <p class="bp-section__sub mx-auto">A verified passport is your portable identity across rentals. Build it once, use it everywhere on Basha Pass.</p>
+    </div>
+
+    <div class="row g-4 mt-2">
+      <div class="col-lg-4">
+        <div class="bp-how-card">
+          <div class="bp-how-card__num">1</div>
+          <div class="bp-how-card__icon"><i class="bi bi-person-vcard"></i></div>
+          <h3 class="bp-how-card__title">Verify your passport</h3>
+          <p class="bp-how-card__body">Upload NID front, NID back, and a selfie. Our team routes it to the police portal — verdict comes back within ~24 hours.</p>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="bp-how-card">
+          <div class="bp-how-card__num">2</div>
+          <div class="bp-how-card__icon"><i class="bi bi-funnel"></i></div>
+          <h3 class="bp-how-card__title">Browse verified seats &amp; rooms</h3>
+          <p class="bp-how-card__body">Filter by area, budget, kind. Each card shows kind, rent, area, lister preferences, and your match score out of 6.</p>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="bp-how-card">
+          <div class="bp-how-card__num">3</div>
+          <div class="bp-how-card__icon"><i class="bi bi-telephone-outbound"></i></div>
+          <h3 class="bp-how-card__title">Reach out off-platform</h3>
+          <p class="bp-how-card__body">Tap a card to see contact info. Message directly via email, phone, or WhatsApp. We never run in-app threads.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats strip -->
+    <div class="bp-stats">
+      <div class="bp-stat">
+        <div class="bp-stat__num">৳500</div>
+        <div class="bp-stat__label">Minimum rent tracked</div>
+      </div>
+      <div class="bp-stat">
+        <div class="bp-stat__num">13</div>
+        <div class="bp-stat__label">Dhaka sub-areas</div>
+      </div>
+      <div class="bp-stat">
+        <div class="bp-stat__num">~24h</div>
+        <div class="bp-stat__label">Verification turnaround</div>
+      </div>
+      <div class="bp-stat">
+        <div class="bp-stat__num">100%</div>
+        <div class="bp-stat__label">NID-verified listers</div>
+      </div>
+    </div>
+
+    <!-- Verification explainer -->
+    <div class="bp-explainer">
+      <div class="bp-explainer__icon"><i class="bi bi-shield-lock"></i></div>
+      <div>
+        <h3 class="bp-explainer__title">Why a passport?</h3>
+        <p class="bp-explainer__body">Verification is shared, not stored next to anyone you'd rather not meet. The portal reaches its verdict out-of-band; we only mirror what it tells us. Your NID photos live in private storage and never appear on your listing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="stories" class="bp-section bp-section--alt">
+  <div class="container-xl">
+    <p class="bp-section__eyebrow">Stories</p>
+    <h2 class="bp-section__title">From verified listers and seekers</h2>
+    <p class="bp-section__sub">Three quick reads from people who moved differently because of it.</p>
+
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="bp-quote">
+          <span class="bp-quote__mark">&ldquo;</span>
+          <p class="bp-quote__body">I needed a male mess seat near campus. The verified badge did what a dozen group-posts couldn't — I reached out the same evening.</p>
+          <div class="bp-quote__person">
+            <div class="bp-avatar bp-avatar--1">R</div>
+            <div>
+              <p class="bp-quote__name">Rimon H.</p>
+              <p class="bp-quote__meta">Student · Mirpur</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="bp-quote">
+          <span class="bp-quote__mark">&ldquo;</span>
+          <p class="bp-quote__body">Lister side: I posted a room, three verified seekers wrote within hours. Reach-out was off-platform, kept the conversation simple.</p>
+          <div class="bp-quote__person">
+            <div class="bp-avatar bp-avatar--2">A</div>
+            <div>
+              <p class="bp-quote__name">Anika T.</p>
+              <p class="bp-quote__meta">Private job · Mohammadpur</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="bp-quote">
+          <span class="bp-quote__mark">&ldquo;</span>
+          <p class="bp-quote__body">I moved jobs twice in a year. Same passport both times — no photocopy loop, no second police submission, no friction.</p>
+          <div class="bp-quote__person">
+            <div class="bp-avatar bp-avatar--3">S</div>
+            <div>
+              <p class="bp-quote__name">Sabbir R.</p>
+              <p class="bp-quote__meta">Garments · Banani</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="bp-section" style="padding: 56px 0;">
+  <div class="container-xl">
+    <div class="bp-cta">
+      <div class="bp-cta__copy">
+        <h2 class="bp-cta__title">Ready to move differently?</h2>
+        <p class="bp-cta__sub">Free at launch. Verification takes about ten minutes to start, ~24 hours to clear. Reach out only when it does.</p>
+      </div>
+      <div class="bp-cta__actions">
+        <a class="btn btn-primary" href="#signup">Create free account</a>
+        <a class="btn btn-outline-light" href="#login">I already have one</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container-xl">
+    <div class="row g-5">
+      <div class="col-lg-4">
+        <div class="bp-foot__brand">Basha Pass</div>
+        <p class="bp-foot__tag">A verified to-let + matching layer for urban Bangladesh. Tenant Passport · Dhaka.</p>
+      </div>
+      <div class="col-6 col-lg-2">
+        <p class="bp-foot__heading">Product</p>
+        <a class="bp-foot__link" href="#how">How it works</a>
+        <a class="bp-foot__link" href="#stories">Stories</a>
+        <a class="bp-foot__link" href="#browse">Browse</a>
+      </div>
+      <div class="col-6 col-lg-2">
+        <p class="bp-foot__heading">Company</p>
+        <a class="bp-foot__link" href="#about">About</a>
+        <a class="bp-foot__link" href="#contact">Contact</a>
+      </div>
+      <div class="col-6 col-lg-2">
+        <p class="bp-foot__heading">Trust</p>
+        <a class="bp-foot__link" href="#privacy">Privacy</a>
+        <a class="bp-foot__link" href="#terms">Terms</a>
+        <a class="bp-foot__link" href="#security">Security</a>
+      </div>
+      <div class="col-6 col-lg-2">
+        <p class="bp-foot__heading">Support</p>
+        <a class="bp-foot__link" href="#help">Help center</a>
+        <a class="bp-foot__link" href="#contact">Email us</a>
+      </div>
+    </div>
+    <div class="bp-foot__bottom">
+      <span>&copy; 2026 Basha Pass · Dhaka</span>
+      <span>English · v1 launch</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

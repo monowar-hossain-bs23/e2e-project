@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard — Basha Pass (Verification rejected)</title>
+<!-- Bootstrap (vanilla) — native button styles; brand colors re-painted via CSS vars -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+  :root,
+  [data-bs-theme="light"] {
+    /* Brand tokens (mirrors DESIGN.md frontmatter) */
+    --bp-primary: #0F6E7A;
+    --bp-primary-rgb: 15, 110, 122;
+    --bp-primary-fg: #FFFFFF;
+    --bp-primary-soft: #E6F2F4;
+    --bp-primary-soft-border: rgba(15,110,122,0.18);
+    --bp-secondary: #C56B4F;
+    --bp-secondary-rgb: 197, 107, 79;
+    --bp-secondary-soft: #FBEFE9;
+    --bp-success: #16A34A;
+    --bp-success-fg: #15803D;
+    --bp-warning-fg: #B45309;
+    --bp-warning-soft: rgba(180, 83, 9, 0.08);
+    --bp-warning-soft-border: rgba(180, 83, 9, 0.25);
+    --bp-ink: #0F172A;
+    --bp-ink-2: #334155;
+    --bp-muted: #5A6878;
+    --bp-border: #E2E8F0;
+    --bp-surface: #FAFBFD;
+    --bp-canvas: #F4F6F9;
+
+    /* Button state tokens */
+    --bp-btn-primary-bg: #0F6E7A;
+    --bp-btn-primary-bg-hover: #0a525b;
+    --bp-btn-primary-bg-active: #083f47;
+    --bp-btn-primary-border-hover: #083f47;
+    --bp-btn-primary-border-active: #063238;
+    --bp-btn-disabled-bg: #cbd5e1;
+    --bp-btn-disabled-border: #cbd5e1;
+    --bp-btn-disabled-fg: #64748b;
+
+    /* Elevation tokens */
+    --bp-elev-card: 0 1px 2px rgba(15,23,42,0.04), 0 1px 3px rgba(15,23,42,0.06);
+    --bp-elev-focus-ring: 0 0 0 2px #FFFFFF, 0 0 0 4px #0F6E7A;
+
+    /* Re-paint Bootstrap default colors */
+    --bs-primary: var(--bp-primary);
+    --bs-primary-rgb: var(--bp-primary-rgb);
+    --bs-link-color: var(--bp-primary);
+    --bs-link-hover-color: var(--bp-btn-primary-bg-hover);
+    --bs-body-color: var(--bp-ink);
+    --bs-body-font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Bengali", SolaimanLipi, sans-serif;
+    --bs-border-color: var(--bp-border);
+  }
+
+  /* Bootstrap button re-paint (with disabled state for cooldown) */
+  .btn-primary {
+    --bs-btn-bg: var(--bp-primary);
+    --bs-btn-border-color: var(--bp-primary);
+    --bs-btn-hover-bg: var(--bp-btn-primary-bg-hover);
+    --bs-btn-hover-border-color: var(--bp-btn-primary-border-hover);
+    --bs-btn-active-bg: var(--bp-btn-primary-bg-active);
+    --bs-btn-active-border-color: var(--bp-btn-primary-border-active);
+    --bs-btn-disabled-bg: var(--bp-btn-disabled-bg);
+    --bs-btn-disabled-border-color: var(--bp-btn-disabled-border);
+    --bs-btn-disabled-color: var(--bp-btn-disabled-fg);
+  }
+
+  html, body { background: var(--bp-canvas); color: var(--bp-ink); }
+  body { font-size: 16px; line-height: 1.55; }
+
+  /* Top nav (mirrors dashboard pattern) */
+  .bp-nav {
+    background: rgba(250, 251, 253, 0.92);
+    backdrop-filter: saturate(180%) blur(12px);
+    border-bottom: 1px solid var(--bp-border);
+  }
+  .bp-brand {
+    font-weight: 700; letter-spacing: -0.01em; font-size: 18px;
+    color: var(--bp-ink); text-decoration: none;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .bp-brand__mark {
+    width: 32px; height: 32px;
+    background: var(--bp-primary); color: #fff;
+    border-radius: 8px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 16px;
+  }
+  .bp-nav__link {
+    color: var(--bp-ink-2); font-weight: 500; font-size: 15px;
+    padding: 8px 14px; border-radius: 8px; text-decoration: none;
+  }
+  .bp-nav__link:hover { background: var(--bp-surface); color: var(--bp-ink); }
+  .bp-nav__link[aria-disabled="true"] { color: var(--bp-muted); pointer-events: none; }
+  .bp-avatar {
+    width: 32px; height: 32px; border-radius: 999px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 700; font-size: 13px;
+    background: var(--bp-secondary);
+  }
+
+  /* Rejection card — the highest-emotion surface in the product */
+  .bp-card {
+    background: #fff; border: 1px solid var(--bp-border);
+    border-radius: 16px;
+    box-shadow: var(--bp-elev-card);
+  }
+  .bp-card__body { padding: 32px; }
+
+  .bp-rejection {
+    border-left: 4px solid var(--bp-warning-fg);
+    background: linear-gradient(180deg, var(--bp-warning-soft) 0%, #fff 70%);
+  }
+
+  .bp-rejection__icon {
+    width: 56px; height: 56px;
+    background: rgba(180, 83, 9, 0.12);
+    color: var(--bp-warning-fg);
+    border-radius: 999px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    margin-bottom: 1.25rem;
+  }
+
+  .bp-rejection__eyebrow {
+    font-size: 12px; color: var(--bp-warning-fg);
+    font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; margin-bottom: 0.5rem;
+  }
+
+  .bp-rejection__title {
+    font-weight: 700; font-size: 26px; letter-spacing: -0.015em;
+    color: var(--bp-ink); margin: 0 0 0.65rem;
+    line-height: 1.2;
+  }
+
+  .bp-rejection__copy {
+    font-size: 15px; color: var(--bp-ink-2);
+    line-height: 1.55;
+    max-width: 520px;
+    margin: 0 0 1.5rem;
+  }
+
+  /* Rejection reason — generic-only on user-facing surface.
+     Internal reason codes (gender_mismatch, etc.) live in admin queue only. */
+  .bp-rejection__reason {
+    background: #fff;
+    border: 1px solid var(--bp-border);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    font-size: 14px;
+    color: var(--bp-ink-2);
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 0.65rem;
+    align-items: flex-start;
+  }
+  .bp-rejection__reason i {
+    color: var(--bp-warning-fg);
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+  .bp-rejection__reason strong {
+    color: var(--bp-ink);
+    font-weight: 700;
+  }
+
+  /* Cooldown panel — explains wait + shows timer */
+  .bp-cooldown {
+    background: var(--bp-surface);
+    border: 1px solid var(--bp-border);
+    border-radius: 12px;
+    padding: 1.25rem 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+  .bp-cooldown__label {
+    font-size: 12px;
+    color: var(--bp-muted);
+    font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .bp-cooldown__time {
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    font-size: 30px;
+    letter-spacing: -0.02em;
+    color: var(--bp-ink);
+    margin-bottom: 0.4rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .bp-cooldown__helper {
+    font-size: 13px;
+    color: var(--bp-ink-2);
+    margin: 0;
+  }
+
+  /* Action row — resubmit CTA disabled until cooldown expires */
+  .bp-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    margin-top: 1.5rem;
+  }
+  .bp-actions .btn-primary {
+    padding: 0.85rem 1rem;
+    font-weight: 600;
+    font-size: 15px;
+    width: 100%;
+  }
+  .bp-actions .secondary-link {
+    text-align: center;
+    font-size: 14px;
+    color: var(--bp-primary);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .bp-actions .secondary-link:hover { text-decoration: underline; }
+
+  /* Help contact — escape hatch for users who think this is wrong */
+  .bp-help {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--bp-border);
+    font-size: 13px;
+    color: var(--bp-muted);
+    text-align: center;
+  }
+  .bp-help a { color: var(--bp-primary); font-weight: 600; text-decoration: none; }
+  .bp-help a:hover { text-decoration: underline; }
+
+  /* Section heading */
+  .section-eyebrow {
+    font-size: 12px; color: var(--bp-primary);
+    font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .section-title {
+    font-weight: 700; font-size: 22px; letter-spacing: -0.015em;
+    color: var(--bp-ink); margin: 0 0 0.35rem;
+  }
+  .section-lede {
+    font-size: 15px; color: var(--bp-muted);
+    margin: 0 0 1.5rem;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- MOCKUP: 21-dashboard-rejected.html — Dashboard hub              -->
+<!--   STATE: logged-in, unverified, REJECTED.                       -->
+<!--                                                               -->
+<!-- IA surface #6 (Dashboard / hub), rejected substate.            -->
+<!-- Highest-emotion surface in the product.                       -->
+<!--                                                               -->
+<!-- Tone decisions (per architect's recommendation):              -->
+<!--   • Neutral-informational, not apologetic                      -->
+<!--   • Generic copy at user level (no specific reason code)       -->
+<!--   • Static cooldown (no live timer JS) — passion-project scale -->
+<!--                                                               -->
+<!-- Privacy/anti-scam decision:                                    -->
+<!--   Internal reason codes (gender_mismatch, illegible, etc.)     -->
+<!--   are NEVER shown to rejected users. Specific reasons are       -->
+<!--   visible only in the admin queue (#22). This prevents         -->
+<!--   scammers from iterating against specific checks.             -->
+<!-- ============================================================ -->
+<nav class="bp-nav">
+  <div class="container py-3 d-flex align-items-center justify-content-between gap-3 flex-wrap">
+    <a href="#" class="bp-brand" aria-label="Basha Pass home">
+      <span class="bp-brand__mark" aria-hidden="true">B</span>
+      Basha Pass
+    </a>
+    <div class="d-flex align-items-center gap-1">
+      <a href="#" class="bp-nav__link" aria-disabled="true" tabindex="-1">Browse</a>
+      <a href="#" class="bp-nav__link">Profile</a>
+      <a href="#" class="bp-nav__link">Logout</a>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <span class="bp-avatar" aria-hidden="true">M</span>
+      <span style="font-size: 14px; font-weight: 600; color: var(--bp-ink-2);">Monowar</span>
+    </div>
+  </div>
+</nav>
+
+<main class="container py-4 py-md-5">
+  <!-- Welcome / greeting — kept neutral, no congratulations -->
+  <div class="mb-4">
+    <div class="section-eyebrow">Verification</div>
+    <h1 class="section-title">Hi, Monowar</h1>
+    <p class="section-lede">Your passport submission needs another look. See details below.</p>
+  </div>
+
+  <!-- Rejection card -->
+  <section class="bp-card bp-rejection mb-4" aria-labelledby="rejection-title">
+    <div class="bp-card__body">
+      <div class="bp-rejection__icon" aria-hidden="true">
+        <i class="bi bi-exclamation-circle"></i>
+      </div>
+
+      <div class="bp-rejection__eyebrow">Submission not approved</div>
+      <h2 id="rejection-title" class="bp-rejection__title">We couldn't verify your submission</h2>
+
+      <p class="bp-rejection__copy">
+        After review, we weren't able to verify the documents and information you submitted. This is uncommon — most submissions are approved on the first try.
+      </p>
+
+      <!-- Generic reason explanation (no specific reason code shown to user) -->
+      <div class="bp-rejection__reason" role="note">
+        <i class="bi bi-info-circle" aria-hidden="true"></i>
+        <div>
+          <strong>What happens next:</strong> You can resubmit your passport after a short cooldown. Your phone number is preserved — you'll only need to re-upload your documents.
+        </div>
+      </div>
+
+      <!-- Cooldown panel — static countdown (server-rendered; no JS timer at v1) -->
+      <div class="bp-cooldown" aria-labelledby="cooldown-label">
+        <div id="cooldown-label" class="bp-cooldown__label">You can resubmit in</div>
+        <div class="bp-cooldown__time" aria-live="polite">23 hours, 14 minutes</div>
+        <p class="bp-cooldown__helper">
+          This cooldown helps prevent repeated submissions and keeps the queue fair for everyone.
+        </p>
+      </div>
+
+      <!-- Action row — CTA disabled until cooldown expires -->
+      <div class="bp-actions">
+        <button type="button" class="btn btn-primary" disabled aria-disabled="true">
+          Resubmit passport <i class="bi bi-lock ms-1" aria-hidden="true"></i>
+        </button>
+        <a href="/verification/step/phone/" class="secondary-link" aria-disabled="true" tabindex="-1" style="color: var(--bp-muted);">
+          View your previous submission
+        </a>
+      </div>
+
+      <!-- Help escape hatch — for users who believe this is an error -->
+      <div class="bp-help">
+        Think this is a mistake? <a href="mailto:hello@bashapass.bd">Contact us</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+</body>
+</html>

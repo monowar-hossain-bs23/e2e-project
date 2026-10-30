@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280">
+<title>Basha Pass — Create account</title>
+<!-- Bootstrap (vanilla) — native button styles; brand colors re-painted via CSS vars -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+  /* Brand tokens */
+  :root,
+  [data-bs-theme="light"] {
+    --bp-primary: #0F6E7A;
+    --bp-primary-rgb: 15, 110, 122;
+    --bp-primary-fg: #FFFFFF;
+    --bp-primary-soft: #E6F2F4;
+    --bp-secondary: #C56B4F;
+    --bp-secondary-rgb: 197, 107, 79;
+    --bp-secondary-soft: #FBEFE9;
+    --bp-success: #16A34A;
+    --bp-ink: #0F172A;
+    --bp-ink-2: #334155;
+    --bp-muted: #5A6878;
+    --bp-border: #E2E8F0;
+    --bp-surface: #FAFBFD;
+    --bp-canvas: #F4F6F9;
+
+    --bs-primary: var(--bp-primary);
+    --bs-primary-rgb: var(--bp-primary-rgb);
+    --bs-secondary: var(--bp-secondary);
+    --bs-secondary-rgb: var(--bp-secondary-rgb);
+    --bs-link-color: var(--bp-primary);
+    --bs-link-hover-color: #0a525b;
+    --bs-body-color: var(--bp-ink);
+    --bs-body-font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Bengali", SolaimanLipi, sans-serif;
+    --bs-border-color: var(--bp-border);
+  }
+
+  .btn-primary {
+    --bs-btn-bg: var(--bp-primary);
+    --bs-btn-border-color: var(--bp-primary);
+    --bs-btn-hover-bg: #0a525b;
+    --bs-btn-hover-border-color: #083f47;
+    --bs-btn-active-bg: #083f47;
+    --bs-btn-active-border-color: #063238;
+    --bs-btn-disabled-bg: var(--bp-primary);
+    --bs-btn-disabled-border-color: var(--bp-primary);
+  }
+  .btn-outline-primary {
+    --bs-btn-color: var(--bp-primary);
+    --bs-btn-border-color: var(--bp-primary);
+    --bs-btn-hover-bg: var(--bp-primary);
+    --bs-btn-hover-border-color: var(--bp-primary);
+    --bs-btn-hover-color: #fff;
+  }
+
+  body { background: var(--bp-canvas); }
+
+  /* Auth surface shell */
+  .auth-shell {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #E6F2F4 0%, #FAFBFD 60%);
+    display: flex;
+    align-items: stretch;
+  }
+  .auth-brand-pane {
+    flex: 1 1 45%;
+    background: linear-gradient(160deg, #0F6E7A 0%, #0a525b 100%);
+    color: #fff;
+    padding: 3rem 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .auth-form-pane {
+    flex: 1 1 55%;
+    padding: 3rem 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bp-surface);
+  }
+  .auth-form {
+    width: 100%;
+    max-width: 420px;
+  }
+  .auth-form h1 {
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.5rem;
+  }
+  .auth-form .subtitle {
+    color: var(--bp-muted);
+    margin-bottom: 2rem;
+  }
+  .auth-form .form-label {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--bp-ink-2);
+    margin-bottom: 0.35rem;
+  }
+  .auth-form .form-control {
+    padding: 0.65rem 0.85rem;
+    border-color: var(--bp-border);
+    background: #fff;
+  }
+  .auth-form .form-control:focus {
+    border-color: var(--bp-primary);
+    box-shadow: 0 0 0 3px rgba(15, 110, 122, 0.15);
+  }
+  .auth-form .form-helper {
+    color: var(--bp-muted);
+    font-size: 12px;
+    margin-top: 0.35rem;
+  }
+  .auth-form .btn-primary { padding: 0.7rem 1rem; font-weight: 600; }
+  .auth-form .alt-link {
+    color: var(--bp-muted);
+    font-size: 14px;
+    margin-top: 1.25rem;
+    text-align: center;
+  }
+  .auth-form .alt-link a { font-weight: 600; }
+
+  .brand-mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: #fff;
+    text-decoration: none;
+  }
+  .brand-mark .logo-dot {
+    width: 12px; height: 12px;
+    background: #fff;
+    border-radius: 2px;
+    transform: rotate(45deg);
+  }
+  .brand-pane-hero {
+    max-width: 480px;
+  }
+  .brand-pane-hero h2 {
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    margin-bottom: 1rem;
+  }
+  .brand-pane-hero p {
+    font-size: 16px;
+    line-height: 1.55;
+    opacity: 0.9;
+    margin-bottom: 1.5rem;
+  }
+  .brand-pane-pillars {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  .pillar {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 0.85rem;
+  }
+  .pillar .num {
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: #E6F2F4;
+  }
+  .pillar .label {
+    font-size: 12px;
+    opacity: 0.85;
+    margin-top: 0.15rem;
+  }
+  .brand-pane-footer {
+    font-size: 12px;
+    opacity: 0.7;
+  }
+  .lang-toggle {
+    background: transparent;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 6px;
+    padding: 0.25rem 0.6rem;
+    font-size: 12px;
+  }
+
+  /* Password meter (for signup + change-password) */
+  .pw-meter {
+    height: 4px;
+    background: var(--bp-border);
+    border-radius: 2px;
+    margin-top: 0.5rem;
+    overflow: hidden;
+  }
+  .pw-meter-bar {
+    height: 100%;
+    width: 60%;
+    background: var(--bp-secondary);
+    border-radius: 2px;
+    transition: width .15s;
+  }
+  .pw-rule {
+    font-size: 12px;
+    color: var(--bp-muted);
+    padding-left: 1.25rem;
+    position: relative;
+    line-height: 1.55;
+  }
+  .pw-rule.met::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--bp-success);
+    font-weight: 700;
+  }
+  .pw-rule.unmet::before {
+    content: "·";
+    position: absolute;
+    left: 0;
+    color: var(--bp-muted);
+    font-weight: 700;
+  }
+
+  /* Welcome full-bleed teal */
+  .welcome-shell {
+    min-height: 100vh;
+    background: linear-gradient(160deg, #0F6E7A 0%, #0a525b 100%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+  }
+  .welcome-card {
+    max-width: 540px;
+    text-align: center;
+  }
+  .welcome-card .welcome-mark {
+    width: 56px; height: 56px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    font-size: 28px;
+  }
+  .welcome-card h1 {
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    margin-bottom: 1rem;
+  }
+  .welcome-card .lede {
+    font-size: 17px;
+    line-height: 1.55;
+    opacity: 0.92;
+    margin-bottom: 2rem;
+  }
+  .welcome-card .btn-primary {
+    background: #fff;
+    color: var(--bp-primary);
+    border-color: #fff;
+    padding: 0.85rem 1.5rem;
+    font-weight: 700;
+    font-size: 16px;
+  }
+  .welcome-card .btn-primary:hover {
+    background: #F0F3F7;
+    border-color: #F0F3F7;
+    color: var(--bp-primary);
+  }
+  .welcome-skip {
+    display: inline-block;
+    margin-top: 1.25rem;
+    color: rgba(255,255,255,0.7);
+    font-size: 14px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* Neutral error block */
+  .alert-neutral {
+    background: rgba(217, 119, 6, 0.08);
+    color: #B45309;
+    border: 1px solid rgba(217, 119, 6, 0.2);
+    border-radius: 8px;
+    padding: 0.65rem 0.85rem;
+    font-size: 14px;
+    margin-bottom: 1rem;
+  }
+
+  /* Success microcopy toast */
+  .micro-toast {
+    background: rgba(22, 163, 74, 0.1);
+    color: #15803D;
+    border: 1px solid rgba(22, 163, 74, 0.25);
+    border-radius: 8px;
+    padding: 0.5rem 0.85rem;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- MOCKUP: 06-signup.html — Sign up (IA surface #2)               -->
+<!-- Journey step: Flow A · Rimon · step 2                          -->
+<!-- ============================================================ -->
+<div class="auth-shell">
+  <aside class="auth-brand-pane" aria-label="Brand context">
+    <header class="d-flex align-items-center justify-content-between">
+      <a href="#" class="brand-mark">
+        <span class="logo-dot" aria-hidden="true"></span>
+        Basha Pass
+      </a>
+      <button type="button" class="lang-toggle" aria-label="Switch language">EN · বাংলা</button>
+    </header>
+
+    <div class="brand-pane-hero">
+      <h2>Find a verified roommate in Dhaka — without handing your NID to strangers.</h2>
+      <p>One passport, verified once. Use it for every move in the city.</p>
+      <div class="brand-pane-pillars" role="list">
+        <div class="pillar" role="listitem">
+          <div class="num">1</div>
+          <div class="label">Verify your NID + selfie</div>
+        </div>
+        <div class="pillar" role="listitem">
+          <div class="num">2</div>
+          <div class="label">Browse verified listings</div>
+        </div>
+        <div class="pillar" role="listitem">
+          <div class="num">3</div>
+          <div class="label">Connect off-platform</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="brand-pane-footer">
+      © 2026 Basha Pass · Free at launch · Dhaka only
+    </div>
+  </aside>
+
+  <main class="auth-form-pane">
+    <div class="auth-form">
+      <h1>Create your account</h1>
+      <p class="subtitle">We'll send a 6-digit code to confirm your email.</p>
+
+      <form action="/accounts/signup/" method="post" novalidate>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" id="email" name="email" class="form-control"
+                 placeholder="you@example.com" autocomplete="email"
+                 required aria-describedby="email-helper">
+          <div id="email-helper" class="form-helper">Use an email you check — we'll send a code there.</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="display-name" class="form-label">Display name</label>
+          <input type="text" id="display-name" name="display_name" class="form-control"
+                 placeholder="e.g. Monowar" autocomplete="nickname" minlength="2" maxlength="32"
+                 pattern="^[A-Za-z0-9 ._\-']+$" required aria-describedby="display-name-helper">
+          <div id="display-name-helper" class="form-helper">What other tenants will see on your listings. 2–32 characters. You can change this later in your profile.</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" id="password" name="password" class="form-control"
+                 placeholder="Choose a password" autocomplete="new-password"
+                 required aria-describedby="password-rules pw-meter-label">
+          <div class="pw-meter" aria-hidden="true"><div class="pw-meter-bar"></div></div>
+          <div id="pw-meter-label" class="form-helper mt-2">Strength: <strong>Fair</strong></div>
+
+          <ul class="list-unstyled mt-2 mb-0" id="password-rules" aria-label="Password rules">
+            <li class="pw-rule met">8+ characters</li>
+            <li class="pw-rule met">One uppercase letter</li>
+            <li class="pw-rule met">One lowercase letter</li>
+            <li class="pw-rule unmet">One number</li>
+            <li class="pw-rule unmet">One symbol (e.g. ! @ #)</li>
+          </ul>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Create account</button>
+      </form>
+
+      <p class="alt-link">
+        Already have an account? <a href="05-login.html">Log in</a>
+      </p>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

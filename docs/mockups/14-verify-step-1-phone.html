@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Basha Pass — Verify · Step 1 of 5 · Phone</title>
+<!-- Bootstrap (vanilla) — native button styles; brand colors re-painted via CSS vars -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+  :root,
+  [data-bs-theme="light"] {
+    /* Brand tokens (mirrors DESIGN.md frontmatter) */
+    --bp-primary: #0F6E7A;
+    --bp-primary-rgb: 15, 110, 122;
+    --bp-primary-fg: #FFFFFF;
+    --bp-primary-soft: #E6F2F4;
+    --bp-primary-soft-border: rgba(15,110,122,0.18);
+    --bp-secondary: #C56B4F;
+    --bp-secondary-rgb: 197, 107, 79;
+    --bp-secondary-soft: #FBEFE9;
+    --bp-success: #16A34A;
+    --bp-success-fg: #15803D;
+    --bp-warning-fg: #B45309;
+    --bp-ink: #0F172A;
+    --bp-ink-2: #334155;
+    --bp-muted: #5A6878;
+    --bp-border: #E2E8F0;
+    --bp-surface: #FAFBFD;
+    --bp-canvas: #F4F6F9;
+
+    /* Button state tokens (normative; see DESIGN.md `button-states:` block) */
+    --bp-btn-primary-bg: #0F6E7A;
+    --bp-btn-primary-bg-hover: #0a525b;
+    --bp-btn-primary-bg-active: #083f47;
+    --bp-btn-primary-border-hover: #083f47;
+    --bp-btn-primary-border-active: #063238;
+    --bp-btn-disabled-bg: #cbd5e1;
+    --bp-btn-disabled-border: #cbd5e1;
+    --bp-btn-disabled-fg: #64748b;
+
+    /* Elevation tokens (normative; see DESIGN.md `elevation:` block) */
+    --bp-elev-card: 0 1px 2px rgba(15,23,42,0.04), 0 1px 3px rgba(15,23,42,0.06);
+    --bp-elev-focus-ring: 0 0 0 2px #FFFFFF, 0 0 0 4px #0F6E7A;
+
+    /* Re-paint Bootstrap default colors to brand palette */
+    --bs-primary: var(--bp-primary);
+    --bs-primary-rgb: var(--bp-primary-rgb);
+    --bs-link-color: var(--bp-primary);
+    --bs-link-hover-color: var(--bp-btn-primary-bg-hover);
+    --bs-body-color: var(--bp-ink);
+    --bs-body-font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Bengali", SolaimanLipi, sans-serif;
+    --bs-border-color: var(--bp-border);
+  }
+
+  /* Re-paint Bootstrap primary button to brand palette (token-based) */
+  .btn-primary {
+    --bs-btn-bg: var(--bp-primary);
+    --bs-btn-border-color: var(--bp-primary);
+    --bs-btn-hover-bg: var(--bp-btn-primary-bg-hover);
+    --bs-btn-hover-border-color: var(--bp-btn-primary-border-hover);
+    --bs-btn-active-bg: var(--bp-btn-primary-bg-active);
+    --bs-btn-active-border-color: var(--bp-btn-primary-border-active);
+    --bs-btn-disabled-bg: var(--bp-btn-disabled-bg);
+    --bs-btn-disabled-border-color: var(--bp-btn-disabled-border);
+    --bs-btn-disabled-color: var(--bp-btn-disabled-fg);
+  }
+
+  html, body { background: var(--bp-canvas); color: var(--bp-ink); }
+  body { font-size: 16px; line-height: 1.55; }
+
+  /* Wizard shell — minimal top bar (logo + step counter), no nav, single primary CTA */
+  .wizard-shell {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--bp-canvas);
+  }
+
+  .wizard-topbar {
+    background: rgba(250, 251, 253, 0.92);
+    backdrop-filter: saturate(180%) blur(10px);
+    border-bottom: 1px solid var(--bp-border);
+    padding: 0.9rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .wizard-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--bp-ink);
+    text-decoration: none;
+  }
+  .wizard-brand .logo-dot {
+    width: 11px; height: 11px;
+    background: var(--bp-primary);
+    border-radius: 2px;
+    transform: rotate(45deg);
+  }
+
+  .step-counter {
+    font-size: 13px;
+    color: var(--bp-muted);
+    font-weight: 500;
+  }
+  .step-counter strong {
+    color: var(--bp-ink);
+    font-weight: 700;
+  }
+
+  .wizard-main {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem 1.25rem 6rem;
+  }
+
+  .wizard-card {
+    width: 100%;
+    max-width: 480px;
+    background: var(--bp-surface);
+    border: 1px solid var(--bp-border);
+    border-radius: 14px;
+    box-shadow: var(--bp-elev-card);
+    padding: 2rem 1.75rem 1.75rem;
+  }
+
+  /* Progress strip — 5 dots, filled = completed, outlined = current, muted = future */
+  .progress-strip {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 1.5rem;
+    justify-content: center;
+  }
+  .progress-strip .dot {
+    width: 32px; height: 6px;
+    border-radius: 3px;
+    background: var(--bp-border);
+  }
+  .progress-strip .dot.current {
+    background: var(--bp-primary);
+    box-shadow: 0 0 0 2px rgba(15,110,122,0.18);
+  }
+  .progress-strip .dot.complete {
+    background: var(--bp-primary);
+  }
+
+  .wizard-card .step-eyebrow {
+    font-size: 12px;
+    color: var(--bp-primary);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .wizard-card h1 {
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 1.18;
+    letter-spacing: -0.015em;
+    margin-bottom: 0.6rem;
+  }
+  .wizard-card .step-lede {
+    color: var(--bp-muted);
+    font-size: 15px;
+    line-height: 1.55;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Privacy panel — explains "fraud detection only" in plain language */
+  .privacy-panel {
+    background: var(--bp-primary-soft);
+    border: 1px solid var(--bp-primary-soft-border);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    display: flex;
+    gap: 0.7rem;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+  }
+  .privacy-panel .privacy-icon {
+    color: var(--bp-primary);
+    font-size: 18px;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+  .privacy-panel .privacy-text {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--bp-ink-2);
+  }
+  .privacy-panel .privacy-text strong {
+    color: var(--bp-ink);
+    font-weight: 700;
+  }
+
+  /* Form fields — match existing form surface from 06-signup */
+  .wizard-form .form-label {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--bp-ink-2);
+    margin-bottom: 0.35rem;
+  }
+  .wizard-form .form-control {
+    padding: 0.7rem 0.9rem;
+    border-color: var(--bp-border);
+    background: #fff;
+    font-size: 16px;
+    letter-spacing: 0.02em;
+  }
+  .wizard-form .form-control:focus {
+    border-color: var(--bp-primary);
+    box-shadow: 0 0 0 3px rgba(15, 110, 122, 0.15);
+  }
+  .wizard-form .form-helper {
+    color: var(--bp-muted);
+    font-size: 12px;
+    margin-top: 0.35rem;
+  }
+
+  /* Live E.164 preview — shows normalized form as user types valid BD local format */
+  .e164-preview {
+    display: none;
+    margin-top: 0.5rem;
+    padding: 0.55rem 0.75rem;
+    background: rgba(22, 163, 74, 0.08);
+    border: 1px solid rgba(22, 163, 74, 0.22);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--bp-success-fg);
+    font-weight: 600;
+  }
+  .e164-preview.show { display: block; }
+  .e164-preview .preview-label {
+    color: var(--bp-muted);
+    font-weight: 500;
+    margin-right: 0.35rem;
+  }
+
+  /* Primary CTA — full width on mobile, comfortable touch target */
+  .wizard-cta {
+    margin-top: 1.5rem;
+  }
+  .wizard-cta .btn-primary {
+    padding: 0.85rem 1rem;
+    font-weight: 600;
+    font-size: 15px;
+    width: 100%;
+  }
+  .wizard-cta .secondary-link {
+    display: block;
+    text-align: center;
+    margin-top: 0.85rem;
+    font-size: 14px;
+    color: var(--bp-muted);
+    text-decoration: none;
+  }
+  .wizard-cta .secondary-link:hover { color: var(--bp-primary); }
+
+  /* Entry-state banner variants — used in HTML comment block, not in primary render */
+  .banner-cooldown {
+    background: rgba(180, 83, 9, 0.08);
+    border: 1px solid rgba(180, 83, 9, 0.25);
+    color: var(--bp-warning-fg);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    font-size: 14px;
+    margin-bottom: 1.25rem;
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+  }
+  .banner-resume {
+    background: var(--bp-primary-soft);
+    border: 1px solid var(--bp-primary-soft-border);
+    color: var(--bp-ink);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    font-size: 14px;
+    margin-bottom: 1.25rem;
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+  }
+  .banner-resume strong { color: var(--bp-primary); }
+
+  /* Skip link (top-right) */
+  .topbar-skip {
+    font-size: 13px;
+    color: var(--bp-muted);
+    text-decoration: none;
+    padding: 0.35rem 0.6rem;
+  }
+  .topbar-skip:hover { color: var(--bp-ink); }
+
+  /* Sticky bottom CTA on mobile (mobile-first UX pattern) */
+  @media (max-width: 640px) {
+    .wizard-cta {
+      position: sticky;
+      bottom: 0;
+      background: var(--bp-surface);
+      padding: 1rem 0 0.25rem;
+      margin: 1.5rem -1.75rem -1.75rem;
+      border-top: 1px solid var(--bp-border);
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- MOCKUP: 14-verify-step-1-phone.html — Verification wizard     -->
+<!--   step 1 of 5: Phone                                          -->
+<!--                                                               -->
+<!-- IA surface #7 (Verification wizard).                          -->
+<!-- AD-11 router: first URL in the linear flow.                  -->
+<!-- Driver: Founder-Operator N1 (catch duplicate accounts via     -->
+<!--   phone cross-check) + Anika N3 (privacy — phone is fraud-    -->
+<!--   detection only, never shown).                               -->
+<!-- Spec source: follow-on-spec.md §"Item #4 — verification/step/-->
+<!--   phone/" + §"Item #5 — phone_e164 field" + §"Item #1 — PRD".-->
+<!--                                                               -->
+<!-- ENTRY-STATE VARIANTS (described; only fresh shown):          -->
+<!--   Fresh entry        : no banner. Primary CTA: "Continue".    -->
+<!--   Mid-wizard resume  : banner-resume "You're on step 3 of 5.  -->
+<!--                        Resume where you left off." → Continue.-->
+<!--   Cooldown re-entry  : banner-cooldown "Your last submission  -->
+<!--                        was rejected. Start fresh — your phone -->
+<!--                        is preserved." → Continue.             -->
+<!-- ============================================================ -->
+<div class="wizard-shell">
+  <header class="wizard-topbar">
+    <a href="#" class="wizard-brand" aria-label="Basha Pass home">
+      <span class="logo-dot" aria-hidden="true"></span>
+      Basha Pass
+    </a>
+    <div class="step-counter" aria-label="Step 1 of 5">
+      Step <strong>1</strong> of 5
+    </div>
+    <a href="#" class="topbar-skip">Save &amp; exit</a>
+  </header>
+
+  <main class="wizard-main">
+    <div class="wizard-card">
+      <!-- 5-dot progress strip (filled = complete, outlined-teal = current, muted = future) -->
+      <div class="progress-strip" role="progressbar"
+           aria-valuemin="1" aria-valuemax="5" aria-valuenow="1"
+           aria-label="Step 1 of 5: Phone">
+        <span class="dot current" aria-hidden="true"></span>
+        <span class="dot" aria-hidden="true"></span>
+        <span class="dot" aria-hidden="true"></span>
+        <span class="dot" aria-hidden="true"></span>
+        <span class="dot" aria-hidden="true"></span>
+      </div>
+
+      <div class="step-eyebrow">Step 1</div>
+      <h1>Verify your phone number</h1>
+      <p class="step-lede">
+        We use your phone to make sure each account is a real person — not a duplicate or a fake profile.
+      </p>
+
+      <!-- Privacy contract panel — non-negotiable per follow-on-spec.md -->
+      <div class="privacy-panel" role="note">
+        <i class="bi bi-shield-lock-fill privacy-icon" aria-hidden="true"></i>
+        <div class="privacy-text">
+          <strong>Used for fraud detection only.</strong>
+          Your phone is <strong>never shown</strong> to other tenants and is <strong>never used</strong> for off-platform contact.
+        </div>
+      </div>
+
+      <form class="wizard-form" action="/verification/step/phone/" method="post" novalidate>
+        <div class="mb-2">
+          <label for="phone" class="form-label">Phone number</label>
+          <input type="tel" id="phone" name="phone" class="form-control"
+                 placeholder="01XXXXXXXXX" autocomplete="tel-national"
+                 inputmode="numeric" pattern="^01[3-9][0-9]{8}$" maxlength="11"
+                 required aria-describedby="phone-helper phone-preview">
+          <div id="phone-helper" class="form-helper">
+            Bangladesh mobile format · 11 digits starting with 01
+          </div>
+          <!-- Live E.164 preview — JS would show .show on valid input; static demo shows expected state -->
+          <div id="phone-preview" class="e164-preview show" role="status">
+            <span class="preview-label">Stored as:</span>+8801712345678
+          </div>
+        </div>
+
+        <div class="wizard-cta">
+          <button type="submit" class="btn btn-primary">
+            Continue <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i>
+          </button>
+          <a href="#" class="secondary-link">Why we ask for this</a>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

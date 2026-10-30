@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Basha Pass — Welcome</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+  :root,
+  [data-bs-theme="light"] {
+    --bp-primary: #0F6E7A;
+    --bp-primary-rgb: 15, 110, 122;
+    --bs-body-font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Bengali", SolaimanLipi, sans-serif;
+  }
+
+  /* Welcome is full-bleed teal, no top-nav — explicit UX rule in EXPERIENCE.md */
+  .welcome-shell {
+    min-height: 100vh;
+    background: linear-gradient(160deg, #0F6E7A 0%, #0a525b 100%);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  /* Decorative radial accents */
+  .welcome-shell::before,
+  .welcome-shell::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+    pointer-events: none;
+  }
+  .welcome-shell::before {
+    width: 480px; height: 480px;
+    top: -120px; right: -160px;
+  }
+  .welcome-shell::after {
+    width: 360px; height: 360px;
+    bottom: -100px; left: -120px;
+  }
+
+  .welcome-brand {
+    position: absolute;
+    top: 2rem; left: 2rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: #fff;
+    text-decoration: none;
+    z-index: 2;
+  }
+  .welcome-brand .logo-dot {
+    width: 12px; height: 12px;
+    background: #fff;
+    border-radius: 2px;
+    transform: rotate(45deg);
+  }
+
+  .welcome-card {
+    max-width: 540px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+  .welcome-card .welcome-mark {
+    width: 64px; height: 64px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.22);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.75rem;
+    font-size: 30px;
+    color: #fff;
+  }
+  .welcome-card h1 {
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    font-size: 38px;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+  .welcome-card .lede {
+    font-size: 17px;
+    line-height: 1.55;
+    opacity: 0.92;
+    margin-bottom: 2.25rem;
+    max-width: 460px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .welcome-card .btn-primary {
+    background: #fff;
+    color: var(--bp-primary);
+    border-color: #fff;
+    padding: 0.9rem 1.75rem;
+    font-weight: 700;
+    font-size: 16px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .welcome-card .btn-primary:hover {
+    background: #F0F3F7;
+    border-color: #F0F3F7;
+    color: var(--bp-primary);
+  }
+  .welcome-card .btn-primary:focus {
+    box-shadow: 0 0 0 4px rgba(255,255,255,0.25);
+  }
+  .welcome-skip {
+    display: inline-block;
+    margin-top: 1.5rem;
+    color: rgba(255,255,255,0.7);
+    font-size: 14px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .welcome-skip:hover {
+    color: #fff;
+  }
+
+  /* Step pills row showing the 5 steps ahead */
+  .step-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.4rem;
+    max-width: 460px;
+    margin: 0 auto 2rem;
+  }
+  .step-pill {
+    text-align: left;
+    padding: 0.65rem 0.85rem;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+  }
+  .step-pill .num {
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    opacity: 0.7;
+    letter-spacing: 0.04em;
+  }
+  .step-pill .label {
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 0.15rem;
+    opacity: 0.92;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- MOCKUP: 11-welcome.html — Welcome (IA #4, post-signup)         -->
+<!-- Reached after token verification. Single CTA to Verification   -->
+<!-- wizard (IA #7). Skip-for-now routes to Dashboard (IA #6).      -->
+<!-- ============================================================ -->
+<main class="welcome-shell">
+  <a href="#" class="welcome-brand">
+    <span class="logo-dot" aria-hidden="true"></span>
+    Basha Pass
+  </a>
+
+  <div class="welcome-card">
+    <div class="welcome-mark" aria-hidden="true">
+      <i class="bi bi-stars"></i>
+    </div>
+
+    <h1>You're in, Monowar.<br>Let's build your passport.</h1>
+
+    <div class="step-row" aria-label="What happens next: 5 steps">
+      <div class="step-pill">
+        <div class="num">STEP 1</div>
+        <div class="label">Phone</div>
+      </div>
+      <div class="step-pill">
+        <div class="num">STEP 2</div>
+        <div class="label">NID front</div>
+      </div>
+      <div class="step-pill">
+        <div class="num">STEP 3</div>
+        <div class="label">NID back</div>
+      </div>
+      <div class="step-pill">
+        <div class="num">STEP 4</div>
+        <div class="label">Selfie</div>
+      </div>
+      <div class="step-pill">
+        <div class="num">STEP 5</div>
+        <div class="label">Preferences</div>
+      </div>
+    </div>
+
+    <p class="lede">
+      It takes about 5 minutes. You'll verify your phone, upload your NID, take a selfie, and set your preferences.
+    </p>
+
+    <a href="#" class="btn btn-primary">
+      Start passport <i class="bi bi-arrow-right"></i>
+    </a>
+
+    <div>
+      <a href="#" class="welcome-skip">Skip for now</a>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>

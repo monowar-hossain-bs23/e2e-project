@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280">
+<title>Quiet mess seat in Mirpur — ৳4,500 / seat / month · Basha Pass</title>
+<!-- Bootstrap (vanilla) — native button styles; brand colors re-painted via CSS vars -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+  /* Brand tokens — re-paint Bootstrap primary/secondary to Trust Teal + Warm */
+  :root,
+  [data-bs-theme="light"] {
+    /* Brand palette */
+    --bp-primary: #0F6E7A;        /* Trust Teal */
+    --bp-primary-rgb: 15, 110, 122;
+    --bp-primary-fg: #FFFFFF;
+    --bp-primary-soft: #E6F2F4;
+    --bp-secondary: #C56B4F;       /* Warm secondary */
+    --bp-secondary-rgb: 197, 107, 79;
+    --bp-secondary-soft: #FBEFE9;
+    --bp-success: #16A34A;
+    --bp-success-fg: #15803D;
+    --bp-ink: #0F172A;
+    --bp-ink-2: #334155;
+    --bp-muted: #5A6878;
+    --bp-border: #E2E8F0;
+    --bp-surface: #FAFBFD;
+    --bp-surface-2: #F0F3F7;
+    --bp-canvas: #F4F6F9;
+
+    /* Re-paint Bootstrap default colors to brand palette */
+    --bs-primary: var(--bp-primary);
+    --bs-primary-rgb: var(--bp-primary-rgb);
+    --bs-secondary: var(--bp-secondary);
+    --bs-secondary-rgb: var(--bp-secondary-rgb);
+    --bs-link-color: var(--bp-primary);
+    --bs-link-hover-color: #0a525b;
+    --bs-body-color: var(--bp-ink);
+    --bs-body-font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Bengali", "SolaimanLipi", sans-serif;
+    --bs-border-color: var(--bp-border);
+  }
+
+  /* Re-paint Bootstrap component variables so buttons pick up brand colors */
+  .btn-primary {
+    --bs-btn-bg: var(--bp-primary);
+    --bs-btn-border-color: var(--bp-primary);
+    --bs-btn-hover-bg: #0a525b;
+    --bs-btn-hover-border-color: #083f47;
+    --bs-btn-active-bg: #083f47;
+    --bs-btn-active-border-color: #063238;
+    --bs-btn-disabled-bg: var(--bp-primary);
+    --bs-btn-disabled-border-color: var(--bp-primary);
+  }
+  .btn-secondary {
+    --bs-btn-bg: var(--bp-secondary);
+    --bs-btn-border-color: var(--bp-secondary);
+    --bs-btn-hover-bg: #a85639;
+    --bs-btn-hover-border-color: #9c4f37;
+    --bs-btn-active-bg: #9c4f37;
+    --bs-btn-active-border-color: #823f2a;
+    --bs-btn-disabled-bg: var(--bp-secondary);
+    --bs-btn-disabled-border-color: var(--bp-secondary);
+  }
+  .btn-outline-secondary {
+    --bs-btn-color: var(--bp-secondary);
+    --bs-btn-border-color: var(--bp-secondary);
+    --bs-btn-hover-bg: var(--bp-secondary);
+    --bs-btn-hover-border-color: var(--bp-secondary);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-bg: var(--bp-secondary);
+    --bs-btn-active-border-color: var(--bp-secondary);
+    --bs-btn-active-color: #fff;
+  }
+
+  html, body { background: var(--bp-canvas); color: var(--bp-ink); }
+  body { font-size: 16px; line-height: 1.55; }
+  body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Bengali", "SolaimanLipi", sans-serif; }
+
+  /* Bengali fallback for any lang="bn" container */
+  [lang="bn"] {
+    font-family: "Noto Sans Bengali", "SolaimanLipi", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  /* Global focus ring (locked teal) */
+  a:focus-visible, button:focus-visible, .btn:focus-visible, input:focus-visible {
+    outline: 2px solid var(--bp-primary);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  /* Top nav — same as landing */
+  .bp-nav {
+    background: rgba(250, 251, 253, 0.92);
+    backdrop-filter: saturate(180%) blur(12px);
+    -webkit-backdrop-filter: saturate(180%) blur(12px);
+    border-bottom: 1px solid var(--bp-border);
+    position: sticky; top: 0; z-index: 1030;
+  }
+  .bp-brand {
+    font-weight: 700; letter-spacing: -0.01em; font-size: 18px;
+    color: var(--bp-ink); text-decoration: none;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .bp-brand__mark {
+    width: 32px; height: 32px;
+    background: var(--bp-primary); color: #fff;
+    border-radius: 8px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 16px;
+  }
+  .bp-nav__link {
+    color: var(--bp-ink-2); font-weight: 500; font-size: 15px;
+    padding: 8px 14px; border-radius: 8px; text-decoration: none;
+  }
+  .bp-nav__link:hover { background: var(--bp-surface); color: var(--bp-ink); }
+  .bp-nav__link[aria-current="page"] { color: var(--bp-primary); background: var(--bp-primary-soft); }
+
+  /* Breadcrumb */
+  .bp-breadcrumb {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13px; color: var(--bp-muted); margin: 0;
+  }
+  .bp-breadcrumb a { color: var(--bp-muted); text-decoration: none; }
+  .bp-breadcrumb a:hover { color: var(--bp-ink); }
+  .bp-breadcrumb .bi { font-size: 10px; opacity: 0.7; }
+  .bp-breadcrumb [aria-current="page"] { color: var(--bp-ink); font-weight: 500; }
+
+  /* Page wrapper */
+  main.bp-detail { padding: 28px 0 72px; }
+
+  /* Photo gallery */
+  .bp-gallery { display: flex; flex-direction: column; gap: 10px; }
+  .bp-gallery__main {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    border-radius: 12px;
+    overflow: hidden;
+    background:
+      linear-gradient(135deg, rgba(15,110,122,0.22), rgba(15,110,122,0.04)),
+      linear-gradient(180deg, var(--bp-surface-2), #E5EAF0);
+    border: 1px solid var(--bp-border);
+  }
+  .bp-gallery__kind {
+    position: absolute; top: 14px; left: 14px;
+    background: rgba(255,255,255,0.92);
+    border: 1px solid var(--bp-border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--bp-muted);
+  }
+  .bp-gallery__counter {
+    position: absolute; bottom: 14px; right: 14px;
+    background: rgba(15,23,42,0.65);
+    color: #fff;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 12px; font-weight: 600;
+    backdrop-filter: blur(4px);
+  }
+  .bp-gallery__thumbs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  .bp-gallery__thumb {
+    aspect-ratio: 1;
+    border-radius: 8px;
+    background:
+      linear-gradient(135deg, rgba(15,110,122,0.14), rgba(15,110,122,0.04)),
+      linear-gradient(180deg, var(--bp-surface-2), #E5EAF0);
+    border: 1px solid var(--bp-border);
+    cursor: pointer;
+    padding: 0;
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+  }
+  .bp-gallery__thumb[aria-current="true"] {
+    border: 2px solid var(--bp-primary);
+    box-shadow: inset 0 0 0 2px rgba(15,110,122,0.08);
+  }
+  .bp-gallery__thumb:hover { border-color: rgba(15,110,122,0.4); }
+
+  /* Verified badge (top-right of author card) */
+  .bp-verified-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--bp-primary); color: #fff;
+    font-size: 12px; font-weight: 600;
+    padding: 4px 10px; border-radius: 999px;
+  }
+  .bp-verified-pill i { font-size: 12px; }
+
+  /* Listing body card */
+  .bp-card {
+    background: #fff;
+    border: 1px solid var(--bp-border);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 2px rgba(15,23,42,0.04), 0 1px 3px rgba(15,23,42,0.06);
+  }
+  .bp-card + .bp-card { margin-top: 16px; }
+
+  .bp-listing__title {
+    font-family: "Inter", sans-serif;
+    font-weight: 700; font-size: 28px;
+    line-height: 1.2; letter-spacing: -0.01em;
+    color: var(--bp-ink);
+    margin: 0 0 10px;
+  }
+  .bp-listing__sub {
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    color: var(--bp-muted); font-size: 14px;
+    margin: 0 0 18px;
+  }
+  .bp-listing__sub .dot { width: 3px; height: 3px; border-radius: 999px; background: var(--bp-border); }
+  .bp-listing__sub .bi { color: var(--bp-primary); }
+
+  .bp-kind-badge {
+    display: inline-flex; align-items: center;
+    background: var(--bp-primary-soft); color: var(--bp-primary);
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 12px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+
+  .bp-price-block {
+    display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+    padding: 14px 0 16px;
+    border-top: 1px solid var(--bp-border);
+    border-bottom: 1px solid var(--bp-border);
+    margin: 4px 0 20px;
+  }
+  .bp-price {
+    font-family: "Inter", sans-serif;
+    font-weight: 700; font-size: 32px;
+    line-height: 1; letter-spacing: -0.02em;
+    color: var(--bp-ink);
+  }
+  .bp-price__unit { color: var(--bp-muted); font-size: 15px; font-weight: 500; }
+
+  .bp-body-copy { font-size: 15px; line-height: 1.6; color: var(--bp-ink-2); }
+  .bp-body-copy p { margin: 0 0 12px; }
+  .bp-body-copy p:last-child { margin: 0; }
+
+  /* Author card */
+  .bp-author { display: flex; align-items: flex-start; gap: 14px; }
+  .bp-avatar {
+    width: 48px; height: 48px; border-radius: 999px;
+    background: var(--bp-primary-soft); color: var(--bp-primary);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 18px;
+    flex-shrink: 0;
+  }
+  .bp-author__body { flex: 1; min-width: 0; }
+  .bp-author__head {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    margin-bottom: 4px;
+  }
+  .bp-author__name {
+    font-family: "Inter", sans-serif;
+    font-weight: 600; font-size: 17px; color: var(--bp-ink); margin: 0;
+  }
+  .bp-author__since { font-size: 13px; color: var(--bp-muted); margin: 0; }
+  .bp-chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 10px; }
+  .bp-chip {
+    font-size: 12px; font-weight: 600;
+    padding: 4px 10px; border-radius: 999px;
+    background: var(--bp-secondary-soft); color: var(--bp-secondary);
+  }
+  .bp-chip--soft {
+    background: var(--bp-primary-soft); color: var(--bp-primary);
+  }
+  .bp-passport-link {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 13px; font-weight: 600;
+    color: var(--bp-primary); text-decoration: none;
+  }
+  .bp-passport-link:hover { color: #0a525b; text-decoration: underline; }
+
+  /* Right column sticky contact panel */
+  .bp-sticky-col > * + * { margin-top: 16px; }
+  @media (min-width: 992px) {
+    .bp-sticky { position: sticky; top: 80px; }
+  }
+
+  .bp-contact__title {
+    font-family: "Inter", sans-serif;
+    font-weight: 600; font-size: 16px; color: var(--bp-ink); margin: 0 0 4px;
+  }
+  .bp-contact__sub {
+    font-size: 13px; color: var(--bp-muted); margin: 0 0 14px;
+  }
+  .bp-contact__row {
+    display: flex; align-items: center; gap: 14px;
+    min-height: 56px;
+    padding: 8px 0;
+    border-top: 1px solid var(--bp-border);
+    text-decoration: none; color: var(--bp-ink);
+  }
+  .bp-contact__row:first-of-type { border-top: none; padding-top: 4px; }
+  .bp-contact__row:hover .bp-contact__value { color: var(--bp-primary); }
+  .bp-contact__icon {
+    width: 40px; height: 40px; border-radius: 999px;
+    background: var(--bp-primary-soft); color: var(--bp-primary);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .bp-contact__meta { flex: 1; min-width: 0; }
+  .bp-contact__label {
+    display: block; font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--bp-muted); margin: 0 0 2px;
+  }
+  .bp-contact__value {
+    display: block; font-family: "Inter", sans-serif;
+    font-weight: 600; font-size: 15px; color: var(--bp-ink);
+    word-break: break-all;
+  }
+  .bp-contact__chev { color: var(--bp-muted); font-size: 14px; }
+  .bp-contact__hint {
+    margin: 12px 0 0; font-size: 13px; color: var(--bp-muted); line-height: 1.5;
+  }
+  .bp-contact__actions { display: flex; gap: 8px; margin-top: 14px; }
+  .bp-contact__actions .btn { flex: 1; font-size: 14px; padding: 0.45rem 0.75rem; }
+
+  /* Match score / compatibility */
+  .bp-compat__title,
+  .bp-prefs__title,
+  .bp-safety__title {
+    font-family: "Inter", sans-serif;
+    font-weight: 600; font-size: 13px; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--bp-muted);
+    margin: 0 0 10px;
+  }
+  .bp-compat__score {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
+  }
+  .bp-compat__dots { display: inline-flex; gap: 4px; }
+  .bp-compat__dot {
+    width: 14px; height: 14px; border-radius: 999px;
+    background: var(--bp-success);
+  }
+  .bp-compat__dot--muted { background: var(--bp-border); }
+  .bp-compat__label {
+    font-family: "Inter", sans-serif; font-weight: 700; font-size: 18px;
+    color: var(--bp-success-fg);
+  }
+  .bp-compat__list { list-style: none; margin: 0; padding: 0; }
+  .bp-compat__list li {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 0; font-size: 14px; color: var(--bp-ink-2);
+    border-top: 1px dashed var(--bp-border);
+  }
+  .bp-compat__list li:first-child { border-top: none; }
+  .bp-compat__list .bi-check { color: var(--bp-success); font-size: 16px; }
+  .bp-compat__list .bi-x { color: var(--bp-muted); font-size: 16px; }
+  .bp-compat__list .bi-x + span { color: var(--bp-muted); }
+
+  /* Lister preferences */
+  .bp-prefs__list { list-style: none; margin: 0; padding: 0; }
+  .bp-prefs__list li {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 0; font-size: 14px;
+    border-top: 1px dashed var(--bp-border);
+  }
+  .bp-prefs__list li:first-child { border-top: none; }
+  .bp-prefs__list dt,
+  .bp-prefs__list .label {
+    color: var(--bp-muted); font-size: 13px;
+  }
+  .bp-prefs__list dd,
+  .bp-prefs__list .value {
+    margin: 0; font-weight: 600; color: var(--bp-ink);
+  }
+
+  /* Safety card */
+  .bp-safety {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px; color: var(--bp-muted);
+  }
+  .bp-safety__icon {
+    width: 28px; height: 28px; border-radius: 999px;
+    background: var(--bp-surface-2); color: var(--bp-ink-2);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0;
+  }
+  .bp-safety a { color: var(--bp-primary); text-decoration: none; font-weight: 600; }
+  .bp-safety a:hover { text-decoration: underline; }
+
+  /* Unverified (locked) contact panel — hidden by default */
+  .bp-contact--locked { display: none; }
+  .bp-locked__icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: var(--bp-primary-soft); color: var(--bp-primary);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 22px; margin-bottom: 12px;
+  }
+  .bp-locked__title {
+    font-family: "Inter", sans-serif;
+    font-weight: 600; font-size: 16px; color: var(--bp-ink); margin: 0 0 6px;
+  }
+  .bp-locked__body {
+    font-size: 14px; color: var(--bp-muted); margin: 0 0 16px;
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="bp-nav">
+  <div class="container-xl py-3">
+    <div class="d-flex align-items-center justify-content-between">
+      <a class="bp-brand" href="#">
+        <span class="bp-brand__mark">B</span>
+        Basha Pass
+      </a>
+      <div class="d-flex align-items-center gap-1">
+        <a class="bp-nav__link d-none d-lg-inline-block" href="#dashboard">Dashboard</a>
+        <a class="bp-nav__link" href="#browse" aria-current="page">Browse</a>
+        <a class="bp-nav__link d-none d-lg-inline-block" href="#post">Post a listing</a>
+        <a class="bp-nav__link d-none d-lg-inline-block" href="#profile">Profile</a>
+        <a class="bp-nav__link d-none d-lg-inline-block" href="#logout">Logout</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main class="bp-detail">
+  <div class="container-xl">
+
+    <!-- BREADCRUMB -->
+    <nav aria-label="Breadcrumb" class="mb-4">
+      <ol class="bp-breadcrumb list-unstyled m-0">
+        <li><a href="#browse">Browse</a></li>
+        <li><i class="bi bi-chevron-right" aria-hidden="true"></i></li>
+        <li><a href="#mirpur">Mirpur</a></li>
+        <li><i class="bi bi-chevron-right" aria-hidden="true"></i></li>
+        <li aria-current="page">Seat</li>
+      </ol>
+    </nav>
+
+    <!-- TWO-COLUMN LAYOUT -->
+    <div class="row g-4">
+
+      <!-- LEFT COLUMN -->
+      <div class="col-lg-7">
+
+        <!-- PHOTO GALLERY -->
+        <section class="bp-gallery" aria-label="Listing photos">
+          <div class="bp-gallery__main" role="img" aria-label="Seat in Mirpur, ৳4,500 per seat, near campus">
+            <span class="bp-gallery__kind">SEAT</span>
+            <span class="bp-gallery__counter" aria-hidden="true">
+              <i class="bi bi-images me-1"></i>1 / 5
+            </span>
+          </div>
+          <div class="bp-gallery__thumbs" role="tablist" aria-label="Photo thumbnails">
+            <button class="bp-gallery__thumb" type="button" aria-current="true" aria-label="Photo 1: front room view"></button>
+            <button class="bp-gallery__thumb" type="button" aria-label="Photo 2: kitchen"></button>
+            <button class="bp-gallery__thumb" type="button" aria-label="Photo 3: storage area"></button>
+            <button class="bp-gallery__thumb" type="button" aria-label="Photo 4: exterior"></button>
+          </div>
+        </section>
+
+        <!-- LISTING BODY -->
+        <article class="bp-card mt-4" aria-label="Listing details">
+          <h1 class="bp-listing__title">Quiet mess, 2-min walk to campus</h1>
+          <div class="bp-listing__sub">
+            <span class="bp-kind-badge">Seat</span>
+            <span><i class="bi bi-geo-alt me-1" aria-hidden="true"></i>Mirpur 10, Dhaka</span>
+            <span class="dot" aria-hidden="true"></span>
+            <span><i class="bi bi-calendar-event me-1" aria-hidden="true"></i>Move-in from Sept 15, 2026</span>
+          </div>
+
+          <div class="bp-price-block">
+            <span class="bp-price">৳4,500</span>
+            <span class="bp-price__unit">/ seat / month</span>
+          </div>
+
+          <div class="bp-body-copy">
+            <p>Two seats available in a 3-person bachelor mess, two minutes' walk from the Mirpur 10 circle. Shared kitchen with two gas burners, separate storage per tenant. Quiet block — students and early-job holders only.</p>
+            <p>Bills split three ways (gas, water, wifi, current). Cooking happens twice a day — vegetarian in the morning, mixed in the evening. The current third tenant is a final-year student who's moving out to his family home in late October.</p>
+            <p>Quiet hours from 10 PM. No overnight guests without notice. Smokers and pets aren't a fit — the landlord shares the floor above.</p>
+            <p lang="bn">আনিকার সাথে কথা বলতে চাইলে যোগাযোগ করুন।</p>
+          </div>
+        </article>
+
+        <!-- AUTHOR CARD -->
+        <section class="bp-card mt-3" aria-label="About the lister">
+          <div class="bp-author">
+            <div class="bp-avatar" aria-hidden="true">T</div>
+            <div class="bp-author__body">
+              <div class="bp-author__head">
+                <div>
+                  <p class="bp-author__name">Tanvir H.</p>
+                  <p class="bp-author__since">Verified for 4 months · NID confirmed Aug 14, 2026</p>
+                </div>
+                <span class="bp-verified-pill" aria-label="NID verified — tap for verification date and tenure">
+                  <i class="bi bi-shield-fill-check"></i> Verified
+                </span>
+              </div>
+
+              <div class="bp-chip-row" aria-label="Lifestyle preferences">
+                <span class="bp-chip">Non-smoker</span>
+                <span class="bp-chip">Early bird</span>
+                <span class="bp-chip">Student</span>
+              </div>
+
+              <a class="bp-passport-link" href="#passport-tanvir">
+                View full passport <i class="bi bi-arrow-right" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="col-lg-5">
+        <div class="bp-sticky-col">
+
+          <!-- VERIFIED-VIEWER: STICKY CONTACT PANEL -->
+          <section class="bp-card bp-sticky" role="region" aria-labelledby="contact-title">
+            <h2 id="contact-title" class="bp-contact__title">Reach Tanvir directly</h2>
+            <p class="bp-contact__sub">Off-platform contact — open your own email or dialer.</p>
+
+            <a class="bp-contact__row" href="mailto:tanvir.hassan@example.com">
+              <span class="bp-contact__icon" aria-hidden="true"><i class="bi bi-envelope"></i></span>
+              <span class="bp-contact__meta">
+                <span class="bp-contact__label">Email</span>
+                <span class="bp-contact__value">tanvir.hassan@example.com</span>
+              </span>
+              <i class="bi bi-chevron-right bp-contact__chev" aria-hidden="true"></i>
+            </a>
+
+            <a class="bp-contact__row" href="tel:+8801712345678">
+              <span class="bp-contact__icon" aria-hidden="true"><i class="bi bi-telephone"></i></span>
+              <span class="bp-contact__meta">
+                <span class="bp-contact__label">Phone</span>
+                <span class="bp-contact__value">+880 1712 345 678</span>
+              </span>
+              <i class="bi bi-chevron-right bp-contact__chev" aria-hidden="true"></i>
+            </a>
+
+            <p class="bp-contact__hint">
+              Off-platform contact. Basha Pass doesn't run messages.
+            </p>
+
+            <div class="bp-contact__actions">
+              <button class="btn btn-outline-secondary" type="button">
+                <i class="bi bi-bookmark me-1" aria-hidden="true"></i> Save listing
+              </button>
+              <button class="btn btn-outline-secondary" type="button">
+                <i class="bi bi-share me-1" aria-hidden="true"></i> Share
+              </button>
+            </div>
+          </section>
+
+          <!-- COMPATIBILITY / MATCH SCORE -->
+          <section class="bp-card" role="region" aria-labelledby="compat-title">
+            <h2 id="compat-title" class="bp-compat__title">Compatibility</h2>
+            <div class="bp-compat__score">
+              <span class="bp-compat__dots" aria-hidden="true">
+                <span class="bp-compat__dot"></span>
+                <span class="bp-compat__dot"></span>
+                <span class="bp-compat__dot"></span>
+                <span class="bp-compat__dot"></span>
+                <span class="bp-compat__dot"></span>
+                <span class="bp-compat__dot bp-compat__dot--muted"></span>
+              </span>
+              <span class="bp-compat__label">5 of 6</span>
+            </div>
+            <p class="bp-contact__hint" style="margin-top:0; margin-bottom: 12px;">5 of 6 preferences match.</p>
+
+            <ul class="bp-compat__list">
+              <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>Non-smoker matches</span></li>
+              <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>Early bird matches</span></li>
+              <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>Student matches</span></li>
+              <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>Area within budget</span></li>
+              <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>Rent in range</span></li>
+              <li><i class="bi bi-x-circle-fill" aria-hidden="true"></i><span>Sleep schedule differs</span></li>
+            </ul>
+          </section>
+
+          <!-- LISTER PREFERENCES -->
+          <section class="bp-card" role="region" aria-labelledby="prefs-title">
+            <h2 id="prefs-title" class="bp-prefs__title">What Tanvir prefers</h2>
+            <ul class="bp-prefs__list">
+              <li><span class="label">Gender</span><span class="value">Male</span></li>
+              <li><span class="label">Smoking</span><span class="value">Non-smoker</span></li>
+              <li><span class="label">Sleep</span><span class="value">Early bird</span></li>
+              <li><span class="label">Occupation</span><span class="value">Student</span></li>
+              <li><span class="label">Move-in</span><span class="value">From Sept 15</span></li>
+            </ul>
+          </section>
+
+          <!-- SAFETY CARD -->
+          <div class="bp-card" id="report" style="padding: 14px 18px;">
+            <div class="bp-safety">
+              <span class="bp-safety__icon" aria-hidden="true"><i class="bi bi-shield-exclamation"></i></span>
+              <span>Safety first · <a href="#report">Report this listing</a> if anything feels off.</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!--
+  =====================================================================
+  UNVERIFIED-VIEWER STATE — how to switch
+  =====================================================================
+
+  The page above renders the VERIFIED viewer by default. To preview the
+  UNVERIFIED viewer (where contact info is locked), make TWO changes:
+
+    1. Hide the verified contact panel. The verified <section> lives at the
+       top of the right column wrapped in:
+         <section class="bp-card bp-sticky" role="region" ...>
+       Add the class `d-none` to it (or remove the panel entirely).
+
+    2. Reveal the locked panel. Immediately above the compatibility card
+       inside `.bp-sticky-col`, insert this block:
+
+       <section class="bp-card bp-sticky" role="region" aria-labelledby="locked-title">
+         <div class="bp-locked__icon" aria-hidden="true">
+           <i class="bi bi-shield-lock"></i>
+         </div>
+         <h2 id="locked-title" class="bp-locked__title">Verify to see contact info</h2>
+         <p class="bp-locked__body">
+           Tanvir's email and phone are visible to verified viewers only.
+           Verification usually takes under 24 hours.
+         </p>
+         <a class="btn btn-primary w-100" href="#verify-step-1">
+           Start verification
+         </a>
+         <p class="bp-contact__hint mt-3 mb-0">
+           ~24h review after you submit NID front, back, and a selfie.
+         </p>
+       </section>
+
+  The locked panel uses the same `.bp-card` + `.bp-sticky` shell as the
+  verified panel so the sticky positioning behaves identically.
+  =====================================================================
+-->
+
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280">
+<title>Basha Pass — Verify your email (code expired)</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+  :root,
+  [data-bs-theme="light"] {
+    --bp-primary: #0F6E7A;
+    --bp-primary-rgb: 15, 110, 122;
+    --bp-primary-fg: #FFFFFF;
+    --bp-primary-soft: #E6F2F4;
+    --bp-success: #16A34A;
+    --bp-ink: #0F172A;
+    --bp-ink-2: #334155;
+    --bp-muted: #5A6878;
+    --bp-border: #E2E8F0;
+    --bp-surface: #FAFBFD;
+    --bp-canvas: #F4F6F9;
+    --bp-warning-fg: #B45309;
+    --bs-primary: var(--bp-primary);
+    --bs-primary-rgb: var(--bp-primary-rgb);
+    --bs-link-color: var(--bp-primary);
+    --bs-body-color: var(--bp-ink);
+    --bs-body-font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Bengali", SolaimanLipi, sans-serif;
+    --bs-border-color: var(--bp-border);
+  }
+  .btn-primary {
+    --bs-btn-bg: var(--bp-primary);
+    --bs-btn-border-color: var(--bp-primary);
+    --bs-btn-hover-bg: #0a525b;
+  }
+  .btn-outline-primary {
+    --bs-btn-color: var(--bp-primary);
+    --bs-btn-border-color: var(--bp-primary);
+    --bs-btn-hover-bg: var(--bp-primary);
+    --bs-btn-hover-border-color: var(--bp-primary);
+    --bs-btn-hover-color: #fff;
+  }
+  body { background: var(--bp-canvas); }
+  .auth-shell {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #E6F2F4 0%, #FAFBFD 60%);
+    display: flex; align-items: stretch;
+  }
+  .auth-brand-pane {
+    flex: 1 1 45%;
+    background: linear-gradient(160deg, #0F6E7A 0%, #0a525b 100%);
+    color: #fff;
+    padding: 3rem 4rem;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .auth-form-pane {
+    flex: 1 1 55%;
+    padding: 3rem 4rem;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bp-surface);
+  }
+  .auth-form { width: 100%; max-width: 460px; }
+  .auth-form h1 {
+    font-family: "Inter", sans-serif; font-weight: 700;
+    font-size: 28px; line-height: 1.2;
+    letter-spacing: -0.01em; margin-bottom: 0.5rem;
+  }
+  .auth-form .subtitle { color: var(--bp-muted); margin-bottom: 1.5rem; }
+  .auth-form .form-label { font-weight: 600; font-size: 14px; color: var(--bp-ink-2); margin-bottom: 0.35rem; }
+  .auth-form .form-control {
+    padding: 0.65rem 0.85rem;
+    border-color: var(--bp-border); background: #fff;
+  }
+  .auth-form .form-control:focus {
+    border-color: var(--bp-primary);
+    box-shadow: 0 0 0 3px rgba(15, 110, 122, 0.15);
+  }
+  .auth-form .form-helper { color: var(--bp-muted); font-size: 12px; margin-top: 0.35rem; }
+  .auth-form .btn-primary, .auth-form .btn-outline-primary { padding: 0.7rem 1rem; font-weight: 600; }
+  .auth-form .alt-link { color: var(--bp-muted); font-size: 14px; margin-top: 1.25rem; text-align: center; }
+  .auth-form .alt-link a { font-weight: 600; }
+
+  .brand-mark {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-family: "Inter", sans-serif; font-weight: 700; font-size: 20px;
+    color: #fff; text-decoration: none;
+  }
+  .brand-mark .logo-dot {
+    width: 12px; height: 12px;
+    background: #fff; border-radius: 2px; transform: rotate(45deg);
+  }
+  .brand-pane-hero { max-width: 480px; }
+  .brand-pane-hero h2 {
+    font-family: "Inter", sans-serif; font-weight: 700;
+    font-size: 32px; line-height: 1.15;
+    letter-spacing: -0.015em; margin-bottom: 1rem;
+  }
+  .brand-pane-hero p { font-size: 16px; line-height: 1.55; opacity: 0.9; }
+  .brand-pane-footer { font-size: 12px; opacity: 0.7; }
+  .lang-toggle {
+    background: transparent; color: #fff;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 6px; padding: 0.25rem 0.6rem; font-size: 12px;
+  }
+
+  /* Expired state replaces the OTP form inline */
+  .expired-panel {
+    background: rgba(217, 119, 6, 0.06);
+    border: 1px solid rgba(217, 119, 6, 0.22);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  .expired-panel .icon {
+    width: 48px; height: 48px;
+    background: rgba(217, 119, 6, 0.15);
+    color: var(--bp-warning-fg);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 0.85rem;
+  }
+  .expired-panel h2 {
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--bp-ink);
+    margin-bottom: 0.4rem;
+  }
+  .expired-panel p {
+    color: var(--bp-ink-2);
+    font-size: 14px;
+    margin-bottom: 1.25rem;
+    line-height: 1.5;
+  }
+  .resend-meta {
+    font-size: 12px;
+    color: var(--bp-muted);
+    margin-top: 0.75rem;
+  }
+  .resend-meta .remaining {
+    background: rgba(15, 110, 122, 0.08);
+    color: var(--bp-primary);
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-left: 0.35rem;
+  }
+
+  /* Limit-reached variant */
+  .limit-note {
+    background: var(--bp-surface);
+    border: 1px solid var(--bp-border);
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    font-size: 13px;
+    color: var(--bp-ink-2);
+    margin-top: 1rem;
+    line-height: 1.55;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- MOCKUP: 13-verify-email-expired.html — Inline expired state    -->
+<!-- Reached when the 5-min countdown hits 0 on the verify-email    -->
+<!-- screen (IA #3). OTP form is replaced inline by this panel.     -->
+<!-- User can resend (up to 3 total) or restart via signup.         -->
+<!-- ============================================================ -->
+<div class="auth-shell">
+  <aside class="auth-brand-pane" aria-label="Brand context">
+    <header class="d-flex align-items-center justify-content-between">
+      <a href="#" class="brand-mark">
+        <span class="logo-dot" aria-hidden="true"></span>
+        Basha Pass
+      </a>
+      <button type="button" class="lang-toggle" aria-label="Switch language">EN · বাংলা</button>
+    </header>
+
+    <div class="brand-pane-hero">
+      <h2>Codes expire for your safety.</h2>
+      <p>A fresh code keeps your account secure. Request one and we'll send it right away.</p>
+    </div>
+
+    <div class="brand-pane-footer">
+      © 2026 Basha Pass · Free at launch · Dhaka only
+    </div>
+  </aside>
+
+  <main class="auth-form-pane">
+    <div class="auth-form" aria-label="Verify email — expired state">
+      <h1>Your code expired</h1>
+      <p class="subtitle">Codes are valid for 5 minutes. Send a fresh one to <strong>rimon.khan@…gmail.com</strong>.</p>
+
+      <div class="expired-panel" role="alert">
+        <div class="icon" aria-hidden="true"><i class="bi bi-clock-history"></i></div>
+        <h2>Code expired</h2>
+        <p>The 6-digit code we sent is no longer valid. Send a new one to keep going.</p>
+
+        <form action="/accounts/verify-email/resend/" method="post" novalidate>
+          <button type="submit" class="btn btn-primary w-100">
+            <i class="bi bi-arrow-clockwise"></i> Resend code
+          </button>
+        </form>
+
+        <div class="resend-meta">
+          Resend available <span class="remaining">2 of 3 left</span>
+        </div>
+      </div>
+
+      <p class="alt-link">
+        Wrong email? <a href="06-signup.html">Start over</a>
+      </p>
+    </div>
+  </main>
+</div>
+
+<!-- ============================================================ -->
+<!-- VARIANT B (commented, for design QA): resend-limit reached     -->
+<!-- After 3 resends, the Resend button disappears and a quiet      -->
+<!-- helper appears: "Resend limit reached. Sign up again to get    -->
+<!-- a fresh code." This is the limit-reached state.                 -->
+<!-- ============================================================ -->
+<!--
+<div class="auth-shell">
+  <main class="auth-form-pane" style="flex: 1;">
+    <div class="auth-form">
+      <h1>Your code expired</h1>
+      <p class="subtitle">Codes are valid for 5 minutes.</p>
+      <div class="expired-panel" role="alert">
+        <div class="icon"><i class="bi bi-shield-x"></i></div>
+        <h2>Resend limit reached</h2>
+        <p>You've used all 3 resends. Sign up again to get a fresh code and start over.</p>
+        <a href="06-signup.html" class="btn btn-primary w-100">Sign up again</a>
+      </div>
+      <div class="limit-note">
+        Resets don't compromise your account — they prevent abuse. If you didn't request these codes,
+        you can safely ignore them.
+      </div>
+    </div>
+  </main>
+</div>
+-->
+
+</body>
+</html>
