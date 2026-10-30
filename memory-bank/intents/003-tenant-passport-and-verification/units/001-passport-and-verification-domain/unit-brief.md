@@ -19,9 +19,9 @@ Deliver the foundational domain models, services, storage backends, and admin re
 
 ### In Scope
 - `Passport` and `LifestyleProfile` models with field validations, 13 canonical Dhaka areas, and post-verification immutability.
-- `ConsentService` (AD-3) defining public/private field projection protocols.
 - `Verification` model tracking verification attempts, NID front/back paths, selfie path, state, reviewer, timestamps, and reason code.
 - Private filesystem storage configuration (`media_private/`, AD-9) ensuring zero public access to NID and selfie images.
+- Staff-only authenticated private media streaming view for Django admin previews.
 - Canonical 5-member reject reason `Enum` in `apps/verification/services/reject_reasons.py` (AD-4).
 - `VerificationService.transition(...)` as the sole mutator enforcing state transitions, role permissions, and the 24-hour cooldown.
 - Append-only transactional audit logging in `AuditEntry` via `AuditService.append(...)` (AD-15).

@@ -22,12 +22,10 @@ implemented: false
 - [ ] **Given** an authenticated user with verified email, **When** a `Passport` is created, **Then** it links 1:1 with `User` via UUID primary key, stores a unique display name (3–32 chars), and initializes status as `unverified`.
 - [ ] **Given** a `Passport`, **When** its `LifestyleProfile` is populated, **Then** all 6 fields are strictly validated: `gender` (male, female, other), `occupation` (student, garments_worker, private_job, freelancer, other), `smoking` (yes, no, occasionally), `sleep_schedule` (early_bird, night_owl, flexible), `area_preference` (subset of 13 canonical Dhaka sub-areas), and `budget_min`/`budget_max` (৳500–৳50,000).
 - [ ] **Given** a passport in `verified` status, **When** any update is attempted via UI or API on passport or lifestyle fields, **Then** the mutation is blocked by model/service immutability invariants (FR-3).
-- [ ] **Given** any external viewer requesting passport details, **When** `ConsentService.render(viewer, passport)` is called, **Then** raw citizen identity and NID data are excluded per viewer protocol (AD-3).
 
 ## Technical Notes
 
 - Lives in `apps/passports/models.py`.
-- `ConsentService` implemented in `apps/passports/services/consent_service.py` adhering to Architecture Spine AD-3.
 - Canonical 13 Dhaka sub-areas: Mirpur, Mohammadpur, Uttara, Banani, Gulshan, Baridhara, Bashundhara, Dhanmondi, Ramna, Tejgaon, Gazipur, Narayanganj-adjacent, Other.
 
 ## Dependencies
