@@ -12,6 +12,14 @@
         <a class="bp-nav__link d-none d-lg-inline-block" href="#stories">Stories</a>
         <a class="bp-nav__link d-none d-lg-inline-block" href="#about">About</a>
         {% if request.user.is_authenticated %}
+          <a class="bp-nav__link" href="{% url 'dashboard' %}">
+            <i class="bi bi-grid-fill me-1"></i> Dashboard
+          </a>
+          {% if not request.user.passport or not request.user.passport.is_verified %}
+            <a class="btn btn-primary btn-sm d-none d-md-inline-flex align-items-center gap-1" href="{% url 'passport_create' %}">
+              <i class="bi bi-shield-check"></i> Verify Passport
+            </a>
+          {% endif %}
           <span class="small fw-semibold text-secondary d-none d-sm-inline-block">{{ request.user.display_name }}</span>
           <form action="{% url 'logout' %}" method="post" class="d-inline">
             {% csrf_token %}

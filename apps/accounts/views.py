@@ -258,7 +258,7 @@ class LoginView(View):
             next_url, allowed_hosts={request.get_host()}
         ):
             return redirect(next_url)
-        return redirect("/")
+        return redirect("dashboard")
 
 
 class LogoutView(View):

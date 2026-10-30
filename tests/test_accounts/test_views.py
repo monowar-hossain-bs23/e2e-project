@@ -334,7 +334,7 @@ class TestLoginView:
         assert SESSION_PENDING_USER_ID in client.session
 
     def test_login_post_verified_user_success(self, client):
-        """POST for verified user logs in and redirects to home."""
+        """POST for verified user logs in and redirects to dashboard."""
         user = User.objects.create_user(
             email="verified_login@example.com",
             password="StrongPassword123!",
@@ -347,7 +347,7 @@ class TestLoginView:
         }
         response = client.post(self.url, data=payload)
         assert response.status_code == 302
-        assert response.url == "/"
+        assert response.url == reverse("dashboard")
 
         # User is authenticated
         assert str(client.session["_auth_user_id"]) == str(user.pk)
@@ -384,7 +384,7 @@ class TestLoginView:
             f"{self.url}?next=https://malicious-site.example.com", data=payload
         )
         assert response.status_code == 302
-        assert response.url == "/"
+        assert response.url == reverse("dashboard")
 
 
 @pytest.mark.django_db
