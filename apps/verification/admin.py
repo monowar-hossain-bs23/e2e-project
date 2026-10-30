@@ -83,6 +83,37 @@ class VerificationAdmin(admin.ModelAdmin):
 
     actions = ["approve_submissions", "mark_in_review"]
 
+    def save_model(
+        self,
+        request,
+        obj: Verification,
+        form,
+        change: bool,
+    ) -> None:
+        """Enforce AD-10: review transitions must flow through VerificationService."""
+        if change and obj.reject_reason and obj.state != Verification.State.REJECTED:
+            res = VerificationService.transition(
+                verification=obj,
+                new_state=Verification.State.REJECTED,
+                actor=request.user,
+                reason=obj.reject_reason,
+                notes=obj.reviewer_notes,
+            )
+            if not res.get("ok"):
+                messages.error(
+                    request,
+                    f"Failed to reject submission: {res.get('message')}",
+                )
+            else:
+                messages.warning(
+                    request,
+                    f"Verification for {obj.passport.display_name} rejected "
+                    f"({obj.get_reject_reason_display()}). 24h cooldown initiated.",
+                )
+            return
+
+        super().save_model(request, obj, form, change)
+
     @admin.display(description="ID")
     def id_short(self, obj: Verification) -> str:
         return str(obj.id)[:8]

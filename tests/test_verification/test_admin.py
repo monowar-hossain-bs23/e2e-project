@@ -172,6 +172,38 @@ class TestVerificationAdmin:
         assert verification.state == Verification.State.REVIEWING
         assert verification.reviewed_by == staff_user
 
+    def test_admin_save_model_rejection(
+        self,
+        verification_admin: VerificationAdmin,
+        verification: Verification,
+        staff_user: User,
+    ) -> None:
+        from apps.verification.services.reject_reasons import RejectReason
+
+        rf = RequestFactory()
+        request = rf.post(f"/admin/verification/verification/{verification.id}/change/")
+        request.user = staff_user
+        request.session = "session"
+        messages = FallbackStorage(request)
+        request._messages = messages
+
+        verification.reject_reason = RejectReason.ILLEGIBLE
+        verification.reviewer_notes = "NID front is too blurry to read."
+
+        verification_admin.save_model(
+            request=request,
+            obj=verification,
+            form=None,
+            change=True,
+        )
+
+        verification.refresh_from_db()
+        assert verification.state == Verification.State.REJECTED
+        assert verification.passport.status == Passport.Status.REJECTED
+        assert verification.reject_reason == RejectReason.ILLEGIBLE
+        assert verification.last_rejection_at is not None
+        assert verification.reviewed_by == staff_user
+
     def test_fifo_queue_ordering_in_queryset(self, passport: Passport) -> None:
         now = timezone.now()
         v1 = Verification.objects.create(
