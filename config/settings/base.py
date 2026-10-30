@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     # Local apps
     "apps.core",
     "apps.accounts",
+    "apps.passports",
+    "apps.verification",
+    "apps.audit",
 ]
 
 AUTH_USER_MODEL = "accounts.User"
@@ -129,8 +132,12 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 # Media files & PII split (per Architecture Spine AD-9)
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
-MEDIA_PRIVATE_ROOT = MEDIA_ROOT / "private"
+MEDIA_PRIVATE_ROOT = BASE_DIR / "media_private"
 MEDIA_PUBLIC_ROOT = MEDIA_ROOT / "public"
+
+MEDIA_ROOT.mkdir(parents=True, exist_ok=True)
+MEDIA_PRIVATE_ROOT.mkdir(parents=True, exist_ok=True)
+MEDIA_PUBLIC_ROOT.mkdir(parents=True, exist_ok=True)
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

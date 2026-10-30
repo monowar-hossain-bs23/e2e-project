@@ -3,7 +3,7 @@ id: 005-passport-verification-service
 unit: 001-passport-and-verification-domain
 intent: 003-tenant-passport-and-verification
 type: ddd-construction-bolt
-status: in-progress
+status: complete
 stories:
   - 011-passport-and-lifestyle-models
   - 012-verification-model-and-private-storage
@@ -11,12 +11,24 @@ stories:
   - 014-admin-verification-queue
 created: '2026-10-30T13:40:00Z'
 started: '2026-10-30T17:20:00Z'
-completed: null
-current_stage: design
+completed: '2026-10-30T18:47:05Z'
+current_stage: null
 stages_completed:
   - name: model
     completed: '2026-10-30T17:20:00Z'
     artifact: ddd-01-domain-model.md
+  - name: design
+    completed: '2026-10-30T17:50:00Z'
+    artifact: ddd-02-technical-design.md
+  - name: adr
+    completed: '2026-10-30T17:55:00Z'
+    artifact: adr-002-private-pii-media-storage-and-staff-streaming.md
+  - name: implement
+    completed: '2026-10-30T18:15:00Z'
+    artifact: apps/passports/, apps/verification/, apps/audit/
+  - name: test
+    completed: '2026-10-31T00:46:00Z'
+    artifact: ddd-03-test-report.md
 requires_bolts:
   - 003-account-identity-service
 enables_bolts:
@@ -51,10 +63,10 @@ Establish the core trust foundation for Basha Pass, guaranteeing high-integrity 
 
 ## Stages
 - [x] **1. Model**: `ddd-01-domain-model.md`
-- [ ] **2. Design**: `ddd-02-technical-design.md`
-- [ ] **3. ADR**: Architecture decision record (e.g. private media storage & cooldown semantics)
-- [ ] **4. Implement**: Source code in `apps/passports/`, `apps/verification/`, `apps/audit/`
-- [ ] **5. Test**: Test suite in `tests/test_passports/`, `tests/test_verification/`, `tests/test_audit/` + `ddd-03-test-report.md`
+- [x] **2. Design**: `ddd-02-technical-design.md`
+- [x] **3. ADR**: `adr-002-private-pii-media-storage-and-staff-streaming.md`
+- [x] **4. Implement**: Source code in `apps/passports/`, `apps/verification/`, `apps/audit/`
+- [x] **5. Test**: Test suite in `tests/test_passports/`, `tests/test_verification/`, `tests/test_audit/` + `ddd-03-test-report.md`
 
 ## Dependencies
 
@@ -65,10 +77,10 @@ Establish the core trust foundation for Basha Pass, guaranteeing high-integrity 
 - `006-passport-verification-ui`
 
 ## Success Criteria
-- [ ] `Passport` and `LifestyleProfile` enforce 6 lifestyle dimensions and post-verification immutability
-- [ ] NID front/back and selfie images saved exclusively to `media_private/` with zero public route exposure
-- [ ] `VerificationService.transition(...)` enforces role authz, legal transitions, and 24-hour cooldown
-- [ ] Direct email sent within 5 minutes of verification approval or rejection
-- [ ] `AuditEntry` logged atomically for every verification state mutation
-- [ ] Staff review queue in Django Admin orders submissions FIFO and requires canonical reason codes on rejection
-- [ ] Automated pytest suite validates domain rules, transitions, cooldowns, and isolation
+- [x] `Passport` and `LifestyleProfile` enforce 6 lifestyle dimensions and post-verification immutability
+- [x] NID front/back and selfie images saved exclusively to `media_private/` with zero public route exposure
+- [x] `VerificationService.transition(...)` enforces role authz, legal transitions, and 24-hour cooldown
+- [x] Direct email sent within 5 minutes of verification approval or rejection
+- [x] `AuditEntry` logged atomically for every verification state mutation
+- [x] Staff review queue in Django Admin orders submissions FIFO and requires canonical reason codes on rejection
+- [x] Automated pytest suite validates domain rules, transitions, cooldowns, and isolation

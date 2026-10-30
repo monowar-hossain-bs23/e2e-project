@@ -1,0 +1,16 @@
+Hello {{ display_name }},
+
+We reviewed your recent identity verification submission, but unfortunately we could not verify your documents at this time.
+
+Reason: {{ reason_label }}
+{% if reviewer_notes %}Reviewer note: {{ reviewer_notes }}{% endif %}
+
+To protect against abuse, Basha Pass enforces a 24-hour waiting period before you can submit a new verification attempt.
+You will be able to re-submit fresh documents after: {{ cooldown_until|date:"N j, Y, P" }}.
+
+You can view your status here:
+{{ dashboard_url }}
+
+--
+Basha Pass Team
+Sent to {{ recipient_email }}

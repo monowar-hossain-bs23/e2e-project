@@ -1,0 +1,13 @@
+Congratulations, {{ display_name }}!
+
+Your identity documents have been successfully verified by our staff. Your Tenant Passport is now active!
+
+Verified Status: Active
+You can now view verified listings, see landlord contact details, and create your own listings.
+
+Access your dashboard here:
+{{ dashboard_url }}
+
+--
+Basha Pass Team
+Sent to {{ recipient_email }}

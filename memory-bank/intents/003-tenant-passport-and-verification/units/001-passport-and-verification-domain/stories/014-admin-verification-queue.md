@@ -2,11 +2,11 @@
 id: 014-admin-verification-queue
 unit: 001-passport-and-verification-domain
 intent: 003-tenant-passport-and-verification
-status: ready
+status: complete
 priority: must
 created: '2026-10-30T13:40:00Z'
 assigned_bolt: 005-passport-verification-service
-implemented: false
+implemented: true
 ---
 
 # Story: 014-admin-verification-queue

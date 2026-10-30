@@ -44,6 +44,8 @@ db.sqlite3
 db.sqlite3-journal
 media/private/*
 !media/private/.gitkeep
+media_private/*
+!media_private/.gitkeep
 media/public/*
 !media/public/.gitkeep
 staticfiles/

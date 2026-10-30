@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Basha Pass Verification Update</title>
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.5; color: #0F172A; max-width: 600px; margin: 0 auto; padding: 24px;">
+  <div style="background-color: #C56B4F; padding: 20px; border-radius: 8px 8px 0 0; text-align: center; color: white;">
+    <h1 style="margin: 0; font-size: 22px;">Basha Pass</h1>
+  </div>
+  <div style="border: 1px solid #E2E8F0; border-top: none; padding: 28px; border-radius: 0 0 8px 8px; background-color: #FFFFFF;">
+    <h2 style="color: #C56B4F; margin-top: 0;">Verification Update for {{ display_name }}</h2>
+    <p>We reviewed your recent identity verification submission, but unfortunately we could not verify your documents at this time.</p>
+    
+    <div style="background-color: #FBEFE9; border-left: 4px solid #C56B4F; padding: 14px; margin: 20px 0; border-radius: 4px;">
+      <p style="margin: 0; font-weight: 600; color: #C56B4F;">Reason: {{ reason_label }}</p>
+      {% if reviewer_notes %}
+        <p style="margin: 6px 0 0; font-size: 14px; color: #334155;"><strong>Reviewer note:</strong> {{ reviewer_notes }}</p>
+      {% endif %}
+    </div>
+
+    <p style="font-size: 14px; color: #334155;">
+      To protect against abuse, Basha Pass enforces a <strong>24-hour waiting period</strong> before you can submit a new verification attempt.
+      You can re-submit after <strong>{{ cooldown_until|date:"N j, Y, P" }}</strong>.
+    </p>
+
+    <p style="margin-top: 24px;">
+      <a href="{{ dashboard_url }}" style="background-color: #0F6E7A; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">View Status in Dashboard</a>
+    </p>
+
+    <hr style="border: none; border-top: 1px solid #E2E8F0; margin: 24px 0;">
+    <p style="font-size: 12px; color: #5A6878; margin: 0;">This email was sent to {{ recipient_email }} regarding your Basha Pass account.</p>
+  </div>
+</body>
+</html>
