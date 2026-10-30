@@ -1,0 +1,35 @@
+{# expects: verified_listers_count #}
+<!-- HERO SIDE PASSPORT PREVIEW -->
+<div class="bp-passport-wrapper">
+  <div class="bp-passport-card">
+    <div class="bp-passport-card__head">
+      <div class="d-flex gap-3 align-items-center">
+        <div class="bp-passport-card__photo">R</div>
+        <div>
+          <p class="bp-passport-card__name">Rimon H.</p>
+          <p class="bp-passport-card__meta">Mirpur · verified 4 months</p>
+        </div>
+      </div>
+      <span class="bp-verified-pill">
+        <i class="bi bi-shield-fill-check"></i> Verified
+      </span>
+    </div>
+    <div class="bp-passport-card__price">
+      ৳4,500 <small>/ seat · from Sept 15</small>
+    </div>
+    <div class="bp-passport-card__chips">
+      <span class="bp-chip">Non-smoker</span>
+      <span class="bp-chip">Early bird</span>
+      <span class="bp-chip">Student</span>
+      <span class="bp-chip bp-chip--soft">Matches 5 of 6</span>
+    </div>
+    <div class="bp-passport-card__foot">
+      <span><i class="bi bi-geo-alt me-1"></i> Near campus, 2-min walk</span>
+      <span><i class="bi bi-arrow-right-circle-fill me-1"></i> Reach out</span>
+    </div>
+  </div>
+  <div class="bp-hero__float">
+    <i class="bi bi-shield-fill-check" style="color: var(--bp-success); font-size: 18px;"></i>
+    <span><span class="num">{{ verified_listers_count|default:"142" }}</span> verified listers live</span>
+  </div>
+</div>

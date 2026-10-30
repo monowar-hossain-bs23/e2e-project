@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Basha Pass — Find a verified roommate in Dhaka{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/landing.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- NAVIGATION (AD-5) -->
+{% include "basha/partials/navbar.html" %}
+
+<!-- HERO SECTION -->
+<section class="bp-hero">
+  <div class="container-xl">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-7">
+        <span class="bp-hero__eyebrow">
+          <span class="dot"></span> Verified tenants · Dhaka
+        </span>
+        <h1 class="bp-hero__title">
+          Find a verified roommate in Dhaka — without handing your NID to strangers.
+        </h1>
+        <p class="bp-hero__sub">
+          Verified tenants and verified listers, side by side. Browse seats and rooms, reach out off-platform, and skip the paperwork loop on every move.
+        </p>
+        <div class="bp-hero__ctas">
+          <a class="btn btn-primary" href="/accounts/signup/">Create free account</a>
+          <a class="btn btn-outline-secondary" href="#how">See how it works</a>
+        </div>
+        <div class="bp-trust">
+          <span class="bp-trust__item"><i class="bi bi-shield-check"></i> NID verified by police portal</span>
+          <span class="bp-trust__item"><i class="bi bi-clock-history"></i> Reviewed in ~24 hours</span>
+          <span class="bp-trust__item"><i class="bi bi-chat-square-dots"></i> Off-platform contact</span>
+        </div>
+      </div>
+      <div class="col-lg-5 d-none d-lg-block">
+        {% include "basha/partials/passport_preview.html" %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS (AD-5) -->
+{% include "basha/partials/how_it_works.html" %}
+
+<!-- STORIES / TESTIMONIALS (AD-5) -->
+{% include "basha/partials/testimonials.html" %}
+
+<!-- CTA BANNER (AD-5) -->
+{% include "basha/partials/cta_banner.html" %}
+
+<!-- FOOTER (AD-5) -->
+{% include "basha/partials/footer.html" %}
+{% endblock %}

@@ -1,0 +1,41 @@
+[project]
+name = "basha-pass"
+version = "0.1.0"
+description = "Verified roommate and seat-matching platform for urban Bangladesh"
+authors = [
+    {name = "Basha Pass Team"}
+]
+readme = "README.md"
+requires-python = ">=3.12,<4"
+dependencies = [
+    "django>=5.2,<6.0",
+    "django-environ>=0.11.0",
+    "psycopg[binary]>=3.2.0",
+]
+
+[tool.poetry]
+package-mode = false
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.0"
+pytest-django = "^4.9.0"
+ruff = "^0.9.0"
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings.test"
+python_files = ["test_*.py", "*_test.py"]
+pythonpath = ["."]
+addopts = "--strict-markers"

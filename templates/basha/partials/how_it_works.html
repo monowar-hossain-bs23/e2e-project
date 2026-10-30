@@ -1,0 +1,67 @@
+{# expects: min_rent_bdt, sub_areas_count, turnaround_hours #}
+<!-- HOW IT WORKS -->
+<section id="how" class="bp-section">
+  <div class="container-xl">
+    <div class="text-center mx-auto" style="max-width: 720px;">
+      <p class="bp-section__eyebrow">How it works</p>
+      <h2 class="bp-section__title mx-auto">Three steps. No group posts, no NID handoffs.</h2>
+      <p class="bp-section__sub mx-auto">A verified passport is your portable identity across rentals. Build it once, use it everywhere on Basha Pass.</p>
+    </div>
+
+    <div class="row g-4 mt-2">
+      <div class="col-lg-4">
+        <div class="bp-how-card">
+          <div class="bp-how-card__num">1</div>
+          <div class="bp-how-card__icon"><i class="bi bi-person-vcard"></i></div>
+          <h3 class="bp-how-card__title">Verify your passport</h3>
+          <p class="bp-how-card__body">Upload NID front, NID back, and a selfie. Our team routes it to the police portal — verdict comes back within ~24 hours.</p>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="bp-how-card">
+          <div class="bp-how-card__num">2</div>
+          <div class="bp-how-card__icon"><i class="bi bi-funnel"></i></div>
+          <h3 class="bp-how-card__title">Browse verified seats &amp; rooms</h3>
+          <p class="bp-how-card__body">Filter by area, budget, kind. Each card shows kind, rent, area, lister preferences, and your match score out of 6.</p>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="bp-how-card">
+          <div class="bp-how-card__num">3</div>
+          <div class="bp-how-card__icon"><i class="bi bi-telephone-outbound"></i></div>
+          <h3 class="bp-how-card__title">Reach out off-platform</h3>
+          <p class="bp-how-card__body">Tap a card to see contact info. Message directly via email, phone, or WhatsApp. We never run in-app threads.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats strip -->
+    <div class="bp-stats">
+      <div class="bp-stat">
+        <div class="bp-stat__num">৳{{ min_rent_bdt|default:"500" }}</div>
+        <div class="bp-stat__label">Minimum rent tracked</div>
+      </div>
+      <div class="bp-stat">
+        <div class="bp-stat__num">{{ sub_areas_count|default:"13" }}</div>
+        <div class="bp-stat__label">Dhaka sub-areas</div>
+      </div>
+      <div class="bp-stat">
+        <div class="bp-stat__num">~{{ turnaround_hours|default:"24" }}h</div>
+        <div class="bp-stat__label">Verification turnaround</div>
+      </div>
+      <div class="bp-stat">
+        <div class="bp-stat__num">100%</div>
+        <div class="bp-stat__label">NID-verified listers</div>
+      </div>
+    </div>
+
+    <!-- Verification explainer -->
+    <div class="bp-explainer">
+      <div class="bp-explainer__icon"><i class="bi bi-shield-lock"></i></div>
+      <div>
+        <h3 class="bp-explainer__title">Why a passport?</h3>
+        <p class="bp-explainer__body">Verification is shared, not stored next to anyone you'd rather not meet. The portal reaches its verdict out-of-band; we only mirror what it tells us. Your NID photos live in private storage and never appear on your listing.</p>
+      </div>
+    </div>
+  </div>
+</section>

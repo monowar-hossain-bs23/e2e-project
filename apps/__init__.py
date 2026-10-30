@@ -1,0 +1,1 @@
+"""Basha Pass applications package."""

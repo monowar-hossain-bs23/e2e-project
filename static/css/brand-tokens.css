@@ -1,0 +1,96 @@
+/* Brand design tokens for Basha Pass
+   Derived from docs/mockups/01-landing.html and DESIGN.md
+*/
+
+:root,
+[data-bs-theme="light"] {
+  /* Brand palette */
+  --bp-primary: #0F6E7A;        /* Trust Teal */
+  --bp-primary-rgb: 15, 110, 122;
+  --bp-primary-fg: #FFFFFF;
+  --bp-primary-soft: #E6F2F4;
+  --bp-primary-soft-border: rgba(15, 110, 122, 0.18);
+  --bp-secondary: #C56B4F;       /* Warm secondary */
+  --bp-secondary-rgb: 197, 107, 79;
+  --bp-secondary-soft: #FBEFE9;
+  --bp-success: #16A34A;
+  --bp-success-fg: #15803D;      /* AA-passing success text (4.95:1 on surface) */
+  --bp-warning-fg: #B45309;      /* AA-passing warning text (4.55:1 on surface) */
+  --bp-ink: #0F172A;
+  --bp-ink-2: #334155;
+  --bp-muted: #5A6878;
+  --bp-border: #E2E8F0;
+  --bp-surface: #FAFBFD;
+  --bp-canvas: #F4F6F9;
+
+  /* Button state tokens */
+  --bp-btn-primary-bg: #0F6E7A;
+  --bp-btn-primary-bg-hover: #0a525b;
+  --bp-btn-primary-bg-active: #083f47;
+  --bp-btn-primary-border-hover: #083f47;
+  --bp-btn-primary-border-active: #063238;
+  --bp-btn-on-dark-primary-bg-hover: #138892;
+  --bp-btn-on-dark-primary-border-hover: #117a87;
+  --bp-btn-outline-light-border: rgba(255, 255, 255, 0.55);
+  --bp-btn-outline-light-border-hover: rgba(255, 255, 255, 0.75);
+  --bp-btn-outline-light-border-active: rgba(255, 255, 255, 0.85);
+  --bp-btn-outline-light-hover-bg: rgba(255, 255, 255, 0.12);
+  --bp-btn-outline-light-active-bg: rgba(255, 255, 255, 0.20);
+
+  /* Elevation tokens */
+  --bp-elev-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.06);
+  --bp-elev-card-hover: 0 12px 32px rgba(15, 23, 42, 0.06);
+  --bp-elev-modal: 0 8px 24px rgba(15, 23, 42, 0.10);
+  --bp-elev-toast: 0 6px 18px rgba(15, 23, 42, 0.08);
+  --bp-elev-focus-ring: 0 0 0 2px #FFFFFF, 0 0 0 4px #0F6E7A;
+  --bp-elev-passport-stack: 0 10px 30px rgba(15, 23, 42, 0.08), 0 30px 60px -20px rgba(15, 110, 122, 0.18);
+
+  /* Decorative gradients */
+  --bp-grad-passport-card-photo: linear-gradient(135deg, #0F6E7A, #16A34A);
+  --bp-grad-hero-radial-primary: radial-gradient(1100px 480px at 80% -10%, rgba(15, 110, 122, 0.10), transparent 60%);
+  --bp-grad-hero-radial-secondary: radial-gradient(700px 380px at 10% 20%, rgba(197, 107, 79, 0.08), transparent 60%);
+  --bp-grad-cta-panel-radial: radial-gradient(700px 320px at 95% 105%, rgba(15, 110, 122, 0.20), transparent 60%);
+  --bp-grad-how-card-radial-hover: radial-gradient(circle at top right, rgba(15, 110, 122, 0.18), transparent 70%);
+  --bp-grad-how-card-radial-rest: radial-gradient(circle at top right, rgba(15, 110, 122, 0.10), transparent 70%);
+
+  /* Re-paint Bootstrap default colors to brand palette */
+  --bs-primary: var(--bp-primary);
+  --bs-primary-rgb: var(--bp-primary-rgb);
+  --bs-secondary: var(--bp-secondary);
+  --bs-secondary-rgb: var(--bp-secondary-rgb);
+  --bs-link-color: var(--bp-primary);
+  --bs-link-hover-color: var(--bp-btn-primary-bg-hover);
+  --bs-body-color: var(--bp-ink);
+  --bs-body-font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --bs-border-color: var(--bp-border);
+}
+
+/* Button overrides for Bootstrap components */
+.btn-primary {
+  --bs-btn-bg: var(--bp-primary);
+  --bs-btn-border-color: var(--bp-primary);
+  --bs-btn-hover-bg: var(--bp-btn-primary-bg-hover);
+  --bs-btn-hover-border-color: var(--bp-btn-primary-border-hover);
+  --bs-btn-active-bg: var(--bp-btn-primary-bg-active);
+  --bs-btn-active-border-color: var(--bp-btn-primary-border-active);
+  --bs-btn-disabled-bg: var(--bp-primary);
+  --bs-btn-disabled-border-color: var(--bp-primary);
+}
+
+.btn-secondary {
+  --bs-btn-bg: var(--bp-secondary);
+  --bs-btn-border-color: var(--bp-secondary);
+  --bs-btn-hover-bg: #a85639;
+  --bs-btn-hover-border-color: #9c4f37;
+  --bs-btn-active-bg: #9c4f37;
+  --bs-btn-active-border-color: #823f2a;
+  --bs-btn-disabled-bg: var(--bp-secondary);
+  --bs-btn-disabled-border-color: var(--bp-secondary);
+}
+
+body {
+  background-color: var(--bp-canvas);
+  color: var(--bp-ink);
+  font-family: var(--bs-body-font-family);
+  -webkit-font-smoothing: antialiased;
+}
