@@ -2,7 +2,7 @@
 unit: 002-passport-verification-ui
 intent: 003-tenant-passport-and-verification
 phase: inception
-status: ready
+status: complete
 created: '2026-10-30T13:40:00Z'
 updated: '2026-10-30T13:40:00Z'
 unit_type: frontend

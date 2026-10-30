@@ -1,0 +1,37 @@
+<!-- Unverified Tenant Teaser Dashboard (Mockup 19) -->
+<div class="bp-verify-banner mb-4">
+  <div class="bp-verify-banner__icon">
+    <i class="bi bi-shield-lock"></i>
+  </div>
+  <div class="bp-verify-banner__body">
+    <h3 class="bp-verify-banner__title">Unlock Verified Dhaka Listings</h3>
+    <p class="bp-verify-banner__copy">
+      Complete your Tenant Passport to verify your identity, message verified roommates, and view direct contact details.
+    </p>
+  </div>
+  <div class="bp-verify-banner__actions">
+    <a href="{% url 'passport_create' %}" class="btn btn-primary btn-sm px-3 py-2 fw-semibold">
+      <i class="bi bi-arrow-right-circle me-1"></i> Verify Passport Now
+    </a>
+  </div>
+</div>
+
+<div class="bp-card text-center py-5 px-4 mb-4">
+  <div class="bp-softgate">
+    <div class="bp-softgate__icon" style="width: 64px; height: 64px; margin: 0 auto 1.25rem; background: var(--bp-primary-soft); color: var(--bp-primary); border-radius: 16px; display: inline-flex; align-items: center; justify-content: center; font-size: 30px;">
+      <i class="bi bi-patch-check"></i>
+    </div>
+    <h3 class="bp-softgate__title fw-bold">Verification takes less than 2 minutes</h3>
+    <p class="bp-softgate__copy text-muted mx-auto" style="max-width: 480px;">
+      Submit your basic lifestyle preferences and a quick photo of your NID. Our team verifies submissions securely within 24 hours.
+    </p>
+    <ul class="list-unstyled text-start mx-auto my-4" style="max-width: 360px;">
+      <li class="py-1 text-secondary"><i class="bi bi-check2 text-primary fw-bold me-2"></i> Private PII storage — never shared publicly</li>
+      <li class="py-1 text-secondary"><i class="bi bi-check2 text-primary fw-bold me-2"></i> Verified Tenant trust badge on your profile</li>
+      <li class="py-1 text-secondary"><i class="bi bi-check2 text-primary fw-bold me-2"></i> Unlock direct phone contact with verified flatmates</li>
+    </ul>
+    <a href="{% url 'passport_create' %}" class="btn btn-primary px-4 py-2 fw-semibold">
+      Start Verification Wizard
+    </a>
+  </div>
+</div>

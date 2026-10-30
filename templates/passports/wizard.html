@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Verify Tenant Passport — Basha Pass{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/passports.css' %}">
+<style>
+  .wizard-section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--bp-ink);
+    margin-bottom: 0.25rem;
+  }
+  .wizard-section-lede {
+    font-size: 14px;
+    color: var(--bp-muted);
+    margin-bottom: 1.5rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+{% include "basha/partials/navbar.html" %}
+
+<main class="py-5" style="background: var(--bp-canvas); min-height: 85vh;">
+  <div class="container" style="max-width: 760px;">
+
+    <!-- Stepper Indicator -->
+    <div class="wizard-stepper mb-4">
+      <div class="wizard-step completed">
+        <div class="wizard-step__circle"><i class="bi bi-check2"></i></div>
+        <span class="wizard-step__label">Account</span>
+      </div>
+      <div class="wizard-step active">
+        <div class="wizard-step__circle">2</div>
+        <span class="wizard-step__label">Profile & Lifestyle</span>
+      </div>
+      <div class="wizard-step">
+        <div class="wizard-step__circle">3</div>
+        <span class="wizard-step__label">Identity Documents</span>
+      </div>
+    </div>
+
+    <!-- Main Wizard Card -->
+    <div class="bp-card">
+      <div class="bp-card__body">
+        <div class="mb-4 text-center">
+          <span class="text-uppercase fw-bold small text-primary" style="letter-spacing: 0.06em;">Step 2 of 3</span>
+          <h1 class="h3 fw-bold text-dark mt-1 mb-2">Create Your Tenant Passport</h1>
+          <p class="text-secondary small mb-0">
+            Tell us about your living habits and verify your national identity to unlock full platform access.
+          </p>
+        </div>
+
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger" role="alert">
+            {% for error in form.non_field_errors %}
+              <div><i class="bi bi-exclamation-circle-fill me-1"></i> {{ error }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data" novalidate id="passport-wizard-form">
+          {% csrf_token %}
+
+          <!-- Section 1: Public Identity -->
+          <div class="mb-4 pb-3 border-bottom">
+            <h2 class="wizard-section-title"><i class="bi bi-person-badge text-primary me-2"></i>1. Public Profile</h2>
+            <p class="wizard-section-lede">This handle is public to other roommates and landlords in Dhaka.</p>
+
+            <div class="mb-3">
+              <label for="{{ form.display_name.id_for_label }}" class="form-label fw-semibold">
+                {{ form.display_name.label }} <span class="text-danger">*</span>
+              </label>
+              {{ form.display_name }}
+              {% if form.display_name.errors %}
+                <div class="text-danger small mt-1">
+                  {% for error in form.display_name.errors %}{{ error }}{% endfor %}
+                </div>
+              {% else %}
+                <div class="form-text small">{{ form.display_name.help_text }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Section 2: Six Lifestyle Dimensions -->
+          <div class="mb-4 pb-3 border-bottom">
+            <h2 class="wizard-section-title"><i class="bi bi-sliders text-primary me-2"></i>2. Lifestyle Preferences</h2>
+            <p class="wizard-section-lede">Accurate habits ensure compatible roommate matches across Dhaka neighborhoods.</p>
+
+            <div class="row g-3 mb-3">
+              <div class="col-12 col-md-6">
+                <label for="{{ form.gender.id_for_label }}" class="form-label fw-semibold">
+                  {{ form.gender.label }} <span class="text-danger">*</span>
+                </label>
+                {{ form.gender }}
+                {% if form.gender.errors %}
+                  <div class="text-danger small mt-1">{% for error in form.gender.errors %}{{ error }}{% endfor %}</div>
+                {% endif %}
+              </div>
+              <div class="col-12 col-md-6">
+                <label for="{{ form.occupation.id_for_label }}" class="form-label fw-semibold">
+                  {{ form.occupation.label }} <span class="text-danger">*</span>
+                </label>
+                {{ form.occupation }}
+                {% if form.occupation.errors %}
+                  <div class="text-danger small mt-1">{% for error in form.occupation.errors %}{{ error }}{% endfor %}</div>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="row g-3 mb-3">
+              <div class="col-12 col-md-6">
+                <label for="{{ form.smoking.id_for_label }}" class="form-label fw-semibold">
+                  {{ form.smoking.label }} <span class="text-danger">*</span>
+                </label>
+                {{ form.smoking }}
+                {% if form.smoking.errors %}
+                  <div class="text-danger small mt-1">{% for error in form.smoking.errors %}{{ error }}{% endfor %}</div>
+                {% endif %}
+              </div>
+              <div class="col-12 col-md-6">
+                <label for="{{ form.sleep_schedule.id_for_label }}" class="form-label fw-semibold">
+                  {{ form.sleep_schedule.label }} <span class="text-danger">*</span>
+                </label>
+                {{ form.sleep_schedule }}
+                {% if form.sleep_schedule.errors %}
+                  <div class="text-danger small mt-1">{% for error in form.sleep_schedule.errors %}{{ error }}{% endfor %}</div>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="row g-3 mb-3">
+              <div class="col-12 col-md-6">
+                <label for="{{ form.budget_min.id_for_label }}" class="form-label fw-semibold">
+                  {{ form.budget_min.label }} <span class="text-danger">*</span>
+                </label>
+                {{ form.budget_min }}
+                {% if form.budget_min.errors %}
+                  <div class="text-danger small mt-1">{% for error in form.budget_min.errors %}{{ error }}{% endfor %}</div>
+                {% endif %}
+              </div>
+              <div class="col-12 col-md-6">
+                <label for="{{ form.budget_max.id_for_label }}" class="form-label fw-semibold">
+                  {{ form.budget_max.label }} <span class="text-danger">*</span>
+                </label>
+                {{ form.budget_max }}
+                {% if form.budget_max.errors %}
+                  <div class="text-danger small mt-1">{% for error in form.budget_max.errors %}{{ error }}{% endfor %}</div>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">
+                {{ form.area_preference.label }} <span class="text-danger">*</span>
+              </label>
+              {% if form.area_preference.errors %}
+                <div class="text-danger small mb-2">{% for error in form.area_preference.errors %}{{ error }}{% endfor %}</div>
+              {% else %}
+                <div class="form-text small mb-2">{{ form.area_preference.help_text }}</div>
+              {% endif %}
+
+              <div class="area-checkbox-grid">
+                {% for choice_value, choice_label in form.fields.area_preference.choices %}
+                  <label class="area-checkbox-item">
+                    <input
+                      type="checkbox"
+                      name="area_preference"
+                      value="{{ choice_value }}"
+                      class="form-check-input mt-0"
+                      {% if choice_value in form.area_preference.value %}checked{% endif %}
+                    >
+                    <span>{{ choice_label }}</span>
+                  </label>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 3: Identity Verification Documents -->
+          <div class="mb-4">
+            <h2 class="wizard-section-title"><i class="bi bi-shield-check text-primary me-2"></i>3. National ID Verification</h2>
+            <p class="wizard-section-lede">
+              Documents are stored in an encrypted private partition (<code class="small">media_private/</code>) with zero public access.
+            </p>
+
+            <div class="row g-3 mb-3">
+              <div class="col-12 col-md-6">
+                <div class="upload-dropzone">
+                  <i class="bi bi-front"></i>
+                  <label class="fw-semibold d-block small mb-1">{{ form.nid_front.label }} <span class="text-danger">*</span></label>
+                  <span class="text-muted small d-block mb-2">JPEG, PNG or WebP ≤ 5MB</span>
+                  {{ form.nid_front }}
+                  {% if form.nid_front.errors %}
+                    <div class="text-danger small mt-2">{% for error in form.nid_front.errors %}{{ error }}{% endfor %}</div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="col-12 col-md-6">
+                <div class="upload-dropzone">
+                  <i class="bi bi-back"></i>
+                  <label class="fw-semibold d-block small mb-1">{{ form.nid_back.label }} <span class="text-danger">*</span></label>
+                  <span class="text-muted small d-block mb-2">JPEG, PNG or WebP ≤ 5MB</span>
+                  {{ form.nid_back }}
+                  {% if form.nid_back.errors %}
+                    <div class="text-danger small mt-2">{% for error in form.nid_back.errors %}{{ error }}{% endfor %}</div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="upload-dropzone">
+                  <i class="bi bi-person-bounding-box"></i>
+                  <label class="fw-semibold d-block small mb-1">{{ form.selfie.label }} <span class="text-danger">*</span></label>
+                  <span class="text-muted small d-block mb-2">{{ form.selfie.help_text }}</span>
+                  {{ form.selfie }}
+                  {% if form.selfie.errors %}
+                    <div class="text-danger small mt-2">{% for error in form.selfie.errors %}{{ error }}{% endfor %}</div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Submission Controls -->
+          <div class="d-flex align-items-center justify-content-between pt-3 border-top">
+            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary px-3 py-2">
+              Cancel
+            </a>
+            <button type="submit" class="btn btn-primary px-4 py-2 fw-semibold">
+              <i class="bi bi-send-check me-1"></i> Submit for Verification
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

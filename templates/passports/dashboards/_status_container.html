@@ -1,0 +1,12 @@
+<!-- Dynamic Status Container for Dashboard & HTMX polling -->
+<div id="status-container" hx-get="{% url 'dashboard_status_partial' %}" hx-trigger="statusUpdate from:body" hx-swap="outerHTML">
+  {% if state == "verified" %}
+    {% include "passports/dashboards/_verified.html" %}
+  {% elif state == "pending" %}
+    {% include "passports/dashboards/_in_review.html" %}
+  {% elif state == "rejected" %}
+    {% include "passports/dashboards/_rejected.html" %}
+  {% else %}
+    {% include "passports/dashboards/_unverified_teaser.html" %}
+  {% endif %}
+</div>

@@ -1,0 +1,31 @@
+<!-- In Review Status Screen (Story 016) -->
+<div class="bp-card mb-4" style="border-left: 4px solid var(--bp-primary);">
+  <div class="bp-card__body">
+    <div class="d-flex align-items-center gap-3 mb-3">
+      <div style="width: 48px; height: 48px; border-radius: 999px; background: var(--bp-primary-soft); color: var(--bp-primary); display: flex; align-items: center; justify-content: center; font-size: 24px;">
+        <i class="bi bi-hourglass-split"></i>
+      </div>
+      <div>
+        <span class="text-uppercase fw-bold small text-primary" style="letter-spacing: 0.06em;">Application Status</span>
+        <h3 class="h4 fw-bold text-dark mb-0">Documents Under Review</h3>
+      </div>
+    </div>
+
+    <p class="text-secondary mb-3">
+      Thank you for submitting your identity documents! Our operations team reviews all applications in strict first-in, first-out (FIFO) order.
+    </p>
+
+    <div class="alert alert-light border d-flex align-items-center gap-3 py-2 px-3 mb-3" style="background: var(--bp-surface);">
+      <i class="bi bi-clock-history text-muted fs-4"></i>
+      <div class="small text-secondary">
+        <strong>Review SLA:</strong> Most applications are reviewed in under <strong>24 hours</strong>. You will receive an email confirmation as soon as your passport is evaluated.
+      </div>
+    </div>
+
+    {% if verification and verification.submitted_at %}
+      <div class="text-muted small">
+        <i class="bi bi-calendar3 me-1"></i> Submitted on: <strong>{{ verification.submitted_at|date:"N j, Y, P" }}</strong>
+      </div>
+    {% endif %}
+  </div>
+</div>

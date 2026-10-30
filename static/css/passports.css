@@ -1,0 +1,268 @@
+/* Passports & Verification UI Styles
+   Derived from mockups 14-verify-step-1-phone.html, 19-dashboard-unverified.html, 21-dashboard-rejected.html
+*/
+
+/* Wizard Stepper Header */
+.wizard-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 2rem;
+  padding: 0 1rem;
+}
+.wizard-stepper::before {
+  content: "";
+  position: absolute;
+  top: 18px;
+  left: 2rem;
+  right: 2rem;
+  height: 2px;
+  background: var(--bp-border);
+  z-index: 1;
+}
+.wizard-step {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  background: transparent;
+  flex: 1;
+}
+.wizard-step__circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: #fff;
+  border: 2px solid var(--bp-border);
+  color: var(--bp-muted);
+  font-weight: 700;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.35rem;
+  transition: all 0.2s ease;
+}
+.wizard-step.active .wizard-step__circle {
+  background: var(--bp-primary);
+  border-color: var(--bp-primary);
+  color: #fff;
+  box-shadow: 0 0 0 4px var(--bp-primary-soft);
+}
+.wizard-step.completed .wizard-step__circle {
+  background: var(--bp-success);
+  border-color: var(--bp-success);
+  color: #fff;
+}
+.wizard-step__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--bp-muted);
+  display: block;
+}
+.wizard-step.active .wizard-step__label {
+  color: var(--bp-primary);
+}
+
+/* Card Wrappers */
+.bp-card {
+  background: #fff;
+  border: 1px solid var(--bp-border);
+  border-radius: 16px;
+  box-shadow: var(--bp-elev-card);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.bp-card__body {
+  padding: 28px;
+}
+@media (min-width: 768px) {
+  .bp-card__body {
+    padding: 36px;
+  }
+}
+
+/* Document Upload Dropzones */
+.upload-dropzone {
+  border: 2px dashed var(--bp-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  background: var(--bp-surface);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.upload-dropzone:hover,
+.upload-dropzone:focus-within {
+  border-color: var(--bp-primary);
+  background: var(--bp-primary-soft);
+}
+.upload-dropzone i {
+  font-size: 28px;
+  color: var(--bp-primary);
+  margin-bottom: 0.5rem;
+  display: block;
+}
+.upload-dropzone input[type="file"] {
+  display: block;
+  margin: 0.5rem auto 0;
+  max-width: 280px;
+}
+
+/* Area Checkbox Grid */
+.area-checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+.area-checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 14px;
+  color: var(--bp-ink-2);
+  background: var(--bp-surface);
+  border: 1px solid var(--bp-border);
+  border-radius: 8px;
+  padding: 0.45rem 0.65rem;
+  cursor: pointer;
+}
+.area-checkbox-item:hover {
+  background: var(--bp-primary-soft);
+  border-color: var(--bp-primary-soft-border);
+}
+
+/* Verification State Banners */
+.bp-verify-banner {
+  background: var(--bp-primary-soft);
+  border: 1px solid rgba(15, 110, 122, 0.20);
+  border-left: 4px solid var(--bp-primary);
+  border-radius: 14px;
+  padding: 22px 24px;
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  flex-wrap: wrap;
+  box-shadow: var(--bp-elev-card);
+}
+.bp-verify-banner__icon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  background: var(--bp-primary);
+  color: #fff;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+.bp-verify-banner__body {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+.bp-verify-banner__title {
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--bp-ink);
+  margin: 0 0 4px;
+}
+.bp-verify-banner__copy {
+  font-size: 14px;
+  color: var(--bp-ink-2);
+  margin: 0;
+}
+
+/* Rejection Card & Cooldown Panel (Mockup 21) */
+.bp-rejection {
+  border-left: 4px solid var(--bp-warning-fg);
+  background: linear-gradient(180deg, rgba(180, 83, 9, 0.08) 0%, #fff 70%);
+}
+.bp-rejection__icon {
+  width: 56px;
+  height: 56px;
+  background: rgba(180, 83, 9, 0.12);
+  color: var(--bp-warning-fg);
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  margin-bottom: 1.25rem;
+}
+.bp-rejection__eyebrow {
+  font-size: 12px;
+  color: var(--bp-warning-fg);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.bp-rejection__title {
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: -0.015em;
+  color: var(--bp-ink);
+  margin: 0 0 0.65rem;
+}
+.bp-rejection__reason {
+  background: #fff;
+  border: 1px solid var(--bp-border);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  font-size: 14px;
+  color: var(--bp-ink-2);
+  margin-bottom: 1.5rem;
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+}
+.bp-cooldown {
+  background: var(--bp-surface);
+  border: 1px solid var(--bp-border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+.bp-cooldown__label {
+  font-size: 12px;
+  color: var(--bp-muted);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+.bp-cooldown__time {
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 32px;
+  letter-spacing: -0.02em;
+  color: var(--bp-ink);
+  margin-bottom: 0.4rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Verified Badge & Trust Pill */
+.bp-badge-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #DCFCE7;
+  color: #15803D;
+  border: 1px solid rgba(22, 163, 74, 0.25);
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.01em;
+}
+.bp-tag-pill {
+  display: inline-block;
+  background: var(--bp-surface);
+  border: 1px solid var(--bp-border);
+  color: var(--bp-ink-2);
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+}

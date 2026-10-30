@@ -2,11 +2,11 @@
 id: 016-verification-status-dashboards
 unit: 002-passport-verification-ui
 intent: 003-tenant-passport-and-verification
-status: ready
+status: complete
 priority: must
 created: '2026-10-30T13:40:00Z'
 assigned_bolt: 006-passport-verification-ui
-implemented: false
+implemented: true
 ---
 
 # Story: 016-verification-status-dashboards

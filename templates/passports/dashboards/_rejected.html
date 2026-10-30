@@ -1,0 +1,78 @@
+{% load static %}
+<!-- Rejection & 24-Hour Cooldown Dashboard (Mockup 21, FR-5) -->
+<div class="bp-card bp-rejection mb-4">
+  <div class="bp-card__body">
+    <div class="bp-rejection__icon">
+      <i class="bi bi-exclamation-triangle"></i>
+    </div>
+    <div class="bp-rejection__eyebrow">Verification Status</div>
+    <h3 class="bp-rejection__title">Verification could not be approved</h3>
+    <p class="bp-rejection__copy">
+      We reviewed your recent identity verification submission, but could not verify your identity based on the uploaded documents.
+    </p>
+
+    <!-- Generic reason code display -->
+    <div class="bp-rejection__reason">
+      <i class="bi bi-info-circle-fill"></i>
+      <div>
+        <strong>Reason:</strong>
+        {% if verification and verification.reject_reason %}
+          {{ verification.get_reject_reason_display }}
+        {% else %}
+          Document criteria could not be confirmed.
+        {% endif %}
+        {% if verification and verification.reviewer_notes %}
+          <div class="mt-1 text-muted">
+            <em>"{{ verification.reviewer_notes }}"</em>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- 24-Hour Cooldown Panel -->
+    <div class="bp-cooldown">
+      <div class="bp-cooldown__label">Resubmission Cooldown</div>
+      <div
+        id="cooldown-timer"
+        class="bp-cooldown__time"
+        data-remaining-seconds="{% if cooldown and cooldown.cooldown_active %}{{ cooldown.remaining_seconds }}{% else %}0{% endif %}"
+      >
+        --:--:--
+      </div>
+      <p id="cooldown-helper" class="bp-cooldown__helper text-muted">
+        {% if cooldown and cooldown.cooldown_active %}
+          To protect against abuse, Basha Pass enforces a 24-hour waiting period before you can submit a new attempt.
+        {% else %}
+          Cooldown has expired. You may submit fresh documents now.
+        {% endif %}
+      </p>
+    </div>
+
+    <!-- Actions -->
+    <div class="d-flex align-items-center gap-3 flex-wrap mt-3">
+      {% if cooldown and cooldown.cooldown_active %}
+        <button
+          id="resubmit-btn"
+          class="btn btn-primary px-4 py-2 fw-semibold disabled"
+          disabled
+          aria-disabled="true"
+        >
+          <i class="bi bi-arrow-repeat me-1"></i> Resubmit Documents
+        </button>
+      {% else %}
+        <a
+          id="resubmit-btn"
+          href="{% url 'passport_create' %}"
+          class="btn btn-primary px-4 py-2 fw-semibold"
+        >
+          <i class="bi bi-arrow-repeat me-1"></i> Resubmit Documents
+        </a>
+      {% endif %}
+      <a href="mailto:support@bashapass.com" class="btn btn-outline-secondary px-3 py-2">
+        Contact Support
+      </a>
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'js/cooldown-timer.js' %}"></script>

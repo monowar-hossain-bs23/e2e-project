@@ -1,0 +1,35 @@
+<!-- Passport Header Component (AD-5) -->
+<div class="bp-card p-4 mb-4">
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+    <div class="d-flex align-items-center gap-3">
+      <div class="bp-avatar" style="width: 56px; height: 56px; font-size: 20px; font-weight: 700; background: var(--bp-primary); color: #fff; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center;">
+        {{ passport.display_name|slice:":1"|upper }}
+      </div>
+      <div>
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+          <h2 class="h4 mb-0 fw-bold text-dark">{{ passport.display_name }}</h2>
+          {% if passport.is_verified %}
+            <span class="bp-badge-verified">
+              <i class="bi bi-patch-check-fill"></i> Verified Tenant
+            </span>
+          {% else %}
+            <span class="badge bg-secondary text-white">{{ passport.get_status_display }}</span>
+          {% endif %}
+        </div>
+        <p class="text-muted small mb-0 mt-1">
+          Basha Pass ID: <code class="text-secondary">{{ passport.id|stringformat:"s"|slice:":8" }}</code>
+        </p>
+      </div>
+    </div>
+
+    {% if profile %}
+      <div class="d-flex flex-wrap gap-2">
+        <span class="bp-tag-pill"><i class="bi bi-briefcase me-1"></i>{{ profile.get_occupation_display }}</span>
+        <span class="bp-tag-pill"><i class="bi bi-person me-1"></i>{{ profile.get_gender_display }}</span>
+        <span class="bp-tag-pill"><i class="bi bi-cash me-1"></i>৳{{ profile.budget_min }} – ৳{{ profile.budget_max }}</span>
+        <span class="bp-tag-pill"><i class="bi bi-moon me-1"></i>{{ profile.get_sleep_schedule_display }}</span>
+        <span class="bp-tag-pill"><i class="bi bi-slash-circle me-1"></i>Smoking: {{ profile.get_smoking_display }}</span>
+      </div>
+    {% endif %}
+  </div>
+</div>

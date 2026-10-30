@@ -3,15 +3,24 @@ id: 006-passport-verification-ui
 unit: 002-passport-verification-ui
 intent: 003-tenant-passport-and-verification
 type: simple-construction-bolt
-status: planned
+status: complete
 stories:
   - 015-passport-submission-wizard
   - 016-verification-status-dashboards
 created: '2026-10-30T13:40:00Z'
-started: null
-completed: null
+started: '2026-10-31T00:50:00Z'
+completed: '2026-10-30T19:06:28Z'
 current_stage: null
-stages_completed: []
+stages_completed:
+  - name: plan
+    completed: '2026-10-31T00:51:00Z'
+    artifact: implementation-plan.md
+  - name: implement
+    completed: '2026-10-31T01:01:00Z'
+    artifact: implementation-walkthrough.md
+  - name: test
+    completed: '2026-10-31T01:05:00Z'
+    artifact: test-walkthrough.md
 requires_bolts:
   - 004-user-auth-ui
   - 005-passport-verification-service
@@ -43,9 +52,9 @@ Deliver an intuitive, responsive, and trustworthy onboarding experience for urba
 **Definition**: `.specsmd/aidlc/templates/construction/bolt-types/simple-construction-bolt.md`
 
 ## Stages
-- [ ] **1. Plan**: `implementation-plan.md`
-- [ ] **2. Implement**: Source code + `implementation-walkthrough.md`
-- [ ] **3. Test**: Test suite + `test-walkthrough.md`
+- [x] **1. Plan**: `implementation-plan.md`
+- [x] **2. Implement**: Source code + `implementation-walkthrough.md`
+- [x] **3. Test**: Test suite + `test-walkthrough.md`
 
 ## Dependencies
 
@@ -57,10 +66,10 @@ Deliver an intuitive, responsive, and trustworthy onboarding experience for urba
 - Future listing creation and roommate matching intents
 
 ## Success Criteria
-- [ ] Multi-step wizard captures display name, 6 lifestyle axes, and valid NID/selfie images
-- [ ] Client-side and server-side validation enforces image constraints (JPEG, PNG, WebP ≤ 5MB)
-- [ ] Unverified dashboard teaser prompts passport submission per mockup `19`
-- [ ] In-review pending view alerts user to typical <24h review SLA
-- [ ] Rejection view renders canonical reason code, reviewer note, and dynamic 24h countdown timer per mockup `21`
-- [ ] Verified badge rendered in passport header per AD-5
-- [ ] Automated integration tests verify end-to-end view flows
+- [x] Multi-step wizard captures display name, 6 lifestyle axes, and valid NID/selfie images
+- [x] Client-side and server-side validation enforces image constraints (JPEG, PNG, WebP ≤ 5MB)
+- [x] Unverified dashboard teaser prompts passport submission per mockup `19`
+- [x] In-review pending view alerts user to typical <24h review SLA
+- [x] Rejection view renders canonical reason code, reviewer note, and dynamic 24h countdown timer per mockup `21`
+- [x] Verified badge rendered in passport header per AD-5
+- [x] Automated integration tests verify end-to-end view flows
