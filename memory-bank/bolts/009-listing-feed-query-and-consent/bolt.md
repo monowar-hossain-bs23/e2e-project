@@ -3,15 +3,19 @@ id: 009-listing-feed-query-and-consent
 unit: 001-listing-feed-query-and-consent
 intent: 005-public-listing-feed-and-search
 type: ddd-construction-bolt
-status: planned
+status: complete
 stories:
   - 024-listing-consent-service-and-projection
   - 025-listing-feed-query-and-compatibility
 created: '2026-10-31T16:05:00Z'
-started: null
-completed: null
-current_stage: null
-stages_completed: []
+started: '2026-10-31T17:00:00Z'
+completed: '2026-11-01T01:15:00Z'
+current_stage: complete
+stages_completed:
+  - model
+  - design
+  - test
+  - implement
 requires_bolts:
   - 007-listing-domain-service
   - 008-listing-management-ui

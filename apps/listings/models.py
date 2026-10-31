@@ -164,6 +164,12 @@ class Listing(models.Model):
     @property
     def primary_photo(self) -> "ListingPhoto | None":
         """Return the primary photo based on order."""
+        if (
+            hasattr(self, "_prefetched_objects_cache")
+            and "photos" in self._prefetched_objects_cache
+        ):
+            photos = list(self.photos.all())
+            return photos[0] if photos else None
         return self.photos.order_by("order", "created_at").first()
 
     def clean(self) -> None:

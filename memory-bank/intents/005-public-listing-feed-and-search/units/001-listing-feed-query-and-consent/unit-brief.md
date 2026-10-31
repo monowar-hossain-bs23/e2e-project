@@ -1,10 +1,10 @@
 ---
 unit: 001-listing-feed-query-and-consent
 intent: 005-public-listing-feed-and-search
-phase: inception
-status: ready
+phase: construction
+status: complete
 created: '2026-10-31T15:58:00Z'
-updated: '2026-10-31T15:58:00Z'
+updated: '2026-11-01T01:15:00Z'
 ---
 
 # Unit Brief: 001-listing-feed-query-and-consent
@@ -104,15 +104,15 @@ Provides the unified, high-performance read-model query engine ([`ListingFeedQue
 ## Success Criteria
 
 ### Functional
-- [ ] Unverified and anonymous viewers receive `email=None` and `phone=None` in projections.
-- [ ] Verified viewers receive full contact details.
-- [ ] 6-axis compatibility heuristic accurately evaluates the 6 lifestyle dimensions returning 0 to 6.
-- [ ] Listings >60 days old, archived, or withdrawn are excluded from public feed.
+- [x] Unverified and anonymous viewers receive `email=None` and `phone=None` in projections.
+- [x] Verified viewers receive full contact details.
+- [x] 6-axis compatibility heuristic accurately evaluates the 6 lifestyle dimensions returning 0 to 6.
+- [x] Listings >60 days old, archived, or withdrawn are excluded from public feed.
 
 ### Non-Functional
-- [ ] Feed query execution executes in < 150ms p95 on 10,000 listings.
-- [ ] Eager loading ensures constant query count regardless of page size.
-- [ ] 100% test coverage on `ConsentService` and `ListingFeedQuery`.
+- [x] Feed query execution executes in < 150ms p95 on 10,000 listings.
+- [x] Eager loading ensures constant query count regardless of page size.
+- [x] 100% test coverage on `ConsentService` and `ListingFeedQuery`.
 
 ---
 

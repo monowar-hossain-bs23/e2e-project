@@ -29,6 +29,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=32,
         help_text="Public-facing handle shown to other tenants (2–32 chars).",
     )
+    phone_number = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+        help_text="Optional contact phone number for verified rental inquiries.",
+    )
     email_verified = models.BooleanField(
         default=False,
         help_text="Designates whether the user has verified their email via OTP.",

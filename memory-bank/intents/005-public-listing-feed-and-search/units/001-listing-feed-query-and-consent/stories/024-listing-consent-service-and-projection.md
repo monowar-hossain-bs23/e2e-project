@@ -2,11 +2,11 @@
 id: 024-listing-consent-service-and-projection
 unit: 001-listing-feed-query-and-consent
 intent: 005-public-listing-feed-and-search
-status: ready
+status: complete
 priority: must
 created: '2026-10-31T16:00:00Z'
 assigned_bolt: 009-listing-feed-query-and-consent
-implemented: false
+implemented: true
 ---
 
 # Story: 024-listing-consent-service-and-projection
@@ -19,10 +19,10 @@ implemented: false
 
 ## Acceptance Criteria
 
-- [ ] **Given** an unauthenticated viewer or unverified user, **When** `ConsentService.render(viewer, listing)` is invoked, **Then** the returned `ListingProjection` has `email=None`, `phone=None`, and `lifestyle_summary="Verify to see lifestyle fit"`.
-- [ ] **Given** an authenticated user holding a verified Tenant Passport (`passport.status == 'verified'`), **When** `ConsentService.render(viewer, listing)` is invoked, **Then** the returned `ListingProjection` contains the lister's `email` and `phone` as well as the full author lifestyle summary.
-- [ ] **Given** any viewer, **When** `ConsentService.render` constructs the projection, **Then** sensitive PII (author citizen ID number, NID photos, selfie) is never attached to the projection under any circumstances.
-- [ ] **Given** an administrative viewer (`user.is_staff == True`), **When** `ConsentService.render` is called, **Then** an admin projection with PII is available for staff inspection only.
+- [x] **Given** an unauthenticated viewer or unverified user, **When** `ConsentService.render(viewer, listing)` is invoked, **Then** the returned `ListingProjection` has `email=None`, `phone=None`, and `lifestyle_summary="Verify to see lifestyle fit"`.
+- [x] **Given** an authenticated user holding a verified Tenant Passport (`passport.status == 'verified'`), **When** `ConsentService.render(viewer, listing)` is invoked, **Then** the returned `ListingProjection` contains the lister's `email` and `phone` as well as the full author lifestyle summary.
+- [x] **Given** any viewer, **When** `ConsentService.render` constructs the projection, **Then** sensitive PII (author citizen ID number, NID photos, selfie) is never attached to the projection under any circumstances.
+- [x] **Given** an administrative viewer (`user.is_staff == True`), **When** `ConsentService.render` is called, **Then** an admin projection with PII is available for staff inspection only.
 
 ## Technical Notes
 

@@ -50,8 +50,8 @@
 ## 005-public-listing-feed-and-search
 
 ### 001-listing-feed-query-and-consent
-- [ ] [`024-listing-consent-service-and-projection`](file:///home/bs01496/Documents/LMS/basa-pass/memory-bank/intents/005-public-listing-feed-and-search/units/001-listing-feed-query-and-consent/stories/024-listing-consent-service-and-projection.md) - ConsentService & viewer-scoped PII projection shielding contact info (Must, assigned: `009-listing-feed-query-and-consent`)
-- [ ] [`025-listing-feed-query-and-compatibility`](file:///home/bs01496/Documents/LMS/basa-pass/memory-bank/intents/005-public-listing-feed-and-search/units/001-listing-feed-query-and-consent/stories/025-listing-feed-query-and-compatibility.md) - ListingFeedQuery read model, multi-axis filtering, sorting, and 6-axis compatibility score (Must, assigned: `009-listing-feed-query-and-consent`)
+- [x] [`024-listing-consent-service-and-projection`](file:///home/bs01496/Documents/LMS/basa-pass/memory-bank/intents/005-public-listing-feed-and-search/units/001-listing-feed-query-and-consent/stories/024-listing-consent-service-and-projection.md) - ConsentService & viewer-scoped PII projection shielding contact info (Must, assigned: `009-listing-feed-query-and-consent`)
+- [x] [`025-listing-feed-query-and-compatibility`](file:///home/bs01496/Documents/LMS/basa-pass/memory-bank/intents/005-public-listing-feed-and-search/units/001-listing-feed-query-and-consent/stories/025-listing-feed-query-and-compatibility.md) - ListingFeedQuery read model, multi-axis filtering, sorting, and 6-axis compatibility score (Must, assigned: `009-listing-feed-query-and-consent`)
 
 ### 002-listing-feed-and-detail-ui
 - [ ] [`026-feed-view-and-filter-ui`](file:///home/bs01496/Documents/LMS/basa-pass/memory-bank/intents/005-public-listing-feed-and-search/units/002-listing-feed-and-detail-ui/stories/026-feed-view-and-filter-ui.md) - Public listing feed view, offcanvas filter drawer, & sorting controls matching Mockup 03 (Must, assigned: `010-listing-discovery-and-detail-ui`)
