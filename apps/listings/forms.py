@@ -45,11 +45,11 @@ class MultipleFileField(forms.FileField):
 class ListingCreationForm(forms.ModelForm):
     """Multi-section creation form for new accommodation listings."""
 
-    area = forms.MultipleChoiceField(
+    area = forms.ChoiceField(
         choices=[(area, area) for area in DHAKA_SUB_AREAS],
-        widget=forms.CheckboxSelectMultiple,
+        widget=forms.RadioSelect,
         required=True,
-        error_messages={"required": _("Please select at least one Dhaka sub-area.")},
+        error_messages={"required": _("Please select a Dhaka sub-area.")},
     )
     pref_occupation = forms.MultipleChoiceField(
         choices=PreferredOccupation.choices,
@@ -76,6 +76,7 @@ class ListingCreationForm(forms.ModelForm):
         model = Listing
         fields = [
             "kind",
+            "area",
             "rent_bdt",
             "rent_unit",
             "body",

@@ -91,11 +91,8 @@
       }
 
       if (previewAreas) {
-        var checkedAreas = [];
-        areaInputs.forEach(function (chk) {
-          if (chk.checked) checkedAreas.push(chk.value);
-        });
-        previewAreas.textContent = checkedAreas.length > 0 ? checkedAreas.join(', ') : 'Dhaka';
+        var checkedArea = document.querySelector('input[name="area"]:checked');
+        previewAreas.textContent = checkedArea ? checkedArea.value : 'Dhaka';
       }
 
       if (previewBody && bodyInput) {

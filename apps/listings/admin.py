@@ -75,9 +75,9 @@ class ListingAdmin(admin.ModelAdmin):
     def rent_display(self, obj: Listing) -> str:
         return f"৳{obj.rent_bdt:,}/{obj.get_rent_unit_display()}"
 
-    @admin.display(description="Areas")
+    @admin.display(description="Area")
     def areas_display(self, obj: Listing) -> str:
-        return ", ".join(obj.area) if obj.area else "-"
+        return obj.area or "-"
 
     @admin.display(description="Status")
     def status_badge(self, obj: Listing) -> str:

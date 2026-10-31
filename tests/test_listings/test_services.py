@@ -76,7 +76,7 @@ class TestListingService:
             kind=ListingKind.ROOM,
             rent_bdt=12000,
             rent_unit=RentUnit.PER_ROOM,
-            area=["Banani", "Gulshan"],
+            area="Banani",
             body="Spacious room with attached bath.",
             pref_gender=PreferredGender.MALE,
             pref_smoking=PreferredSmoking.NO,
@@ -109,7 +109,7 @@ class TestListingService:
             kind=ListingKind.SEAT,
             rent_bdt=4000,
             rent_unit=RentUnit.PER_SEAT,
-            area=["Mirpur"],
+            area="Mirpur",
             photo_files=[photo],
         )
         assert res["ok"] is False
@@ -125,7 +125,7 @@ class TestListingService:
                 kind=ListingKind.SEAT,
                 rent_bdt=5000,
                 rent_unit=RentUnit.PER_SEAT,
-                area=["Mirpur"],
+                area="Mirpur",
             )
 
         assert ListingService.check_active_cap(verified_passport) == 3
@@ -136,7 +136,7 @@ class TestListingService:
             kind=ListingKind.SEAT,
             rent_bdt=4500,
             rent_unit=RentUnit.PER_SEAT,
-            area=["Uttara"],
+            area="Uttara",
             photo_files=[photo],
         )
         assert res["ok"] is False
@@ -148,14 +148,14 @@ class TestListingService:
             kind=ListingKind.ROOM,
             rent_bdt=10000,
             rent_unit=RentUnit.PER_ROOM,
-            area=["Banani"],
+            area="Banani",
         )
 
         # Attempt to change area (locked)
         res = ListingService.edit(
             listing=listing,
             actor=verified_passport.user,
-            fields={"area": ["Dhanmondi"]},
+            fields={"area": "Dhanmondi"},
         )
         assert res["ok"] is False
         assert res["code"] == "field_locked"
@@ -176,7 +176,7 @@ class TestListingService:
             kind=ListingKind.ROOM,
             rent_bdt=10000,
             rent_unit=RentUnit.PER_ROOM,
-            area=["Banani"],
+            area="Banani",
             body="Old note",
             photo_files=[photo],
         )
@@ -199,7 +199,7 @@ class TestListingService:
             kind=ListingKind.SEAT,
             rent_bdt=5000,
             rent_unit=RentUnit.PER_SEAT,
-            area=["Mirpur"],
+            area="Mirpur",
         )
         assert listing.is_active is True
 
@@ -224,7 +224,7 @@ class TestListingService:
             kind=ListingKind.ROOM,
             rent_bdt=12000,
             rent_unit=RentUnit.PER_ROOM,
-            area=["Banani"],
+            area="Banani",
         )
         Listing.objects.filter(pk=l_stale.pk).update(created_at=stale_time)
 
@@ -234,7 +234,7 @@ class TestListingService:
             kind=ListingKind.SEAT,
             rent_bdt=5000,
             rent_unit=RentUnit.PER_SEAT,
-            area=["Mirpur"],
+            area="Mirpur",
         )
         Listing.objects.filter(pk=l_fresh.pk).update(created_at=fresh_time)
 

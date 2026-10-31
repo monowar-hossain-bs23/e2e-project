@@ -12,7 +12,7 @@
           Are you sure you want to withdraw this accommodation post?
         </p>
         <div class="p-3 bg-light rounded-3 border mb-3">
-          <div class="fw-bold text-dark">{{ item.get_kind_display }} in {{ item.area|join:", " }}</div>
+          <div class="fw-bold text-dark">{{ item.get_kind_display }} in {{ item.area|default:"Dhaka" }}</div>
           <div class="text-primary fw-semibold">৳{{ item.rent_bdt }} / {{ item.get_rent_unit_display }}</div>
         </div>
         <p class="text-muted small mb-0">

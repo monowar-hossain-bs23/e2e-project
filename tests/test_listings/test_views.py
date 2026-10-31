@@ -196,7 +196,7 @@ class TestListingCreateView:
                 kind=ListingKind.ROOM,
                 rent_bdt=12000 + i * 1000,
                 rent_unit=RentUnit.PER_ROOM,
-                area=["Dhanmondi"],
+                area="Dhanmondi",
                 photo_files=[create_mock_photo(f"room{i}.jpg")],
             )
 
@@ -219,7 +219,7 @@ class TestListingCreateView:
                 kind=ListingKind.ROOM,
                 rent_bdt=12000,
                 rent_unit=RentUnit.PER_ROOM,
-                area=["Dhanmondi"],
+                area="Dhanmondi",
                 photo_files=[create_mock_photo(f"cap{i}.jpg")],
             )
 
@@ -228,7 +228,7 @@ class TestListingCreateView:
             "kind": ListingKind.SEAT,
             "rent_bdt": 6000,
             "rent_unit": RentUnit.PER_SEAT,
-            "area": ["Mirpur"],
+            "area": "Mirpur",
             "photos": [create_mock_photo("4th.jpg")],
         }
         response = client.post(reverse("listing_create"), post_data, follow=True)
@@ -246,7 +246,7 @@ class TestListingCreateView:
             "kind": ListingKind.SEAT,
             "rent_bdt": 6000,
             "rent_unit": RentUnit.PER_ROOM,  # Mismatch!
-            "area": ["Mirpur"],
+            "area": "Mirpur",
             "photos": [create_mock_photo("photo.jpg")],
         }
         response = client.post(reverse("listing_create"), post_data)
@@ -261,7 +261,7 @@ class TestListingCreateView:
             "kind": ListingKind.ROOM,
             "rent_bdt": 15000,
             "rent_unit": RentUnit.PER_ROOM,
-            "area": ["Gulshan"],
+            "area": "Gulshan",
         }
         response = client.post(reverse("listing_create"), post_data)
         assert response.status_code == 200
@@ -276,7 +276,7 @@ class TestListingCreateView:
             "kind": ListingKind.ROOM,
             "rent_bdt": 16000,
             "rent_unit": RentUnit.PER_ROOM,
-            "area": ["Gulshan", "Banani"],
+            "area": "Gulshan",
             "body": "Spacious master bedroom with attached bath and balcony.",
             "pref_gender": PreferredGender.MALE,
             "pref_smoking": PreferredSmoking.NO,
@@ -320,7 +320,7 @@ class TestListerDashboardView:
             kind=ListingKind.ROOM,
             rent_bdt=14000,
             rent_unit=RentUnit.PER_ROOM,
-            area=["Dhanmondi"],
+            area="Dhanmondi",
             photo_files=[create_mock_photo("a.jpg")],
         )
         # Create listing for other_verified_user
@@ -329,7 +329,7 @@ class TestListerDashboardView:
             kind=ListingKind.SEAT,
             rent_bdt=5000,
             rent_unit=RentUnit.PER_SEAT,
-            area=["Uttara"],
+            area="Uttara",
             photo_files=[create_mock_photo("b.jpg")],
         )
 
@@ -356,7 +356,7 @@ class TestListerDashboardView:
             kind=ListingKind.ROOM,
             rent_bdt=15000,
             rent_unit=RentUnit.PER_ROOM,
-            area=["Banani"],
+            area="Banani",
             photo_files=[create_mock_photo("banani.jpg")],
         )
         # Withdrawn listing
@@ -365,7 +365,7 @@ class TestListerDashboardView:
             kind=ListingKind.SEAT,
             rent_bdt=5500,
             rent_unit=RentUnit.PER_SEAT,
-            area=["Mirpur"],
+            area="Mirpur",
             photo_files=[create_mock_photo("mirpur.jpg")],
         )
         ListingService.withdraw(listing=res_withdrawn["listing"], actor=verified_user)
@@ -400,7 +400,7 @@ class TestListingEditView:
             kind=ListingKind.ROOM,
             rent_bdt=18000,
             rent_unit=RentUnit.PER_ROOM,
-            area=["Dhanmondi"],
+            area="Dhanmondi",
             body="Original host note",
             photo_files=[create_mock_photo("room_orig.jpg")],
         )
@@ -449,7 +449,7 @@ class TestListingEditView:
         assert authored_listing.rent_bdt == 20000
         assert authored_listing.body == "Updated description with new terms."
         assert authored_listing.kind == ListingKind.ROOM  # Preserved!
-        assert authored_listing.area == ["Dhanmondi"]  # Preserved!
+        assert authored_listing.area == "Dhanmondi"  # Preserved!
 
 
 @pytest.mark.django_db
@@ -463,7 +463,7 @@ class TestListingWithdrawView:
             kind=ListingKind.SEAT,
             rent_bdt=6000,
             rent_unit=RentUnit.PER_SEAT,
-            area=["Mirpur"],
+            area="Mirpur",
             photo_files=[create_mock_photo("seat.jpg")],
         )
         return res["listing"]

@@ -102,16 +102,16 @@
 
             <!-- Area -->
             <div class="bp-field">
-              <label class="bp-label">Area (Multi-select) <span class="text-danger">*</span></label>
-              <div class="bp-chipgroup" role="group" aria-label="Areas — multi-select">
+              <label class="bp-label">Neighborhood / Area <span class="text-danger">*</span></label>
+              <div class="bp-chipgroup" role="radiogroup" aria-label="Dhaka neighborhood selection">
                 {% for val, text in form.area.field.choices %}
                   <label class="bp-chip">
-                    <input type="checkbox" name="area" value="{{ val }}" {% if val in form.area.value %}checked{% endif %}>
+                    <input type="radio" name="area" value="{{ val }}" {% if form.area.value == val %}checked{% endif %}>
                     <span>{{ text }}</span>
                   </label>
                 {% endfor %}
               </div>
-              <p class="bp-help">Pick the neighborhood(s) matching the accommodation location.</p>
+              <p class="bp-help">Select the Dhaka neighborhood where your accommodation is located.</p>
               {% if form.area.errors %}
                 <div class="text-danger small mt-1">{{ form.area.errors.0 }}</div>
               {% endif %}

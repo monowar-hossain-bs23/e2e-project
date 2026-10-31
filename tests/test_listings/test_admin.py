@@ -43,7 +43,7 @@ class TestListingAdmin:
             kind=ListingKind.ROOM,
             rent_bdt=14000,
             rent_unit=RentUnit.PER_ROOM,
-            area=["Banani"],
+            area="Banani",
         )
 
         assert listing_admin.id_short(listing) == str(listing.id)[:8]
@@ -61,7 +61,7 @@ class TestListingAdmin:
             kind=ListingKind.SEAT,
             rent_bdt=6000,
             rent_unit=RentUnit.PER_SEAT,
-            area=["Mirpur"],
+            area="Mirpur",
         )
         photo = ListingPhoto.objects.create(
             listing=listing,

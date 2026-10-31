@@ -15,12 +15,13 @@ from apps.listings.constants import (
     RentUnit,
 )
 from apps.listings.validators import (
-    validate_dhaka_sub_areas,
     validate_kind_and_rent_unit,
     validate_listing_body,
     validate_pref_occupations,
     validate_rent_bounds,
+    validate_single_dhaka_sub_area,
 )
+from apps.passports.validators import DHAKA_SUB_AREAS
 
 
 class Listing(models.Model):
@@ -54,10 +55,14 @@ class Listing(models.Model):
         default=RentPeriod.PER_MONTH,
         help_text=_("Billing cycle, fixed to per_month in v1."),
     )
-    area = models.JSONField(
-        default=list,
-        validators=[validate_dhaka_sub_areas],
-        help_text=_("List of Dhaka sub-areas from the canonical 13."),
+    area = models.CharField(
+        max_length=64,
+        choices=[(a, a) for a in DHAKA_SUB_AREAS],
+        validators=[validate_single_dhaka_sub_area],
+        db_index=True,
+        help_text=_(
+            "Dhaka sub-area from the canonical 13 where the accommodation is located."
+        ),
     )
     body = models.TextField(
         max_length=MAX_BODY_LENGTH,
@@ -127,9 +132,10 @@ class Listing(models.Model):
         ]
 
     def __str__(self) -> str:
-        areas = ", ".join(self.area) if self.area else "Dhaka"
+        area_display = self.area or "Dhaka"
         unit_label = self.get_rent_unit_display()
-        return f"{self.get_kind_display()} in {areas} — ৳{self.rent_bdt:,}/{unit_label}"
+        kind_label = self.get_kind_display()
+        return f"{kind_label} in {area_display} — ৳{self.rent_bdt:,}/{unit_label}"
 
     @property
     def is_active(self) -> bool:

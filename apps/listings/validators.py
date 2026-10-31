@@ -11,15 +11,24 @@ from apps.listings.constants import (
     PreferredOccupation,
     RentUnit,
 )
-from apps.passports.validators import validate_dhaka_sub_areas
+from apps.passports.validators import DHAKA_SUB_AREAS, validate_dhaka_sub_areas
 
 __all__ = [
     "validate_dhaka_sub_areas",
+    "validate_single_dhaka_sub_area",
     "validate_rent_bounds",
     "validate_kind_and_rent_unit",
     "validate_pref_occupations",
     "validate_listing_body",
 ]
+
+
+def validate_single_dhaka_sub_area(value: str) -> None:
+    """Validate that the listing area belongs to canonical Dhaka sub-areas."""
+    if not isinstance(value, str) or value not in DHAKA_SUB_AREAS:
+        raise ValidationError(
+            _(f"Invalid Dhaka area '{value}'. Must be one of the canonical 13.")
+        )
 
 
 def validate_rent_bounds(value: int) -> None:

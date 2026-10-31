@@ -23,11 +23,11 @@ from apps.listings.constants import (
 from apps.listings.models import Listing, ListingPhoto
 from apps.listings.services.storage import ListingPhotoStorageService
 from apps.listings.validators import (
-    validate_dhaka_sub_areas,
     validate_kind_and_rent_unit,
     validate_listing_body,
     validate_pref_occupations,
     validate_rent_bounds,
+    validate_single_dhaka_sub_area,
 )
 from apps.passports.models import Passport
 
@@ -54,7 +54,7 @@ class ListingService:
         kind: str,
         rent_bdt: int,
         rent_unit: str,
-        area: list[str],
+        area: str,
         body: str | None = None,
         pref_gender: str = PreferredGender.ANY,
         pref_smoking: str = PreferredSmoking.ANY,
@@ -77,7 +77,7 @@ class ListingService:
         try:
             validate_kind_and_rent_unit(kind, rent_unit)
             validate_rent_bounds(rent_bdt)
-            validate_dhaka_sub_areas(area)
+            validate_single_dhaka_sub_area(area)
             validate_listing_body(body)
             if pref_occupation:
                 validate_pref_occupations(pref_occupation)

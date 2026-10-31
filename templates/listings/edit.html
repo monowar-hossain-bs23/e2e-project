@@ -43,7 +43,7 @@
       <i class="bi bi-lock-fill text-muted fs-4 mt-1"></i>
       <div class="small">
         <strong>Identity Lock Protection:</strong>
-        To protect flat seekers against bait-and-switch alterations, the <strong>Accommodation Kind ({{ object.get_kind_display }})</strong> and <strong>Dhaka Neighborhoods ({% if object.area %}{{ object.area|join:", " }}{% else %}Dhaka{% endif %})</strong> are locked and cannot be edited. If you moved or changed accommodation types, please withdraw this post and create a new listing.
+        To protect flat seekers against bait-and-switch alterations, the <strong>Accommodation Kind ({{ object.get_kind_display }})</strong> and <strong>Dhaka Neighborhood ({{ object.area|default:"Dhaka" }})</strong> are locked and cannot be edited. If you moved or changed accommodation types, please withdraw this post and create a new listing.
       </div>
     </div>
 
@@ -74,11 +74,9 @@
                 </span>
               </div>
               <div class="col-md-6">
-                <label class="bp-label">Dhaka Neighborhoods</label>
-                <div class="d-flex flex-wrap gap-1">
-                  {% for area in object.area %}
-                    <span class="badge bg-light text-dark border px-2 py-1"><i class="bi bi-geo-alt text-danger me-1"></i>{{ area }}</span>
-                  {% endfor %}
+                <label class="bp-label">Dhaka Neighborhood</label>
+                <div>
+                  <span class="badge bg-light text-dark border px-2 py-1"><i class="bi bi-geo-alt text-danger me-1"></i>{{ object.area|default:"Dhaka" }}</span>
                 </div>
               </div>
             </div>

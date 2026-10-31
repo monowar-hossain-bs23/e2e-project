@@ -13,6 +13,7 @@ from apps.listings.constants import (
     RentUnit,
 )
 from apps.listings.models import Listing, ListingPhoto
+from apps.listings.validators import validate_single_dhaka_sub_area
 from apps.passports.models import Passport
 
 
@@ -39,7 +40,7 @@ class TestListingModels:
             kind=ListingKind.SEAT,
             rent_bdt=5000,
             rent_unit=RentUnit.PER_SEAT,
-            area=["Mirpur", "Uttara"],
+            area="Mirpur",
             body="Nice shared seat for student.",
         )
         assert listing.id is not None
@@ -51,7 +52,7 @@ class TestListingModels:
         assert listing.is_withdrawn is False
         assert listing.is_archived is False
         assert listing.status_label == "Active"
-        assert "Seat in Mirpur, Uttara" in str(listing)
+        assert "Seat in Mirpur" in str(listing)
 
     def test_listing_clean_enforces_kind_and_rent_unit_parity(
         self, author: Passport
@@ -61,7 +62,7 @@ class TestListingModels:
             kind=ListingKind.SEAT,
             rent_bdt=5000,
             rent_unit=RentUnit.PER_ROOM,  # Mismatch!
-            area=["Dhanmondi"],
+            area="Dhanmondi",
         )
         with pytest.raises(ValidationError) as exc:
             listing.clean()
@@ -73,7 +74,7 @@ class TestListingModels:
             kind=ListingKind.ROOM,
             rent_bdt=12000,
             rent_unit=RentUnit.PER_SEAT,  # Mismatch!
-            area=["Banani"],
+            area="Banani",
         )
         with pytest.raises(ValidationError) as exc:
             listing.clean()
@@ -85,7 +86,7 @@ class TestListingModels:
             kind=ListingKind.SEAT,
             rent_bdt=300,  # Below ৳500
             rent_unit=RentUnit.PER_SEAT,
-            area=["Mirpur"],
+            area="Mirpur",
         )
         with pytest.raises(ValidationError):
             listing_low.full_clean()
@@ -95,7 +96,7 @@ class TestListingModels:
             kind=ListingKind.ROOM,
             rent_bdt=60000,  # Above ৳50,000
             rent_unit=RentUnit.PER_ROOM,
-            area=["Gulshan"],
+            area="Gulshan",
         )
         with pytest.raises(ValidationError):
             listing_high.full_clean()
@@ -106,11 +107,16 @@ class TestListingModels:
             kind=ListingKind.ROOM,
             rent_bdt=15000,
             rent_unit=RentUnit.PER_ROOM,
-            area=["NonExistentArea"],
+            area="NonExistentArea",
         )
         with pytest.raises(ValidationError) as exc:
             listing.full_clean()
-        assert "Invalid Dhaka area" in str(exc.value)
+        assert "not a valid choice" in str(exc.value)
+
+        # Validate validator function directly
+        with pytest.raises(ValidationError) as val_exc:
+            validate_single_dhaka_sub_area("InvalidArea")
+        assert "Invalid Dhaka area" in str(val_exc.value)
 
     def test_listing_photo_cascade_and_ordering(self, author: Passport) -> None:
         listing = Listing.objects.create(
@@ -118,7 +124,7 @@ class TestListingModels:
             kind=ListingKind.ROOM,
             rent_bdt=15000,
             rent_unit=RentUnit.PER_ROOM,
-            area=["Banani"],
+            area="Banani",
         )
         p1 = ListingPhoto.objects.create(
             listing=listing, photo_path="listings/photos/p1.jpg", order=1
