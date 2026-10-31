@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Edit Listing — Basha Pass{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/listings.css' %}?v=1.0">
+{% endblock %}
+
+{% block content %}
+{% include "basha/partials/navbar.html" %}
+
+<!-- PAGE HEADER -->
+<header class="bp-page-head">
+  <div class="container-xl">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-2">
+      <ol class="breadcrumb mb-0" style="font-size: 13px;">
+        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}" class="text-decoration-none">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'listing_mine' %}" class="text-decoration-none">Your Listings</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Edit Listing</li>
+      </ol>
+    </nav>
+
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+      <div>
+        <h1 class="h2 fw-bold text-dark mb-1">Edit Listing Terms</h1>
+        <p class="text-secondary mb-0">Update rent, flatmate preferences, or add photos for your accommodation post.</p>
+      </div>
+      {% if object.is_active %}
+        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#withdrawModal-{{ object.id }}">
+          <i class="bi bi-x-circle me-1"></i> Withdraw Listing
+        </button>
+      {% endif %}
+    </div>
+  </div>
+</header>
+
+<main class="pb-5" style="background: var(--bp-canvas); min-height: 80vh;">
+  <div class="container-xl">
+    <!-- Locked Fields Notice -->
+    <div class="alert alert-secondary d-flex align-items-start gap-3 p-3 mb-4 border-0 shadow-sm rounded-4" role="alert">
+      <i class="bi bi-lock-fill text-muted fs-4 mt-1"></i>
+      <div class="small">
+        <strong>Identity Lock Protection:</strong>
+        To protect flat seekers against bait-and-switch alterations, the <strong>Accommodation Kind ({{ object.get_kind_display }})</strong> and <strong>Dhaka Neighborhoods ({% if object.area %}{{ object.area|join:", " }}{% else %}Dhaka{% endif %})</strong> are locked and cannot be edited. If you moved or changed accommodation types, please withdraw this post and create a new listing.
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <form method="post" enctype="multipart/form-data" novalidate>
+          {% csrf_token %}
+
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger mb-4 rounded-3" role="alert">
+              {% for error in form.non_field_errors %}
+                <div><i class="bi bi-exclamation-triangle-fill me-2"></i>{{ error }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <!-- Locked Identity Summary Card -->
+          <section class="bp-section-card">
+            <div class="bp-section-head">
+              <span class="bp-section-num"><i class="bi bi-lock-fill text-muted"></i></span>
+              <h2 class="bp-section-title">Locked Listing Identity</h2>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="bp-label">Accommodation Kind</label>
+                <span class="badge bg-light text-dark border px-3 py-2 fs-6">
+                  <i class="bi bi-lock me-1 text-muted"></i>{{ object.get_kind_display }}
+                </span>
+              </div>
+              <div class="col-md-6">
+                <label class="bp-label">Dhaka Neighborhoods</label>
+                <div class="d-flex flex-wrap gap-1">
+                  {% for area in object.area %}
+                    <span class="badge bg-light text-dark border px-2 py-1"><i class="bi bi-geo-alt text-danger me-1"></i>{{ area }}</span>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Mutable Terms Card -->
+          <section class="bp-section-card">
+            <div class="bp-section-head">
+              <span class="bp-section-num">1.</span>
+              <h2 class="bp-section-title">Rent & Pricing Terms</h2>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-7">
+                <label for="id_rent_bdt" class="bp-label">Monthly Rent (BDT) <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text fw-bold" style="background: var(--bp-surface); border-color: var(--bp-border);">৳</span>
+                  {{ form.rent_bdt }}
+                </div>
+                {% if form.rent_bdt.errors %}
+                  <div class="text-danger small mt-1">{{ form.rent_bdt.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <div class="col-md-5">
+                <label for="id_rent_unit" class="bp-label">Rent Unit <span class="text-danger">*</span></label>
+                {{ form.rent_unit }}
+                {% if form.rent_unit.errors %}
+                  <div class="text-danger small mt-1">{{ form.rent_unit.errors.0 }}</div>
+                {% endif %}
+              </div>
+            </div>
+          </section>
+
+          <!-- Roommate Preferences Card -->
+          <section class="bp-section-card">
+            <div class="bp-section-head">
+              <span class="bp-section-num">2.</span>
+              <h2 class="bp-section-title">Roommate Preferences</h2>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-4">
+                <label for="id_pref_gender" class="bp-label">Preferred Gender</label>
+                {{ form.pref_gender }}
+              </div>
+              <div class="col-md-4">
+                <label for="id_pref_smoking" class="bp-label">Smoking Habit</label>
+                {{ form.pref_smoking }}
+              </div>
+              <div class="col-md-4">
+                <label for="id_pref_sleep" class="bp-label">Sleep Schedule</label>
+                {{ form.pref_sleep }}
+              </div>
+
+              <div class="col-12 mt-3">
+                <label class="bp-label">Preferred Occupation(s)</label>
+                <div class="bp-chipgroup">
+                  {% for val, text in form.pref_occupation.field.choices %}
+                    <label class="bp-chip">
+                      <input type="checkbox" name="pref_occupation" value="{{ val }}" class="form-check-input mt-0 me-1" {% if val in form.pref_occupation.value or val in form.instance.pref_occupation %}checked{% endif %}>
+                      <span>{{ text }}</span>
+                    </label>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Photos Management Card -->
+          <section class="bp-section-card">
+            <div class="bp-section-head d-flex justify-content-between align-items-baseline">
+              <div class="d-flex align-items-baseline gap-2">
+                <span class="bp-section-num">3.</span>
+                <h2 class="bp-section-title">Accommodation Photos</h2>
+              </div>
+              <span class="badge bg-light text-dark border">{{ object.photos.count }} / 7 Photos</span>
+            </div>
+
+            <label class="bp-label">Existing Photos</label>
+            <div class="row g-3 mb-4">
+              {% for photo in object.photos.all %}
+                <div class="col-6 col-sm-4 col-md-3">
+                  <div class="card border shadow-sm h-100 overflow-hidden rounded-3">
+                    <img src="/media/{{ photo.photo_path }}" class="card-img-top" style="height: 100px; object-fit: cover;" alt="Photo">
+                    <div class="card-body p-2 bg-light text-center">
+                      <label class="form-check-label small text-danger cursor-pointer d-flex align-items-center justify-content-center gap-1">
+                        <input type="checkbox" name="delete_photos" value="{{ photo.id }}" class="form-check-input mt-0">
+                        Delete
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+
+            <!-- Upload Additional Photos -->
+            <label for="id_new_photos" class="bp-label">Add More Photos (Max 5MB each)</label>
+            <div class="input-group">
+              <input type="file" name="new_photos" id="id_new_photos" multiple accept="image/jpeg,image/png,image/webp" class="form-control">
+            </div>
+            {% if form.new_photos.errors %}
+              <div class="text-danger small mt-1">{{ form.new_photos.errors.0 }}</div>
+            {% endif %}
+            <p class="bp-help">Upload additional landscape-oriented images (JPEG, PNG, WebP).</p>
+          </section>
+
+          <!-- Host Note Card -->
+          <section class="bp-section-card">
+            <div class="bp-section-head">
+              <span class="bp-section-num">4.</span>
+              <h2 class="bp-section-title">Host Note & Expectations</h2>
+            </div>
+            <div class="bp-field">
+              <label for="id_body" class="bp-label">Description (Optional)</label>
+              {{ form.body }}
+              {% if form.body.errors %}
+                <div class="text-danger small mt-1">{{ form.body.errors.0 }}</div>
+              {% endif %}
+            </div>
+          </section>
+
+          <!-- Form Actions -->
+          <div class="d-flex align-items-center justify-content-between gap-3 pt-2">
+            <a href="{% url 'listing_mine' %}" class="btn btn-outline-secondary px-4 py-2">
+              Cancel
+            </a>
+            <button type="submit" class="btn btn-primary px-5 py-2 fw-semibold">
+              <i class="bi bi-check2-circle me-1"></i> Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Right Column: Status & Advice -->
+      <div class="col-lg-4">
+        <div class="bp-side-card">
+          <h3 class="bp-side-card__title">Listing Status</h3>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <span class="text-muted small">Status:</span>
+            {% if object.is_active %}
+              <span class="badge bg-success-subtle text-success">Active</span>
+            {% elif object.is_withdrawn %}
+              <span class="badge bg-secondary-subtle text-secondary">Withdrawn</span>
+            {% elif object.is_archived %}
+              <span class="badge bg-warning-subtle text-dark">Archived</span>
+            {% endif %}
+          </div>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <span class="text-muted small">Posted:</span>
+            <span class="text-dark small fw-semibold">{{ object.created_at|date:"M d, Y" }}</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-between">
+            <span class="text-muted small">Last Updated:</span>
+            <span class="text-dark small fw-semibold">{{ object.updated_at|date:"M d, Y" }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+{% if object.is_active %}
+  {% include "listings/partials/withdraw_modal.html" with item=object %}
+{% endif %}
+{% endblock %}

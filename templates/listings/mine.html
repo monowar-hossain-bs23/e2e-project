@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Your Listings — Basha Pass{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/listings.css' %}?v=1.0">
+{% endblock %}
+
+{% block content %}
+{% include "basha/partials/navbar.html" %}
+
+<!-- PAGE HEADER -->
+<header class="bp-page-head">
+  <div class="container-xl">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-2">
+      <ol class="breadcrumb mb-0" style="font-size: 13px;">
+        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}" class="text-decoration-none">Dashboard</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Your Listings</li>
+      </ol>
+    </nav>
+
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+      <div>
+        <h1 class="h2 fw-bold text-dark mb-1">Your Accommodation Listings</h1>
+        <p class="text-secondary mb-0">Manage your active posts, monitor roommate responses, or withdraw filled spaces.</p>
+      </div>
+      <div>
+        {% if cap_reached %}
+          <span class="btn btn-secondary disabled" title="Active listing limit reached">
+            <i class="bi bi-slash-circle me-1"></i> Active Cap Reached (3/3)
+          </span>
+        {% else %}
+          <a href="{% url 'listing_create' %}" class="btn btn-primary fw-semibold px-4 py-2">
+            <i class="bi bi-plus-lg me-1"></i> Post a Listing
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="pb-5" style="background: var(--bp-canvas); min-height: 80vh;">
+  <div class="container-xl">
+    <!-- Messages / Toast alerts -->
+    {% if messages %}
+      <div class="mb-4">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-3" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Cap Progress Card -->
+    <div class="card border mb-4 bg-white shadow-sm rounded-4">
+      <div class="card-body p-3 p-md-4">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+          <div class="d-flex align-items-center gap-3">
+            <div class="rounded-circle d-flex align-items-center justify-content-center {% if cap_reached %}bg-danger text-white{% else %}bg-primary-subtle text-primary{% endif %}" style="width: 48px; height: 48px; font-size: 20px;">
+              <i class="bi bi-building"></i>
+            </div>
+            <div>
+              <h6 class="fw-bold mb-0 text-dark">Active Accommodation Cap</h6>
+              <small class="text-muted">
+                You are currently using <strong>{{ active_count }}</strong> of <strong>{{ max_active }}</strong> permitted active listings.
+              </small>
+            </div>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            {% for i in "123"|make_list %}
+              <span class="rounded-pill px-3 py-1 small fw-semibold {% if forloop.counter <= active_count %}bg-primary text-white{% else %}bg-light text-muted border{% endif %}">
+                Slot {{ forloop.counter }}
+              </span>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <ul class="nav nav-tabs mb-4 border-bottom">
+      <li class="nav-item">
+        <a class="nav-link fw-semibold px-4 {% if current_tab == 'active' %}active text-primary{% else %}text-muted{% endif %}" href="{% url 'listing_mine' %}?tab=active">
+          Active Listings <span class="badge rounded-pill {% if current_tab == 'active' %}bg-primary{% else %}bg-secondary{% endif %} ms-1">{{ active_count }}</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link fw-semibold px-4 {% if current_tab == 'inactive' %}active text-primary{% else %}text-muted{% endif %}" href="{% url 'listing_mine' %}?tab=inactive">
+          Archived & Withdrawn <span class="badge rounded-pill {% if current_tab == 'inactive' %}bg-primary{% else %}bg-secondary{% endif %} ms-1">{{ inactive_count }}</span>
+        </a>
+      </li>
+    </ul>
+
+    <!-- Listings List -->
+    {% if listings %}
+      <div class="listings-wrapper">
+        {% for item in listings %}
+          {% include "listings/partials/listing_card.html" with item=item %}
+          {% if item.is_active %}
+            {% include "listings/partials/withdraw_modal.html" with item=item %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <!-- Empty State -->
+      <div class="card border text-center py-5 shadow-sm rounded-4 bg-white">
+        <div class="card-body py-4">
+          <div class="text-muted mb-3 fs-1">
+            <i class="bi bi-houses"></i>
+          </div>
+          {% if current_tab == 'active' %}
+            <h4 class="fw-bold text-dark mb-2">No Active Listings</h4>
+            <p class="text-secondary mb-4 mx-auto" style="max-width: 480px;">
+              You haven't posted any active accommodation listings yet. Post a room or seat vacancy to connect with verified roommates in Dhaka.
+            </p>
+            {% if not cap_reached %}
+              <a href="{% url 'listing_create' %}" class="btn btn-primary fw-semibold px-4 py-2">
+                <i class="bi bi-plus-lg me-1"></i> Post Your First Listing
+              </a>
+            {% endif %}
+          {% else %}
+            <h4 class="fw-bold text-dark mb-2">No Inactive Listings</h4>
+            <p class="text-secondary mb-0">
+              You don't have any withdrawn or auto-archived listings in this tab.
+            </p>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</main>
+{% endblock %}

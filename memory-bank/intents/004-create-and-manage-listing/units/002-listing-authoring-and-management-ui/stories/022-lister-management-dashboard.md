@@ -2,11 +2,11 @@
 id: 022-lister-management-dashboard
 unit: 002-listing-authoring-and-management-ui
 intent: 004-create-and-manage-listing
-status: ready
+status: complete
 priority: must
 created: '2026-10-31T07:28:00Z'
 assigned_bolt: 008-listing-management-ui
-implemented: false
+implemented: true
 ---
 
 # Story: 022-lister-management-dashboard
@@ -19,11 +19,11 @@ implemented: false
 
 ## Acceptance Criteria
 
-- [ ] **Given** a verified tenant visiting `/listings/mine/`, **When** the page renders, **Then** all listings authored by the tenant are displayed sorted newest first.
-- [ ] **Given** active and inactive posts, **When** reviewing listings, **Then** each post displays a thumbnail, title/kind badge, rent per unit, sub-areas, and status badge (**Active**, **Withdrawn**, **Archived**).
-- [ ] **Given** the filter controls, **When** switching tabs between "Active (N)" and "Archived / Withdrawn", **Then** the view filters the listing cards accordingly.
-- [ ] **Given** an active listing card, **When** inspecting actions, **Then** "Edit" and "Withdraw" buttons are readily available.
-- [ ] **Given** zero authored listings, **When** viewing the page, **Then** an empty state displays an encouraging CTA: *"You haven't posted any listings yet. Post a room or seat to find verified roommates."*
+- [x] **Given** a verified tenant visiting `/listings/mine/`, **When** the page renders, **Then** all listings authored by the tenant are displayed sorted newest first.
+- [x] **Given** active and inactive posts, **When** reviewing listings, **Then** each post displays a thumbnail, title/kind badge, rent per unit, sub-areas, and status badge (**Active**, **Withdrawn**, **Archived**).
+- [x] **Given** the filter controls, **When** switching tabs between "Active (N)" and "Archived / Withdrawn", **Then** the view filters the listing cards accordingly.
+- [x] **Given** an active listing card, **When** inspecting actions, **Then** "Edit" and "Withdraw" buttons are readily available.
+- [x] **Given** zero authored listings, **When** viewing the page, **Then** an empty state displays an encouraging CTA: *"You haven't posted any listings yet. Post a room or seat to find verified roommates."*
 
 ## Technical Notes
 

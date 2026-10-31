@@ -1,0 +1,34 @@
+<div class="modal fade" id="withdrawModal-{{ item.id }}" tabindex="-1" aria-labelledby="withdrawModalLabel-{{ item.id }}" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header border-bottom">
+        <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2" id="withdrawModalLabel-{{ item.id }}">
+          <i class="bi bi-exclamation-triangle text-danger"></i> Withdraw Listing
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body py-4">
+        <p class="text-secondary mb-3">
+          Are you sure you want to withdraw this accommodation post?
+        </p>
+        <div class="p-3 bg-light rounded-3 border mb-3">
+          <div class="fw-bold text-dark">{{ item.get_kind_display }} in {{ item.area|join:", " }}</div>
+          <div class="text-primary fw-semibold">৳{{ item.rent_bdt }} / {{ item.get_rent_unit_display }}</div>
+        </div>
+        <p class="text-muted small mb-0">
+          <i class="bi bi-info-circle me-1"></i>
+          Withdrawing will immediately remove this listing from the public feed. It will no longer count towards your 3 active listing limit.
+        </p>
+      </div>
+      <div class="modal-footer border-top bg-light">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Keep Active</button>
+        <form method="post" action="{% url 'listing_withdraw' item.id %}" class="d-inline">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger fw-semibold px-3">
+            <i class="bi bi-check-circle me-1"></i> Yes, Withdraw Listing
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

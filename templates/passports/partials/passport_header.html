@@ -29,6 +29,9 @@
         <span class="bp-tag-pill"><i class="bi bi-cash me-1"></i>৳{{ profile.budget_min }} – ৳{{ profile.budget_max }}</span>
         <span class="bp-tag-pill"><i class="bi bi-moon me-1"></i>{{ profile.get_sleep_schedule_display }}</span>
         <span class="bp-tag-pill"><i class="bi bi-slash-circle me-1"></i>Smoking: {{ profile.get_smoking_display }}</span>
+        {% for area in profile.area_preference %}
+          <span class="bp-tag-pill"><i class="bi bi-geo-alt me-1"></i>{{ area }}</span>
+        {% endfor %}
       </div>
     {% endif %}
   </div>

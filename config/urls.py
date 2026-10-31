@@ -14,6 +14,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("apps.accounts.urls")),
     path("passports/", include("apps.passports.urls")),
+    path("listings/", include("apps.listings.urls")),
     path("dashboard/", DashboardView.as_view(), name="dashboard"),
     path("", include(public_urlpatterns)),
 ]

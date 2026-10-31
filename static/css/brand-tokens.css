@@ -99,6 +99,17 @@
   --bs-btn-active-color: #fff;
 }
 
+.btn-outline-primary {
+  --bs-btn-color: var(--bp-primary);
+  --bs-btn-border-color: var(--bp-primary);
+  --bs-btn-hover-bg: var(--bp-primary);
+  --bs-btn-hover-border-color: var(--bp-primary);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-active-bg: var(--bp-btn-primary-bg-active);
+  --bs-btn-active-border-color: var(--bp-btn-primary-border-active);
+  --bs-btn-active-color: #fff;
+}
+
 body {
   background-color: var(--bp-canvas);
   color: var(--bp-ink);

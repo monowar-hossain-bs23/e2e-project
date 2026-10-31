@@ -1,0 +1,312 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Post a listing — Basha Pass{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/listings.css' %}?v=1.0">
+{% endblock %}
+
+{% block content %}
+{% include "basha/partials/navbar.html" %}
+
+<!-- PAGE HEADER -->
+<header class="bp-page-head">
+  <div class="container-xl">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-2">
+      <ol class="breadcrumb mb-0" style="font-size: 13px;">
+        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}" class="text-decoration-none">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'listing_mine' %}" class="text-decoration-none">Your Listings</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Post a listing</li>
+      </ol>
+    </nav>
+
+    <div class="d-flex align-items-start justify-content-between gap-4 flex-wrap">
+      <div>
+        <h1 class="h2 fw-bold text-dark mb-1">Post a listing</h1>
+        <p class="text-secondary mb-0">Reach verified tenants in Dhaka. ~1 minute to fill out.</p>
+      </div>
+      <div>
+        <span class="bp-status-pill" aria-label="{{ active_count }} of {{ max_active }} active listings used">
+          <span class="bp-status-pill__icon" aria-hidden="true">
+            <i class="bi bi-stack"></i>
+          </span>
+          {{ active_count }} of {{ max_active }} active listings
+        </span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="pb-5" style="background: var(--bp-canvas); min-height: 80vh;">
+  <div class="container-xl">
+    <!-- Cap Warning Banner -->
+    {% if cap_reached %}
+      <div class="alert alert-danger d-flex align-items-center justify-content-between flex-wrap gap-3 p-4 mb-4 border-0 shadow-sm rounded-4" role="alert">
+        <div class="d-flex align-items-center gap-3">
+          <div class="fs-2 text-danger"><i class="bi bi-exclamation-octagon-fill"></i></div>
+          <div>
+            <h5 class="alert-heading fw-bold mb-1">Active Listing Limit Reached</h5>
+            <p class="mb-0">
+              You currently have {{ active_count }} active listings, which is the platform limit. To publish a new listing, please withdraw one of your existing active posts.
+            </p>
+          </div>
+        </div>
+        <a href="{% url 'listing_mine' %}" class="btn btn-danger fw-semibold px-4">
+          Manage Your Listings <i class="bi bi-arrow-right ms-1"></i>
+        </a>
+      </div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" id="listing-form" novalidate>
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger mb-4 rounded-3" role="alert">
+          {% for error in form.non_field_errors %}
+            <div><i class="bi bi-exclamation-triangle-fill me-2"></i>{{ error }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <div class="row g-4">
+        <!-- LEFT COLUMN: FORM -->
+        <div class="col-lg-8">
+
+          <!-- Section 1: What you're listing -->
+          <section class="bp-section-card" aria-labelledby="sec-1-title">
+            <div class="bp-section-head">
+              <span class="bp-section-num">1.</span>
+              <h2 class="bp-section-title" id="sec-1-title">What you're listing</h2>
+            </div>
+
+            <!-- Kind -->
+            <div class="bp-field">
+              <label class="bp-label">Kind <span class="text-danger">*</span></label>
+              <div class="bp-chipgroup" role="radiogroup" aria-label="Kind of space">
+                <label class="bp-chip">
+                  <input type="radio" name="kind" value="seat" {% if form.kind.value == 'seat' or not form.kind.value %}checked{% endif %}>
+                  <span>Seat</span>
+                </label>
+                <label class="bp-chip">
+                  <input type="radio" name="kind" value="room" {% if form.kind.value == 'room' %}checked{% endif %}>
+                  <span>Room</span>
+                </label>
+              </div>
+              <p class="bp-help">A seat is one spot in a shared room/mess; a room is a private room for rent.</p>
+              {% if form.kind.errors %}
+                <div class="text-danger small mt-1">{{ form.kind.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <!-- Area -->
+            <div class="bp-field">
+              <label class="bp-label">Area (Multi-select) <span class="text-danger">*</span></label>
+              <div class="bp-chipgroup" role="group" aria-label="Areas — multi-select">
+                {% for val, text in form.area.field.choices %}
+                  <label class="bp-chip">
+                    <input type="checkbox" name="area" value="{{ val }}" {% if val in form.area.value %}checked{% endif %}>
+                    <span>{{ text }}</span>
+                  </label>
+                {% endfor %}
+              </div>
+              <p class="bp-help">Pick the neighborhood(s) matching the accommodation location.</p>
+              {% if form.area.errors %}
+                <div class="text-danger small mt-1">{{ form.area.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <!-- Rent -->
+            <div class="bp-field">
+              <div class="row g-3">
+                <div class="col-md-7">
+                  <label for="id_rent_bdt" class="bp-label">Monthly rent (BDT) <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <span class="input-group-text fw-bold" style="background: var(--bp-surface); border-color: var(--bp-border);">৳</span>
+                    {{ form.rent_bdt }}
+                  </div>
+                  <p class="bp-help">Allowed range: ৳500 – ৳50,000 per month.</p>
+                  {% if form.rent_bdt.errors %}
+                    <div class="text-danger small mt-1">{{ form.rent_bdt.errors.0 }}</div>
+                  {% endif %}
+                </div>
+                <div class="col-md-5">
+                  <label for="id_rent_unit" class="bp-label">Rent unit <span class="text-danger">*</span></label>
+                  {{ form.rent_unit }}
+                  <p class="bp-help">Must match kind.</p>
+                  {% if form.rent_unit.errors %}
+                    <div class="text-danger small mt-1">{{ form.rent_unit.errors.0 }}</div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 2: Photos -->
+          <section class="bp-section-card" aria-labelledby="sec-2-title">
+            <div class="bp-section-head d-flex justify-content-between align-items-baseline">
+              <div class="d-flex align-items-baseline gap-2">
+                <span class="bp-section-num">2.</span>
+                <h2 class="bp-section-title" id="sec-2-title">Photos</h2>
+              </div>
+              <span class="badge bg-light text-dark border" id="photos-count-notice" style="font-size: 12px;">1–7 photos required</span>
+            </div>
+
+            <!-- Landscape aspect ratio recommendation -->
+            <div class="alert alert-info d-flex align-items-start gap-2 mb-3 rounded-3" role="alert">
+              <i class="bi bi-info-circle-fill text-primary mt-1"></i>
+              <div class="small">
+                <strong>Photo Recommendation:</strong> Please upload clear, landscape-oriented photos (4:3 or 16:9 ratio) of the room, washroom, and flat for optimal viewing on seeker feeds. Max 5MB per photo.
+              </div>
+            </div>
+
+            <div id="photos-ratio-advisory" class="alert alert-warning small d-none mb-3 rounded-3">
+              <i class="bi bi-exclamation-triangle-fill me-1"></i> Some selected photos appear portrait-oriented. Landscape photos are recommended for optimal viewing.
+            </div>
+
+            <!-- Upload drop zone -->
+            <div id="photo-drop-zone" class="bp-upload">
+              <div class="bp-upload__icon">
+                <i class="bi bi-camera-fill"></i>
+              </div>
+              <div class="bp-upload__title">Drag & drop photos here, or click to browse</div>
+              <p class="bp-upload__hint">JPEG, PNG, or WebP. Max 5MB per file.</p>
+            </div>
+
+            {{ form.photos }}
+
+            {% if form.photos.errors %}
+              <div class="text-danger small mt-2">{{ form.photos.errors.0 }}</div>
+            {% endif %}
+
+            <!-- Thumbnails grid -->
+            <div id="photos-thumbs-grid" class="row g-2 mt-3"></div>
+          </section>
+
+          <!-- Section 3: Roommate Preferences -->
+          <section class="bp-section-card" aria-labelledby="sec-3-title">
+            <div class="bp-section-head">
+              <span class="bp-section-num">3.</span>
+              <h2 class="bp-section-title" id="sec-3-title">Roommate preferences</h2>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-md-4">
+                <label for="id_pref_gender" class="bp-label">Preferred Gender</label>
+                {{ form.pref_gender }}
+              </div>
+              <div class="col-md-4">
+                <label for="id_pref_smoking" class="bp-label">Smoking Habit</label>
+                {{ form.pref_smoking }}
+              </div>
+              <div class="col-md-4">
+                <label for="id_pref_sleep" class="bp-label">Sleep Schedule</label>
+                {{ form.pref_sleep }}
+              </div>
+
+              <div class="col-12 mt-3">
+                <label class="bp-label">Preferred Occupation(s)</label>
+                <div class="bp-chipgroup">
+                  {% for val, text in form.pref_occupation.field.choices %}
+                    <label class="bp-chip">
+                      <input type="checkbox" name="pref_occupation" value="{{ val }}" {% if val in form.pref_occupation.value %}checked{% endif %}>
+                      <span>{{ text }}</span>
+                    </label>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 4: Host note -->
+          <section class="bp-section-card" aria-labelledby="sec-4-title">
+            <div class="bp-section-head">
+              <span class="bp-section-num">4.</span>
+              <h2 class="bp-section-title" id="sec-4-title">Host note & expectations</h2>
+            </div>
+
+            <div class="bp-field">
+              <label for="id_body" class="bp-label">Description (Optional)</label>
+              {{ form.body }}
+              <p class="bp-help">Mention bills (wifi, gas, maid), house rules, cooking arrangements, or building features. Max 500 characters.</p>
+              {% if form.body.errors %}
+                <div class="text-danger small mt-1">{{ form.body.errors.0 }}</div>
+              {% endif %}
+            </div>
+          </section>
+
+          <!-- Form actions -->
+          <div class="d-flex align-items-center justify-content-between gap-3 pt-2">
+            <a href="{% url 'listing_mine' %}" class="btn btn-outline-secondary px-4 py-2">
+              Cancel
+            </a>
+            <button type="submit" class="btn btn-primary px-5 py-2 fw-semibold" {% if cap_reached %}disabled{% endif %}>
+              <i class="bi bi-send-fill me-1"></i> Publish Listing
+            </button>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: STICKY PREVIEW & GUIDELINES -->
+        <div class="col-lg-4">
+          <aside class="bp-side">
+            <!-- Preview Card -->
+            <div class="bp-side-card">
+              <h3 class="bp-side-card__title">Preview of your post</h3>
+              <div class="bp-preview shadow-sm">
+                <div id="preview-image" class="bp-preview__photo">
+                  <span id="preview-kind" class="bp-preview__kind">Seat</span>
+                  <span class="bp-preview__verified">
+                    <i class="bi bi-shield-fill-check"></i> Verified
+                  </span>
+                </div>
+                <div class="bp-preview__body">
+                  <div class="bp-preview__price">
+                    ৳<span id="preview-price">0</span>
+                    <small id="preview-unit">/month</small>
+                  </div>
+                  <div class="bp-preview__area">
+                    <i class="bi bi-geo-alt"></i>
+                    <span id="preview-areas">Dhaka</span>
+                  </div>
+                  <p class="bp-preview__excerpt" id="preview-body">
+                    Comfortable accommodation in a secure neighborhood with verified housemates.
+                  </p>
+                  <div class="bp-preview__chips">
+                    <span class="bp-chip-static">Verified Lister</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Platform Guidelines Card -->
+            <div class="bp-side-card" style="background: var(--bp-surface);">
+              <h3 class="bp-side-card__title d-flex align-items-center gap-2">
+                <i class="bi bi-shield-check text-primary"></i> Listing Rules
+              </h3>
+              <ul class="list-unstyled small text-muted mb-0 d-flex flex-column gap-2">
+                <li class="d-flex align-items-start gap-2">
+                  <i class="bi bi-check-circle-fill text-success mt-1"></i>
+                  <span><strong>3-Active Cap:</strong> Max 3 simultaneous active listings to prevent clutter and spam.</span>
+                </li>
+                <li class="d-flex align-items-start gap-2">
+                  <i class="bi bi-check-circle-fill text-success mt-1"></i>
+                  <span><strong>Locked Identity:</strong> Accommodation kind and area cannot be edited after posting.</span>
+                </li>
+                <li class="d-flex align-items-start gap-2">
+                  <i class="bi bi-check-circle-fill text-success mt-1"></i>
+                  <span><strong>Auto-Archive:</strong> Listings expire automatically after 60 days to keep inventory fresh.</span>
+                </li>
+              </ul>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </form>
+  </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/listing-photos.js' %}?v=1.1"></script>
+{% endblock %}

@@ -2,11 +2,11 @@
 id: 020-verified-tenant-listing-gate
 unit: 002-listing-authoring-and-management-ui
 intent: 004-create-and-manage-listing
-status: ready
+status: complete
 priority: must
 created: '2026-10-31T07:28:00Z'
 assigned_bolt: 008-listing-management-ui
-implemented: false
+implemented: true
 ---
 
 # Story: 020-verified-tenant-listing-gate
@@ -19,11 +19,11 @@ implemented: false
 
 ## Acceptance Criteria
 
-- [ ] **Given** an unauthenticated visitor accessing `/listings/create/`, **When** the request arrives, **Then** redirect to `/accounts/login/?next=/listings/create/`.
-- [ ] **Given** an authenticated user without a passport or with `unverified` status, **When** visiting `/listings/create/`, **Then** redirect to `/passports/create/` with flash message: *"Please complete your Tenant Passport verification before posting a listing."*
-- [ ] **Given** an authenticated user whose passport status is `pending` (under staff review), **When** visiting `/listings/create/`, **Then** redirect to `/dashboard/` with flash message: *"Your Tenant Passport is currently under review. You can create listings as soon as verification is approved."*
-- [ ] **Given** an authenticated user whose passport was `rejected`, **When** visiting `/listings/create/`, **Then** redirect to `/dashboard/` displaying the rejection waiting period.
-- [ ] **Given** a user with `passport.status == 'verified'`, **When** visiting `/listings/create/`, **Then** allow full access to the listing creation interface.
+- [x] **Given** an unauthenticated visitor accessing `/listings/create/`, **When** the request arrives, **Then** redirect to `/accounts/login/?next=/listings/create/`.
+- [x] **Given** an authenticated user without a passport or with `unverified` status, **When** visiting `/listings/create/`, **Then** redirect to `/passports/create/` with flash message: *"Please complete your Tenant Passport verification before posting a listing."*
+- [x] **Given** an authenticated user whose passport status is `pending` (under staff review), **When** visiting `/listings/create/`, **Then** redirect to `/dashboard/` with flash message: *"Your Tenant Passport is currently under review. You can create listings as soon as verification is approved."*
+- [x] **Given** an authenticated user whose passport was `rejected`, **When** visiting `/listings/create/`, **Then** redirect to `/dashboard/` displaying the rejection waiting period.
+- [x] **Given** a user with `passport.status == 'verified'`, **When** visiting `/listings/create/`, **Then** allow full access to the listing creation interface.
 
 ## Technical Notes
 

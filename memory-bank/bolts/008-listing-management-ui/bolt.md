@@ -3,17 +3,26 @@ id: 008-listing-management-ui
 unit: 002-listing-authoring-and-management-ui
 intent: 004-create-and-manage-listing
 type: simple-construction-bolt
-status: planned
+status: complete
 stories:
   - 020-verified-tenant-listing-gate
   - 021-listing-create-form-and-view
   - 022-lister-management-dashboard
   - 023-listing-edit-and-withdraw-views
 created: '2026-10-31T07:30:00Z'
-started: null
-completed: null
+started: '2026-10-31T08:45:00Z'
+completed: '2026-10-31T10:20:00Z'
 current_stage: null
-stages_completed: []
+stages_completed:
+  - name: plan
+    completed: '2026-10-31T08:50:00Z'
+    artifact: implementation-plan.md
+  - name: implement
+    completed: '2026-10-31T09:05:00Z'
+    artifact: implementation-walkthrough.md
+  - name: test
+    completed: '2026-10-31T10:20:00Z'
+    artifact: test-walkthrough.md
 requires_bolts:
   - 007-listing-domain-service
 enables_bolts: []

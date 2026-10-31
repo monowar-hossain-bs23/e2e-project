@@ -2,11 +2,11 @@
 id: 021-listing-create-form-and-view
 unit: 002-listing-authoring-and-management-ui
 intent: 004-create-and-manage-listing
-status: ready
+status: complete
 priority: must
 created: '2026-10-31T07:28:00Z'
 assigned_bolt: 008-listing-management-ui
-implemented: false
+implemented: true
 ---
 
 # Story: 021-listing-create-form-and-view
@@ -19,11 +19,11 @@ implemented: false
 
 ## Acceptance Criteria
 
-- [ ] **Given** a verified tenant at or above the 3-active listing cap, **When** loading `/listings/create/`, **Then** the page displays an active-cap warning banner and disables form submission.
-- [ ] **Given** a verified tenant under the cap, **When** loading the form, **Then** all inputs (kind, rent, rent unit, Dhaka areas, preferences, body note, photos) render cleanly with pre-styled Bootstrap/brand design tokens.
-- [ ] **Given** the photo upload area, **When** viewed, **Then** it presents an advisory notice recommending landscape photos (4:3 or 16:9 ratio) for optimal viewing.
-- [ ] **Given** invalid input (e.g. rent out of bounds, mismatched kind and rent unit, missing photos), **When** submitting, **Then** clean field-level error messages display inline without page crashes.
-- [ ] **Given** valid submission with 1–7 photos, **When** submitting, **Then** `ListingService.create()` persists the listing, adds a success flash message, and redirects to the lister dashboard.
+- [x] **Given** a verified tenant at or above the 3-active listing cap, **When** loading `/listings/create/`, **Then** the page displays an active-cap warning banner and disables form submission.
+- [x] **Given** a verified tenant under the cap, **When** loading the form, **Then** all inputs (kind, rent, rent unit, Dhaka areas, preferences, body note, photos) render cleanly with pre-styled Bootstrap/brand design tokens.
+- [x] **Given** the photo upload area, **When** viewed, **Then** it presents an advisory notice recommending landscape photos (4:3 or 16:9 ratio) for optimal viewing.
+- [x] **Given** invalid input (e.g. rent out of bounds, mismatched kind and rent unit, missing photos), **When** submitting, **Then** clean field-level error messages display inline without page crashes.
+- [x] **Given** valid submission with 1–7 photos, **When** submitting, **Then** `ListingService.create()` persists the listing, adds a success flash message, and redirects to the lister dashboard.
 
 ## Technical Notes
 
