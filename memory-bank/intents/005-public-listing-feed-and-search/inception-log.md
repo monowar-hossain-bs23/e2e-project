@@ -1,8 +1,8 @@
 ---
 intent: 005-public-listing-feed-and-search
 created: '2026-10-31T13:15:00Z'
-completed: null
-status: in-progress
+completed: '2026-10-31T16:55:00Z'
+status: complete
 ---
 
 # Inception Log: 005-public-listing-feed-and-search
@@ -12,18 +12,19 @@ status: in-progress
 **Intent**: Public Listing Feed and Search Discovery (Search, Filter, Detail, & Soft-Gated Contact)
 **Type**: new-feature
 **Created**: 2026-10-31T13:15:00Z
+**Completed**: 2026-10-31T16:55:00Z
 
 ## Artifacts Created
 
 | Artifact | Status | File |
 |----------|--------|------|
 | Requirements | ✅ Approved | `requirements.md` |
-| System Context | ✅ Generated | `system-context.md` |
-| Units | ✅ Generated | `units.md` |
-| Unit Briefs | ✅ Generated | `units/001-listing-feed-query-and-consent/unit-brief.md`, `units/002-listing-feed-and-detail-ui/unit-brief.md` |
-| Stories | ✅ Generated | `units/*/stories/*.md` (5 stories: 024–028) |
+| System Context | ✅ Approved | `system-context.md` |
+| Units | ✅ Approved | `units.md` |
+| Unit Briefs | ✅ Approved | `units/001-listing-feed-query-and-consent/unit-brief.md`, `units/002-listing-feed-and-detail-ui/unit-brief.md` |
+| Stories | ✅ Approved | `units/*/stories/*.md` (5 stories: 024–028) |
 | Story Index | ✅ Updated | `memory-bank/story-index.md` |
-| Bolt Plan | ✅ Generated | `memory-bank/bolts/009-listing-feed-query-and-consent/bolt.md`, `memory-bank/bolts/010-listing-discovery-and-detail-ui/bolt.md` |
+| Bolt Plan | ✅ Approved | `memory-bank/bolts/009-listing-feed-query-and-consent/bolt.md`, `memory-bank/bolts/010-listing-discovery-and-detail-ui/bolt.md` |
 
 ## Summary
 
@@ -49,8 +50,8 @@ status: in-progress
 | 2026-10-31 | Initialized Intent 005 | Implements public discovery feed, search filters, detail page, and soft-gated contact panel | Yes (Checkpoint 1 passed) |
 | 2026-10-31 | Adopted Recommended Architecture & Heuristics | Public feed with soft-gated PII, 6-axis compatibility score, ListingFeedQuery read model, append-only contact audit | Yes (Checkpoint 1 passed) |
 | 2026-10-31 | Approved FR-1 through FR-7 | Requirements approved for discovery feed, filters, 0–6 match score, and soft-gated contact | Yes (Checkpoint 2 passed) |
-| 2026-10-31 | Decomposed into 2 units | Clean boundary between read-model query/consent engine vs presentation views/drawer/gallery | Auto-continue to Checkpoint 3 |
-| 2026-10-31 | Planned 2 Construction Bolts | Bolt 009 (DDD bolt for query & consent) and Bolt 010 (Simple bolt for feed & detail UI) | Auto-continue to Checkpoint 3 |
+| 2026-10-31 | Decomposed into 2 units | Clean boundary between read-model query/consent engine vs presentation views/drawer/gallery | Yes (Checkpoint 3 passed) |
+| 2026-10-31 | Planned 2 Construction Bolts | Bolt 009 (DDD bolt for query & consent) and Bolt 010 (Simple bolt for feed & detail UI) | Yes (Checkpoint 3 passed) |
 
 ## Ready for Construction
 
@@ -60,10 +61,11 @@ status: in-progress
 - [x] Units decomposed
 - [x] Stories created for all units
 - [x] Bolts planned
-- [ ] Human review complete (Checkpoint 3)
+- [x] Human review complete (Checkpoint 3 passed)
 
 ## Next Steps
 
-1. Human review of all Inception artifacts (Checkpoint 3).
-2. Confirmation to proceed to Construction (Checkpoint 4).
-3. Begin Bolt `009-listing-feed-query-and-consent` via Construction Agent.
+1. Begin Construction Phase.
+2. Start with Unit `001-listing-feed-query-and-consent` and Bolt `009-listing-feed-query-and-consent`.
+3. Execute: `/specsmd-construction-agent --bolt-id="009-listing-feed-query-and-consent"`
+
