@@ -1,10 +1,10 @@
 ---
 unit: 002-listing-authoring-and-management-ui
 intent: 004-create-and-manage-listing
-phase: inception
-status: ready
+phase: construction
+status: complete
 created: '2026-10-31T07:25:00Z'
-updated: '2026-10-31T07:25:00Z'
+updated: '2026-10-31T10:25:00Z'
 ---
 
 # Unit Brief: 002-listing-authoring-and-management-ui

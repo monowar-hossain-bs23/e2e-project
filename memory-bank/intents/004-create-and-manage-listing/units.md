@@ -1,8 +1,8 @@
 ---
 intent: 004-create-and-manage-listing
-phase: inception
-status: units-decomposed
-updated: '2026-10-31T07:22:00Z'
+phase: construction
+status: complete
+updated: '2026-10-31T10:25:00Z'
 ---
 
 # 004-create-and-manage-listing - Unit Decomposition
