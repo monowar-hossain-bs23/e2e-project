@@ -2,11 +2,11 @@
 id: 019-listing-photo-storage-service
 unit: 001-listing-domain-service
 intent: 004-create-and-manage-listing
-status: ready
+status: complete
 priority: must
 created: '2026-10-31T07:28:00Z'
 assigned_bolt: 007-listing-domain-service
-implemented: false
+implemented: true
 ---
 
 # Story: 019-listing-photo-storage-service
@@ -19,11 +19,11 @@ implemented: false
 
 ## Acceptance Criteria
 
-- [ ] **Given** a batch of uploaded files, **When** total count is less than 1 or exceeds 7, **Then** validation fails with a clear count error message.
-- [ ] **Given** an uploaded file, **When** size exceeds 5 MB, **Then** validation fails with file size error.
-- [ ] **Given** an uploaded file, **When** MIME type or magic bytes do not match JPEG, PNG, or WebP, **Then** validation fails with unsupported image format error.
-- [ ] **Given** valid photos, **When** calling `save_photo()`, **Then** the file is stored under `listings/photos/<listing_id>/<uuid>.<ext>` using standard Django storage and returns the relative storage path.
-- [ ] **Given** a photo deleted during listing edit or listing deletion, **When** cleaning up, **Then** `delete_photo()` removes the physical file from disk.
+- [x] **Given** a batch of uploaded files, **When** total count is less than 1 or exceeds 7, **Then** validation fails with a clear count error message.
+- [x] **Given** an uploaded file, **When** size exceeds 5 MB, **Then** validation fails with file size error.
+- [x] **Given** an uploaded file, **When** MIME type or magic bytes do not match JPEG, PNG, or WebP, **Then** validation fails with unsupported image format error.
+- [x] **Given** valid photos, **When** calling `save_photo()`, **Then** the file is stored under `listings/photos/<listing_id>/<uuid>.<ext>` using standard Django storage and returns the relative storage path.
+- [x] **Given** a photo deleted during listing edit or listing deletion, **When** cleaning up, **Then** `delete_photo()` removes the physical file from disk.
 
 ## Technical Notes
 

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "apps.passports",
     "apps.verification",
     "apps.audit",
+    "apps.listings",
 ]
 
 AUTH_USER_MODEL = "accounts.User"

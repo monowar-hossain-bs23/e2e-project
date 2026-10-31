@@ -37,9 +37,9 @@
 ## 004-create-and-manage-listing
 
 ### 001-listing-domain-service
-- [ ] [`017-listing-and-photo-models`](file:///home/bs01496/Documents/LMS/basa-pass/memory-bank/intents/004-create-and-manage-listing/units/001-listing-domain-service/stories/017-listing-and-photo-models.md) - Listing & ListingPhoto models, UUIDv7 PK, cross-field constraints, area array (Must, assigned: `007-listing-domain-service`)
-- [ ] [`018-listing-service-and-active-cap`](file:///home/bs01496/Documents/LMS/basa-pass/memory-bank/intents/004-create-and-manage-listing/units/001-listing-domain-service/stories/018-listing-service-and-active-cap.md) - ListingService sole mutator, 3-active cap, edit locked fields, withdraw, auto-archive (Must, assigned: `007-listing-domain-service`)
-- [ ] [`019-listing-photo-storage-service`](file:///home/bs01496/Documents/LMS/basa-pass/memory-bank/intents/004-create-and-manage-listing/units/001-listing-domain-service/stories/019-listing-photo-storage-service.md) - Listing photo storage service, Pillow validation, 1-7 photo limits, public media path (Must, assigned: `007-listing-domain-service`)
+- [x] [`017-listing-and-photo-models`](file:///home/bs01496/Documents/LMS/basa-pass/memory-bank/intents/004-create-and-manage-listing/units/001-listing-domain-service/stories/017-listing-and-photo-models.md) - Listing & ListingPhoto models, UUIDv7 PK, cross-field constraints, area array (Must, assigned: `007-listing-domain-service`)
+- [x] [`018-listing-service-and-active-cap`](file:///home/bs01496/Documents/LMS/basa-pass/memory-bank/intents/004-create-and-manage-listing/units/001-listing-domain-service/stories/018-listing-service-and-active-cap.md) - ListingService sole mutator, 3-active cap, edit locked fields, withdraw, auto-archive (Must, assigned: `007-listing-domain-service`)
+- [x] [`019-listing-photo-storage-service`](file:///home/bs01496/Documents/LMS/basa-pass/memory-bank/intents/004-create-and-manage-listing/units/001-listing-domain-service/stories/019-listing-photo-storage-service.md) - Listing photo storage service, Pillow validation, 1-7 photo limits, public media path (Must, assigned: `007-listing-domain-service`)
 
 ### 002-listing-authoring-and-management-ui
 - [ ] [`020-verified-tenant-listing-gate`](file:///home/bs01496/Documents/LMS/basa-pass/memory-bank/intents/004-create-and-manage-listing/units/002-listing-authoring-and-management-ui/stories/020-verified-tenant-listing-gate.md) - VerifiedTenantRequiredMixin gating authoring CBVs with instructional redirects (Must, assigned: `008-listing-management-ui`)

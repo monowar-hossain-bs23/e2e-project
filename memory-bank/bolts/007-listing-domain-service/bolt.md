@@ -3,16 +3,30 @@ id: 007-listing-domain-service
 unit: 001-listing-domain-service
 intent: 004-create-and-manage-listing
 type: ddd-construction-bolt
-status: planned
+status: complete
 stories:
   - 017-listing-and-photo-models
   - 018-listing-service-and-active-cap
   - 019-listing-photo-storage-service
 created: '2026-10-31T07:30:00Z'
-started: null
-completed: null
+started: '2026-10-31T07:40:00Z'
+completed: '2026-10-31T08:35:00Z'
 current_stage: null
-stages_completed: []
+stages_completed:
+  - name: model
+    completed: '2026-10-31T07:45:00Z'
+    artifact: ddd-01-domain-model.md
+  - name: design
+    completed: '2026-10-31T07:55:00Z'
+    artifact: ddd-02-technical-design.md
+  - name: adr
+    completed: '2026-10-31T08:05:00Z'
+    artifact: adr-003-listing-photo-storage-and-cap-concurrency.md
+  - name: implement
+    completed: '2026-10-31T08:25:00Z'
+  - name: test
+    completed: '2026-10-31T08:35:00Z'
+    artifact: ddd-03-test-report.md
 requires_bolts:
   - 005-passport-verification-service
 enables_bolts:

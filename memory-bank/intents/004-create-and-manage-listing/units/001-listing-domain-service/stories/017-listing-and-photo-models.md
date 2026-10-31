@@ -2,11 +2,11 @@
 id: 017-listing-and-photo-models
 unit: 001-listing-domain-service
 intent: 004-create-and-manage-listing
-status: ready
+status: complete
 priority: must
 created: '2026-10-31T07:28:00Z'
 assigned_bolt: 007-listing-domain-service
-implemented: false
+implemented: true
 ---
 
 # Story: 017-listing-and-photo-models
@@ -19,11 +19,11 @@ implemented: false
 
 ## Acceptance Criteria
 
-- [ ] **Given** a verified tenant passport, **When** creating a `Listing`, **Then** it generates a time-sortable UUIDv7 primary key, links to `author` (FK → `Passport.id`, ON DELETE RESTRICT), and validates `kind ∈ ('seat', 'room')`.
-- [ ] **Given** a listing payload, **When** validating rent fields, **Then** `rent_bdt` is bounded between ৳500 and ৳50,000, `rent_period` defaults to `'per_month'`, and `rent_unit` enforces cross-field consistency (`seat` ⇔ `per_seat`, `room` ⇔ `per_room`).
-- [ ] **Given** Dhaka sub-areas, **When** persisting `area`, **Then** it stores a PostgreSQL text array containing between 1 and 13 canonical Dhaka sub-areas.
-- [ ] **Given** lifestyle preferences, **When** saving a listing, **Then** `pref_gender`, `pref_smoking`, `pref_sleep`, and `pref_occupation` (array) choices are validated against canonical enums.
-- [ ] **Given** photos uploaded for a listing, **When** saving `ListingPhoto`, **Then** each photo record is linked via FK to `Listing` with an integer `order` index and image path.
+- [x] **Given** a verified tenant passport, **When** creating a `Listing`, **Then** it generates a time-sortable UUIDv7 primary key, links to `author` (FK → `Passport.id`, ON DELETE RESTRICT), and validates `kind ∈ ('seat', 'room')`.
+- [x] **Given** a listing payload, **When** validating rent fields, **Then** `rent_bdt` is bounded between ৳500 and ৳50,000, `rent_period` defaults to `'per_month'`, and `rent_unit` enforces cross-field consistency (`seat` ⇔ `per_seat`, `room` ⇔ `per_room`).
+- [x] **Given** Dhaka sub-areas, **When** persisting `area`, **Then** it stores a PostgreSQL text array containing between 1 and 13 canonical Dhaka sub-areas.
+- [x] **Given** lifestyle preferences, **When** saving a listing, **Then** `pref_gender`, `pref_smoking`, `pref_sleep`, and `pref_occupation` (array) choices are validated against canonical enums.
+- [x] **Given** photos uploaded for a listing, **When** saving `ListingPhoto`, **Then** each photo record is linked via FK to `Listing` with an integer `order` index and image path.
 
 ## Technical Notes
 

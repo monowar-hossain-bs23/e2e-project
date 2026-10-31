@@ -48,4 +48,6 @@ media_private/*
 !media_private/.gitkeep
 media/public/*
 !media/public/.gitkeep
+media/listings/*
+!media/listings/.gitkeep
 staticfiles/
