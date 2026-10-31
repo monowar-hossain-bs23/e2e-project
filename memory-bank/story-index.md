@@ -46,3 +46,15 @@
 - [x] [`021-listing-create-form-and-view`](file:///home/bs01496/Documents/LMS/basa-pass/memory-bank/intents/004-create-and-manage-listing/units/002-listing-authoring-and-management-ui/stories/021-listing-create-form-and-view.md) - Multi-section listing creation view, form cross-validation, photo uploader & advisory note (Must, assigned: `008-listing-management-ui`)
 - [x] [`022-lister-management-dashboard`](file:///home/bs01496/Documents/LMS/basa-pass/memory-bank/intents/004-create-and-manage-listing/units/002-listing-authoring-and-management-ui/stories/022-lister-management-dashboard.md) - "Your Listings" dashboard view with status badges, active/archived toggle tabs, quick actions (Must, assigned: `008-listing-management-ui`)
 - [x] [`023-listing-edit-and-withdraw-views`](file:///home/bs01496/Documents/LMS/basa-pass/memory-bank/intents/004-create-and-manage-listing/units/002-listing-authoring-and-management-ui/stories/023-listing-edit-and-withdraw-views.md) - Edit view for mutable terms, locked-field protection, and manual withdrawal modal action (Must, assigned: `008-listing-management-ui`)
+
+## 005-public-listing-feed-and-search
+
+### 001-listing-feed-query-and-consent
+- [ ] [`024-listing-consent-service-and-projection`](file:///home/bs01496/Documents/LMS/basa-pass/memory-bank/intents/005-public-listing-feed-and-search/units/001-listing-feed-query-and-consent/stories/024-listing-consent-service-and-projection.md) - ConsentService & viewer-scoped PII projection shielding contact info (Must, assigned: `009-listing-feed-query-and-consent`)
+- [ ] [`025-listing-feed-query-and-compatibility`](file:///home/bs01496/Documents/LMS/basa-pass/memory-bank/intents/005-public-listing-feed-and-search/units/001-listing-feed-query-and-consent/stories/025-listing-feed-query-and-compatibility.md) - ListingFeedQuery read model, multi-axis filtering, sorting, and 6-axis compatibility score (Must, assigned: `009-listing-feed-query-and-consent`)
+
+### 002-listing-feed-and-detail-ui
+- [ ] [`026-feed-view-and-filter-ui`](file:///home/bs01496/Documents/LMS/basa-pass/memory-bank/intents/005-public-listing-feed-and-search/units/002-listing-feed-and-detail-ui/stories/026-feed-view-and-filter-ui.md) - Public listing feed view, offcanvas filter drawer, & sorting controls matching Mockup 03 (Must, assigned: `010-listing-discovery-and-detail-ui`)
+- [ ] [`027-listing-card-and-compatibility-ui`](file:///home/bs01496/Documents/LMS/basa-pass/memory-bank/intents/005-public-listing-feed-and-search/units/002-listing-feed-and-detail-ui/stories/027-listing-card-and-compatibility-ui.md) - Reusable listing card with 0–6 compatibility match dots indicator (Must, assigned: `010-listing-discovery-and-detail-ui`)
+- [ ] [`028-listing-detail-and-gated-contact-ui`](file:///home/bs01496/Documents/LMS/basa-pass/memory-bank/intents/005-public-listing-feed-and-search/units/002-listing-feed-and-detail-ui/stories/028-listing-detail-and-gated-contact-ui.md) - Listing detail page, photo gallery carousel, soft-gated contact card, and audit logging (Must, assigned: `010-listing-discovery-and-detail-ui`)
+
