@@ -84,8 +84,9 @@ class VerificationService:
                 "ok": False,
                 "code": "cooldown_active",
                 "message": _(
-                    f"A 24-hour cooldown is active following your previous rejection. "
-                    f"Please wait approximately {hrs} hour(s) before resubmitting."
+                    f"A 24-hour waiting period is in place following your previous "
+                    f"rejection. Please wait approximately {hrs} hour(s) before "
+                    f"submitting new verification documents."
                 ),
                 "remaining_seconds": cooldown["remaining_seconds"],
                 "cooldown_until": cooldown["cooldown_until"],

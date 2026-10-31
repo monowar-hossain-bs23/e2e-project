@@ -30,7 +30,7 @@
       timerEl.textContent = '00:00:00';
       var helperEl = document.getElementById('cooldown-helper');
       if (helperEl) {
-        helperEl.textContent = 'Cooldown complete! You can now re-submit your documents.';
+        helperEl.textContent = 'You can now submit new documents. Please ensure all photos are clear and legible.';
         helperEl.classList.remove('text-muted');
         helperEl.classList.add('text-success', 'fw-semibold');
       }

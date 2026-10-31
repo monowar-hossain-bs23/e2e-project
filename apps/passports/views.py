@@ -52,8 +52,9 @@ class PassportWizardView(LoginRequiredMixin, View):
             messages.warning(
                 request,
                 _(
-                    f"A 24-hour cooldown is active following rejection. "
-                    f"Please wait approximately {hrs} hour(s) before resubmitting."
+                    f"A 24-hour waiting period is in place following a rejected "
+                    f"submission. Please wait approximately {hrs} hour(s) before "
+                    f"submitting new verification documents."
                 ),
             )
             return redirect("dashboard")

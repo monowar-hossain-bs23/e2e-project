@@ -29,9 +29,9 @@
       </div>
     </div>
 
-    <!-- 24-Hour Cooldown Panel -->
+    <!-- 24-Hour Waiting Period Panel -->
     <div class="bp-cooldown">
-      <div class="bp-cooldown__label">Resubmission Cooldown</div>
+      <div class="bp-cooldown__label">Next submission available in</div>
       <div
         id="cooldown-timer"
         class="bp-cooldown__time"
@@ -41,9 +41,9 @@
       </div>
       <p id="cooldown-helper" class="bp-cooldown__helper text-muted">
         {% if cooldown and cooldown.cooldown_active %}
-          To protect against abuse, Basha Pass enforces a 24-hour waiting period before you can submit a new attempt.
+          For security and verification accuracy, Basha Pass requires a 24-hour waiting period between review attempts. Please use this time to ensure your new photos are clear, well-lit, and uncropped.
         {% else %}
-          Cooldown has expired. You may submit fresh documents now.
+          You can now submit new documents. Please review the requirements carefully before uploading.
         {% endif %}
       </p>
     </div>

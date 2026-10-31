@@ -300,7 +300,7 @@ class TestDashboardView:
         response = client.get(reverse("dashboard"))
         assert response.status_code == 200
         content = response.content.decode()
-        assert "Cooldown has expired" in content
+        assert "You can now submit new documents" in content
         assert "Resubmit Documents" in content
 
     def test_verified_user_renders_badge_and_profile(
