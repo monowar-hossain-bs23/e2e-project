@@ -53,6 +53,7 @@ status: complete
 | 2026-10-31 | Photo Upload Standard | 1–7 photos, max 5MB, JPEG/PNG/WebP, original aspect ratio with UI advisory tip | Yes (Checkpoint 1 passed) |
 | 2026-10-31 | Approved FR-1 through FR-8 | Requirements finalized and aligned with PRD §4.4, ERD §4, and Architecture Spine AD-6, AD-9, AD-15 | Yes (Checkpoint 2 passed) |
 | 2026-10-31 | Decomposed into 2 units | Clean boundary between backend domain service & public media storage vs. gated authoring CBVs & dashboards | Yes (Checkpoint 3 auto-continue) |
+| 2026-10-31 | Constrained Listing Area to Single Selection | A physical room or seat resides in a single Dhaka neighborhood, not multiple areas | Yes |
 | 2026-10-31 | Bolt 007 uses `ddd-construction-bolt` | Listing models, cross-field invariants, 3-active cap check, and photo validation require formal DDD stages | Yes (Checkpoint 3 auto-continue) |
 | 2026-10-31 | Bolt 008 uses `simple-construction-bolt` | Presentation views, forms, and lister dashboard follow plan-implement-test cycle | Yes (Checkpoint 3 auto-continue) |
 

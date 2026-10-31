@@ -53,7 +53,7 @@ Enables verified tenants to create, edit, withdraw, and manage supply-side renta
   - **Rent**: Positive integer between ৳500 and ৳50,000 BDT.
   - **Rent Unit**: `per_seat` or `per_room`. Cross-field constraint enforced: if `kind == 'seat'`, `rent_unit` must be `per_seat`; if `kind == 'room'`, `rent_unit` must be `per_room`.
   - **Rent Period**: System-fixed to `per_month` (not user-editable in v1).
-  - **Area**: Multi-select from the 13 canonical Dhaka sub-areas (at least 1, at most 13).
+  - **Area**: Single selection from the 13 canonical Dhaka sub-areas (a room or seat is located in a single physical area).
   - **Roommate Lifestyle Preferences**:
     - `pref_gender`: `male`, `female`, `any`.
     - `pref_smoking`: `yes`, `no`, `any`.
