@@ -251,6 +251,40 @@ class TestListingDiscoveryViews:
         assert "No listings found matching your criteria" in content
         assert "Clear all filters" in content
 
+    def test_feed_htmx_partial_update(
+        self, client: Client, sample_listings: list[Listing]
+    ) -> None:
+        """HTMX request returns partial feed_results.html without full base layout."""
+        response = client.get(
+            reverse("listing_feed"),
+            headers={"HX-Request": "true"},
+        )
+        assert response.status_code == 200
+        templates_used = [t.name for t in response.templates if t.name]
+        assert "listings/partials/feed_results.html" in templates_used
+        assert "listings/feed.html" not in templates_used
+        assert "basha/partials/navbar.html" not in templates_used
+        content = response.content.decode()
+        assert 'id="feed-container"' in content
+        assert "Showing <strong>2</strong> active listings" in content
+
+    def test_feed_htmx_filtered_results(
+        self, client: Client, sample_listings: list[Listing]
+    ) -> None:
+        """HTMX filter request updates results, counts, and active filter pill."""
+        response = client.get(
+            reverse("listing_feed") + "?area=Mirpur&budget_max=6000",
+            headers={"HX-Request": "true"},
+        )
+        assert response.status_code == 200
+        content = response.content.decode()
+        assert 'id="feed-container"' in content
+        assert "Showing <strong>1</strong> active listing" in content
+        assert "Mirpur" in content
+        assert "Banani" not in content
+        # Active filter count should reflect 1 area + 1 budget filter = 2
+        assert response.context["active_filter_count"] == 2
+
     # --- DETAIL VIEW TESTS (Story 028) ---
 
     def test_anonymous_access_to_detail_locks_contact(

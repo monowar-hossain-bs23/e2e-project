@@ -250,6 +250,11 @@ class ListingFeedView(TemplateView):
 
     template_name = "listings/feed.html"
 
+    def get_template_names(self) -> list[str]:
+        if self.request.headers.get("HX-Request") == "true":
+            return ["listings/partials/feed_results.html"]
+        return [self.template_name]
+
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         req = self.request.GET

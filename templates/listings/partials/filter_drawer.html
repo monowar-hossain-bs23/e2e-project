@@ -9,8 +9,17 @@
     </button>
   </div>
 
-  <form id="filter-form" method="get" action="{% url 'listing_feed' %}" class="d-flex flex-column h-100">
-    <input type="hidden" name="sort" value="{{ current_sort }}">
+  <form id="filter-form"
+        method="get"
+        action="{% url 'listing_feed' %}"
+        class="d-flex flex-column h-100"
+        hx-get="{% url 'listing_feed' %}"
+        hx-trigger="change, input delay:300ms from:#budget_min_input, input delay:300ms from:#budget-max-input"
+        hx-target="#feed-container"
+        hx-swap="outerHTML"
+        hx-push-url="true"
+        hx-indicator="#feed-loading-indicator">
+    <input type="hidden" name="sort" id="filter-sort-input" value="{{ current_sort }}">
 
     <div class="bp-filter-drawer__body">
       {# 1. Dhaka Sub-Areas (13 Canonical Areas) #}
@@ -18,7 +27,7 @@
         <div class="bp-filter-legend">Dhaka Sub-Area</div>
         <div class="bp-chipgroup">
           {% for area in dhaka_sub_areas %}
-            <label class="bp-chip-checkbox">
+            <label class="bp-chip {% if area in selected_areas %}bp-chip--selected{% endif %}">
               <input type="checkbox" name="area" value="{{ area }}" {% if area in selected_areas %}checked{% endif %}>
               <span>{{ area }}</span>
             </label>
@@ -30,12 +39,12 @@
       <section class="bp-filter-section">
         <div class="bp-filter-legend">Accommodation Kind</div>
         <div class="bp-chipgroup">
-          <label class="bp-chip-radio">
+          <label class="bp-chip {% if not selected_kind %}bp-chip--selected{% endif %}">
             <input type="radio" name="kind" value="" {% if not selected_kind %}checked{% endif %}>
             <span>All types</span>
           </label>
           {% for val, label in listing_kinds %}
-            <label class="bp-chip-radio">
+            <label class="bp-chip {% if selected_kind == val %}bp-chip--selected{% endif %}">
               <input type="radio" name="kind" value="{{ val }}" {% if selected_kind == val %}checked{% endif %}>
               <span>{{ label }}</span>
             </label>
@@ -52,7 +61,7 @@
             <input type="number" id="budget_min_input" name="budget_min" class="form-control form-control-sm" value="{{ selected_budget_min }}" min="500" max="50000" step="500">
           </div>
           <div class="col-6">
-            <label class="small text-muted mb-1" for="budget_max_input">Max (৳)</label>
+            <label class="small text-muted mb-1" for="budget-max-input">Max (৳)</label>
             <input type="number" id="budget-max-input" name="budget_max" class="form-control form-control-sm" value="{{ selected_budget_max }}" min="500" max="50000" step="500">
           </div>
         </div>
@@ -71,7 +80,7 @@
         <div class="bp-filter-legend">Roommate Gender</div>
         <div class="bp-chipgroup">
           {% for val, label in gender_choices %}
-            <label class="bp-chip-radio">
+            <label class="bp-chip {% if selected_gender == val %}bp-chip--selected{% endif %}">
               <input type="radio" name="gender" value="{{ val }}" {% if selected_gender == val %}checked{% endif %}>
               <span>{{ label }}</span>
             </label>
@@ -84,7 +93,7 @@
         <div class="bp-filter-legend">Smoking Habit</div>
         <div class="bp-chipgroup">
           {% for val, label in smoking_choices %}
-            <label class="bp-chip-radio">
+            <label class="bp-chip {% if selected_smoking == val %}bp-chip--selected{% endif %}">
               <input type="radio" name="smoking" value="{{ val }}" {% if selected_smoking == val %}checked{% endif %}>
               <span>{{ label }}</span>
             </label>
@@ -97,7 +106,7 @@
         <div class="bp-filter-legend">Sleep Schedule</div>
         <div class="bp-chipgroup">
           {% for val, label in sleep_choices %}
-            <label class="bp-chip-radio">
+            <label class="bp-chip {% if selected_sleep == val %}bp-chip--selected{% endif %}">
               <input type="radio" name="sleep" value="{{ val }}" {% if selected_sleep == val %}checked{% endif %}>
               <span>{{ label }}</span>
             </label>
@@ -111,7 +120,7 @@
         <div class="bp-chipgroup">
           {% for val, label in occupation_choices %}
             {% if val != "any" %}
-              <label class="bp-chip-checkbox">
+              <label class="bp-chip {% if val in selected_occupations %}bp-chip--selected{% endif %}">
                 <input type="checkbox" name="occupation" value="{{ val }}" {% if val in selected_occupations %}checked{% endif %}>
                 <span>{{ label }}</span>
               </label>
@@ -123,7 +132,7 @@
 
     <div class="bp-filter-drawer__foot">
       <button type="button" id="clear-filters-btn" class="bp-filter-drawer__clear">Clear all</button>
-      <button type="submit" class="btn btn-primary px-4">Apply filters</button>
+      <button type="button" id="apply-filters-btn" class="btn btn-primary px-4">Done</button>
     </div>
   </form>
 </aside>

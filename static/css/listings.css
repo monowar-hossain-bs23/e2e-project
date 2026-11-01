@@ -124,6 +124,7 @@
   width: 1px;
   height: 1px;
 }
+.bp-chip--selected,
 .bp-chip:has(input:checked) {
   background: var(--bp-primary-soft);
   border-color: rgba(15, 110, 122, 0.50);
@@ -132,6 +133,15 @@
 }
 .bp-chip:hover {
   border-color: rgba(15, 110, 122, 0.40);
+}
+
+/* HTMX transition & loading indicator */
+.htmx-indicator {
+  display: none;
+}
+.htmx-request .htmx-indicator,
+.htmx-request.htmx-indicator {
+  display: inline-block;
 }
 
 /* Photo upload drop zone */
