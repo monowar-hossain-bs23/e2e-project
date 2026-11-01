@@ -3,7 +3,7 @@ story: 029-lifestyle-preference-mutability-and-profile-domain
 unit: 001-account-preference-domain
 intent: 006-account-settings-and-preferences
 priority: Must
-status: planned
+status: complete
 created: '2026-11-01T11:45:00Z'
 ---
 

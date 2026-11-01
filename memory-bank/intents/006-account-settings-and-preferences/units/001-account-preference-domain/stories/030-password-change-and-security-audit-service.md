@@ -3,7 +3,7 @@ story: 030-password-change-and-security-audit-service
 unit: 001-account-preference-domain
 intent: 006-account-settings-and-preferences
 priority: Must
-status: planned
+status: complete
 created: '2026-11-01T11:45:00Z'
 ---
 

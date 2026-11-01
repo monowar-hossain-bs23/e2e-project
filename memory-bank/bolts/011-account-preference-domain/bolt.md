@@ -3,15 +3,19 @@ id: 011-account-preference-domain
 unit: 001-account-preference-domain
 intent: 006-account-settings-and-preferences
 type: ddd-construction-bolt
-status: planned
+status: complete
 stories:
   - 029-lifestyle-preference-mutability-and-profile-domain
   - 030-password-change-and-security-audit-service
 created: '2026-11-01T11:46:00Z'
-started: null
-completed: null
-current_stage: planned
-stages_completed: []
+started: '2026-11-01T11:59:00Z'
+completed: '2026-11-01T12:06:00Z'
+current_stage: complete
+stages_completed:
+  - model
+  - design
+  - implement
+  - test
 requires_bolts:
   - 005-passport-verification-service
   - 009-listing-feed-query-and-consent

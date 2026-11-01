@@ -165,10 +165,16 @@ class TestLifestyleProfileModel:
         passport.status = Passport.Status.VERIFIED
         passport.save()
 
-        # Attempting to edit or validate the profile now should raise ValidationError
+        # Updating living search parameters (budget and area) on verified passport
         profile.budget_max = 25000
+        profile.area_preference = ["Dhanmondi", "Mirpur"]
+        profile.clean()
+        profile.save()
+
+        # Attempting to edit core lifestyle dimensions raises ValidationError
+        profile.smoking = LifestyleProfile.Smoking.YES
         with pytest.raises(
             ValidationError,
-            match="Lifestyle profile is immutable once passport is verified",
+            match="Core lifestyle dimensions are immutable once passport is verified",
         ):
             profile.clean()

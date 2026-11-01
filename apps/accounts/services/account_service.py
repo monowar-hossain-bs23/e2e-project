@@ -16,6 +16,9 @@ from django.utils import timezone
 
 from apps.accounts.models import EmailVerificationToken, User
 from apps.accounts.validators import PasswordComplexityValidator
+from apps.audit.services.audit_service import AuditService
+from apps.listings.validators import validate_phone_number
+from apps.passports.validators import validate_budget_range, validate_dhaka_sub_areas
 
 logger = logging.getLogger(__name__)
 
@@ -274,3 +277,168 @@ class AccountService:
             recipient_list=[user.email],
             fail_silently=False,
         )
+
+    @classmethod
+    def update_profile(
+        cls,
+        *,
+        user: User,
+        display_name: str,
+        phone_number: str | None = None,
+    ) -> dict[str, Any]:
+        """Validate and update user public handle and primary contact phone."""
+        display_name = display_name.strip()
+        if (
+            len(display_name) < 2
+            or len(display_name) > 32
+            or not DISPLAY_NAME_REGEX.match(display_name)
+        ):
+            return {
+                "ok": False,
+                "code": "invalid_display_name",
+                "message": (
+                    "Display name must be between 2 and 32 characters and contain only "
+                    "alphanumeric characters, spaces, and basic punctuation (. _ - ')."
+                ),
+                "errors": ["display_name"],
+            }
+
+        cleaned_phone: str | None = None
+        if phone_number and str(phone_number).strip():
+            try:
+                cleaned_phone = validate_phone_number(str(phone_number).strip())
+            except ValidationError as exc:
+                return {
+                    "ok": False,
+                    "code": "invalid_phone_number",
+                    "message": exc.messages[0]
+                    if hasattr(exc, "messages")
+                    else str(exc),
+                    "errors": ["phone_number"],
+                }
+
+        old_phone = user.phone_number
+        user.display_name = display_name
+        user.phone_number = cleaned_phone
+
+        with transaction.atomic():
+            user.save(update_fields=["display_name", "phone_number", "updated_at"])
+
+            # Sync handle to passport if user already has one
+            if hasattr(user, "passport"):
+                user.passport.display_name = display_name
+                user.passport.save(update_fields=["display_name", "updated_at"])
+
+            # Record audit entry if phone number changed
+            if old_phone != cleaned_phone:
+                AuditService.append(
+                    actor_id=user.id,
+                    target=user,
+                    action="profile_updated",
+                    reason_code="phone_number_changed",
+                    before_state={"phone_number": old_phone},
+                    after_state={"phone_number": cleaned_phone},
+                )
+
+        logger.info("User profile updated: user_id=%s", user.id)
+        return {"ok": True, "user": user}
+
+    @classmethod
+    def update_location_preferences(
+        cls,
+        *,
+        user: User,
+        area_preference: list[str],
+        budget_min: int,
+        budget_max: int,
+    ) -> dict[str, Any]:
+        """Validate and update tenant search areas and monthly budget limits."""
+        if not hasattr(user, "passport") or not hasattr(
+            user.passport, "lifestyle_profile"
+        ):
+            return {
+                "ok": False,
+                "code": "missing_profile",
+                "message": "User does not have an active lifestyle profile.",
+                "errors": ["lifestyle_profile"],
+            }
+
+        try:
+            validate_dhaka_sub_areas(area_preference)
+            validate_budget_range(budget_min, budget_max)
+        except ValidationError as exc:
+            return {
+                "ok": False,
+                "code": "invalid_parameters",
+                "message": exc.messages[0] if hasattr(exc, "messages") else str(exc),
+                "errors": [
+                    "area_preference" if "area" in str(exc).lower() else "budget"
+                ],
+            }
+
+        profile = user.passport.lifestyle_profile
+        profile.area_preference = area_preference
+        profile.budget_min = budget_min
+        profile.budget_max = budget_max
+
+        with transaction.atomic():
+            profile.full_clean()
+            profile.save(
+                update_fields=[
+                    "area_preference",
+                    "budget_min",
+                    "budget_max",
+                    "updated_at",
+                ]
+            )
+
+        logger.info(
+            "Location preferences updated: user_id=%s, areas=%s",
+            user.id,
+            area_preference,
+        )
+        return {"ok": True, "profile": profile}
+
+    @classmethod
+    def change_password(
+        cls,
+        *,
+        user: User,
+        current_password: str,
+        new_password: str,
+    ) -> dict[str, Any]:
+        """Verify current password, validate complexity, and update password hash."""
+        if not user.check_password(current_password):
+            return {
+                "ok": False,
+                "code": "invalid_current_password",
+                "message": "Your current password was entered incorrectly.",
+                "errors": ["current_password"],
+            }
+
+        validator = PasswordComplexityValidator()
+        try:
+            validator.validate(new_password)
+        except ValidationError as exc:
+            return {
+                "ok": False,
+                "code": "password_too_weak",
+                "message": "New password does not meet complexity requirements.",
+                "errors": list(exc.messages),
+            }
+
+        with transaction.atomic():
+            user.set_password(new_password)
+            user.save(update_fields=["password", "updated_at"])
+
+            AuditService.append(
+                actor_id=user.id,
+                target=user,
+                action="password_changed",
+                reason_code="user_credential_rotation",
+                before_state=None,
+                after_state={},
+            )
+
+        logger.info("User password changed successfully: user_id=%s", user.id)
+        return {"ok": True, "user": user}

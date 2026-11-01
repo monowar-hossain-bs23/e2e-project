@@ -129,14 +129,20 @@ class LifestyleProfile(models.Model):
         if self.area_preference is not None:
             validate_dhaka_sub_areas(self.area_preference)
 
-        # Immutability invariant (FR-3): Once verified,
-        # lifestyle profile cannot be edited
+        # Immutability invariant: Core lifestyle dimensions cannot be modified
+        # post-verification. Living search parameters remain decoupled and mutable.
         if self.pk:
             current = LifestyleProfile.objects.filter(pk=self.pk).first()
             if current and current.passport.is_verified:
-                raise ValidationError(
-                    _(
-                        "Lifestyle profile is immutable once passport is verified. "
-                        "A new verification submission is required to update details."
+                core_dimensions = ("gender", "occupation", "smoking", "sleep_schedule")
+                if any(
+                    getattr(self, field) != getattr(current, field)
+                    for field in core_dimensions
+                ):
+                    raise ValidationError(
+                        _(
+                            "Core lifestyle dimensions are immutable once passport "
+                            "is verified. A new verification submission is required "
+                            "to update details."
+                        )
                     )
-                )

@@ -8,6 +8,8 @@ from django.utils import timezone
 
 from apps.accounts.models import EmailVerificationToken, User
 from apps.accounts.services.account_service import AccountService
+from apps.audit.models import AuditEntry
+from apps.passports.models import LifestyleProfile, Passport
 
 
 @pytest.mark.django_db
@@ -205,3 +207,229 @@ class TestAccountService:
         assert res4["code"] == "resend_limit_exceeded"
         assert res4["attempts_left"] == 0
         assert "Maximum resend attempts reached" in res4["message"]
+
+    def test_update_profile_success_and_audits_phone_change(self):
+        """Updating display name and phone number persists and creates audit record."""
+        user = User.objects.create_user(
+            email="profile_test@example.com",
+            password="Password123!",
+            display_name="OriginalName",
+            phone_number="+8801700000000",
+        )
+        passport = Passport.objects.create(
+            user=user,
+            display_name="OriginalName",
+            status=Passport.Status.VERIFIED,
+        )
+
+        res = AccountService.update_profile(
+            user=user,
+            display_name="UpdatedHandle",
+            phone_number="+8801811223344",
+        )
+        assert res["ok"] is True
+        user.refresh_from_db()
+        assert user.display_name == "UpdatedHandle"
+        assert user.phone_number == "+8801811223344"
+
+        # Check passport display name synced
+        passport.refresh_from_db()
+        assert passport.display_name == "UpdatedHandle"
+
+        # Verify audit entry recorded for phone change
+        audit = AuditEntry.objects.filter(
+            actor_id=user.id, action="profile_updated"
+        ).latest("timestamp")
+        assert audit.reason_code == "phone_number_changed"
+        assert audit.before_state == {"phone_number": "+8801700000000"}
+        assert audit.after_state == {"phone_number": "+8801811223344"}
+
+    def test_update_profile_invalid_display_name_fails(self):
+        """Invalid display name returns error envelope."""
+        user = User.objects.create_user(
+            email="invalid_handle@example.com",
+            password="Password123!",
+            display_name="ValidHandle",
+        )
+        res = AccountService.update_profile(
+            user=user,
+            display_name="x",  # Too short (<2)
+        )
+        assert res["ok"] is False
+        assert res["code"] == "invalid_display_name"
+        user.refresh_from_db()
+        assert user.display_name == "ValidHandle"
+
+    def test_update_profile_invalid_phone_number_fails(self):
+        """Invalid phone number returns error envelope."""
+        user = User.objects.create_user(
+            email="invalid_phone@example.com",
+            password="Password123!",
+            display_name="ValidHandle",
+        )
+        res = AccountService.update_profile(
+            user=user,
+            display_name="ValidHandle",
+            phone_number="not-a-phone",
+        )
+        assert res["ok"] is False
+        assert res["code"] == "invalid_phone_number"
+
+    def test_update_location_preferences_success(self):
+        """Updating search areas and budget bounds persists to LifestyleProfile."""
+        user = User.objects.create_user(
+            email="location_pref@example.com",
+            password="Password123!",
+            display_name="LocUser",
+        )
+        passport = Passport.objects.create(
+            user=user,
+            display_name="LocUser",
+            status=Passport.Status.VERIFIED,
+        )
+        profile = LifestyleProfile.objects.create(
+            passport=passport,
+            gender=LifestyleProfile.Gender.MALE,
+            occupation=LifestyleProfile.Occupation.STUDENT,
+            smoking=LifestyleProfile.Smoking.NO,
+            sleep_schedule=LifestyleProfile.SleepSchedule.EARLY_BIRD,
+            area_preference=["Mirpur"],
+            budget_min=5000,
+            budget_max=10000,
+        )
+
+        res = AccountService.update_location_preferences(
+            user=user,
+            area_preference=["Dhanmondi", "Mohammadpur"],
+            budget_min=8000,
+            budget_max=16000,
+        )
+        assert res["ok"] is True
+        profile.refresh_from_db()
+        assert profile.area_preference == ["Dhanmondi", "Mohammadpur"]
+        assert profile.budget_min == 8000
+        assert profile.budget_max == 16000
+
+    def test_update_location_preferences_invalid_sub_area_fails(self):
+        """Non-canonical Dhaka sub-area is rejected."""
+        user = User.objects.create_user(
+            email="bad_area@example.com",
+            password="Password123!",
+            display_name="BadArea",
+        )
+        passport = Passport.objects.create(
+            user=user,
+            display_name="BadArea",
+            status=Passport.Status.VERIFIED,
+        )
+        LifestyleProfile.objects.create(
+            passport=passport,
+            gender=LifestyleProfile.Gender.MALE,
+            occupation=LifestyleProfile.Occupation.STUDENT,
+            smoking=LifestyleProfile.Smoking.NO,
+            sleep_schedule=LifestyleProfile.SleepSchedule.EARLY_BIRD,
+            area_preference=["Mirpur"],
+            budget_min=5000,
+            budget_max=10000,
+        )
+
+        res = AccountService.update_location_preferences(
+            user=user,
+            area_preference=["NonExistentArea"],
+            budget_min=5000,
+            budget_max=10000,
+        )
+        assert res["ok"] is False
+        assert res["code"] == "invalid_parameters"
+
+    def test_update_location_preferences_inverted_budget_fails(self):
+        """Budget min > budget max is rejected."""
+        user = User.objects.create_user(
+            email="bad_budget@example.com",
+            password="Password123!",
+            display_name="BadBudget",
+        )
+        passport = Passport.objects.create(
+            user=user,
+            display_name="BadBudget",
+            status=Passport.Status.VERIFIED,
+        )
+        LifestyleProfile.objects.create(
+            passport=passport,
+            gender=LifestyleProfile.Gender.MALE,
+            occupation=LifestyleProfile.Occupation.STUDENT,
+            smoking=LifestyleProfile.Smoking.NO,
+            sleep_schedule=LifestyleProfile.SleepSchedule.EARLY_BIRD,
+            area_preference=["Mirpur"],
+            budget_min=5000,
+            budget_max=10000,
+        )
+
+        res = AccountService.update_location_preferences(
+            user=user,
+            area_preference=["Mirpur"],
+            budget_min=20000,
+            budget_max=10000,  # Inverted!
+        )
+        assert res["ok"] is False
+        assert res["code"] == "invalid_parameters"
+
+    def test_change_password_success_and_audits(self):
+        """Valid password rotation updates hash and logs audit entry."""
+        user = User.objects.create_user(
+            email="pwd_change@example.com",
+            password="OldPassword123!",
+            display_name="PwdUser",
+        )
+
+        res = AccountService.change_password(
+            user=user,
+            current_password="OldPassword123!",
+            new_password="NewComplexPassword456@",
+        )
+        assert res["ok"] is True
+        user.refresh_from_db()
+        assert user.check_password("NewComplexPassword456@") is True
+        assert user.check_password("OldPassword123!") is False
+
+        # Verify audit record created with zero plaintext passwords
+        audit = AuditEntry.objects.filter(
+            actor_id=user.id, action="password_changed"
+        ).latest("timestamp")
+        assert audit.reason_code == "user_credential_rotation"
+        assert audit.after_state == {}
+
+    def test_change_password_incorrect_current_fails(self):
+        """Incorrect current password is rejected."""
+        user = User.objects.create_user(
+            email="pwd_wrong@example.com",
+            password="CorrectPassword123!",
+            display_name="WrongPwdUser",
+        )
+
+        res = AccountService.change_password(
+            user=user,
+            current_password="WrongPassword123!",
+            new_password="NewComplexPassword456@",
+        )
+        assert res["ok"] is False
+        assert res["code"] == "invalid_current_password"
+        user.refresh_from_db()
+        assert user.check_password("CorrectPassword123!") is True
+
+    def test_change_password_weak_new_password_fails(self):
+        """Weak new password is rejected by complexity rules."""
+        user = User.objects.create_user(
+            email="pwd_weak@example.com",
+            password="CorrectPassword123!",
+            display_name="WeakPwdUser",
+        )
+
+        res = AccountService.change_password(
+            user=user,
+            current_password="CorrectPassword123!",
+            new_password="simple",  # Weak
+        )
+        assert res["ok"] is False
+        assert res["code"] == "password_too_weak"
+        assert len(res["errors"]) > 0

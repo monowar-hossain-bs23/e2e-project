@@ -62,8 +62,8 @@
 ## 006-account-settings-and-preferences
 
 ### 001-account-preference-domain
-- [ ] [`029-lifestyle-preference-mutability-and-profile-domain`](file:///home/bs01496/Documents/LMS/basa-pass/memory-bank/intents/006-account-settings-and-preferences/units/001-account-preference-domain/stories/029-lifestyle-preference-mutability-and-profile-domain.md) - LifestyleProfile mutability decoupling for search area/budget and profile domain mutations (Must, assigned: `011-account-preference-domain`)
-- [ ] [`030-password-change-and-security-audit-service`](file:///home/bs01496/Documents/LMS/basa-pass/memory-bank/intents/006-account-settings-and-preferences/units/001-account-preference-domain/stories/030-password-change-and-security-audit-service.md) - In-app password rotation with complexity validation and append-only audit tracking (Must, assigned: `011-account-preference-domain`)
+- [x] [`029-lifestyle-preference-mutability-and-profile-domain`](file:///home/bs01496/Documents/LMS/basa-pass/memory-bank/intents/006-account-settings-and-preferences/units/001-account-preference-domain/stories/029-lifestyle-preference-mutability-and-profile-domain.md) - LifestyleProfile mutability decoupling for search area/budget and profile domain mutations (Must, assigned: `011-account-preference-domain`)
+- [x] [`030-password-change-and-security-audit-service`](file:///home/bs01496/Documents/LMS/basa-pass/memory-bank/intents/006-account-settings-and-preferences/units/001-account-preference-domain/stories/030-password-change-and-security-audit-service.md) - In-app password rotation with complexity validation and append-only audit tracking (Must, assigned: `011-account-preference-domain`)
 
 ### 002-account-settings-ui
 - [ ] [`031-account-settings-hub-and-profile-form-ui`](file:///home/bs01496/Documents/LMS/basa-pass/memory-bank/intents/006-account-settings-and-preferences/units/002-account-settings-ui/stories/031-account-settings-hub-and-profile-form-ui.md) - Gated Account Settings hub view, profile card with display name & phone form, navbar link (Must, assigned: `012-account-settings-ui`)
