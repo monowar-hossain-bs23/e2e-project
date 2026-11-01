@@ -3,8 +3,9 @@ story: 032-location-preference-and-password-change-ui
 unit: 002-account-settings-ui
 intent: 006-account-settings-and-preferences
 priority: Must
-status: planned
+status: complete
 created: '2026-11-01T11:45:00Z'
+completed: '2026-11-01T12:35:00Z'
 ---
 
 # Story 032: Location Preference & Password Change UI
@@ -17,12 +18,12 @@ So that my search matching preferences are refreshed and my credentials remain s
 
 ## Acceptance Criteria
 
-- [ ] **Location Preferences Form**: Form rendered with 13 canonical Dhaka sub-area interactive chips, `budget_min`, and `budget_max` inputs.
-- [ ] **Pre-Population**: When user has an existing `LifestyleProfile`, chips and budget fields are pre-populated with saved preferences.
-- [ ] **Unverified Seeker Support**: Users who haven't completed passport creation yet see an informative banner inviting them to complete Tenant Passport onboarding to unlock lifestyle matching.
-- [ ] **Password Change Form**: Form with `current_password`, `new_password`, and `confirm_password` inputs, with password show/hide toggle.
-- [ ] **Session Continuity**: Updating password calls `update_session_auth_hash(request, user)` so the user remains logged in.
-- [ ] **End-to-End Compatibility Refresh**: Updating location preferences immediately updates compatibility scores on the `/listings/` feed.
+- [x] **Location Preferences Form**: Form rendered with 13 canonical Dhaka sub-area interactive chips, `budget_min`, and `budget_max` inputs.
+- [x] **Pre-Population**: When user has an existing `LifestyleProfile`, chips and budget fields are pre-populated with saved preferences.
+- [x] **Unverified Seeker Support**: Users who haven't completed passport creation yet see an informative banner inviting them to complete Tenant Passport onboarding to unlock lifestyle matching.
+- [x] **Password Change Form**: Form with `current_password`, `new_password`, and `confirm_password` inputs, with password show/hide toggle.
+- [x] **Session Continuity**: Updating password calls `update_session_auth_hash(request, user)` so the user remains logged in.
+- [x] **End-to-End Compatibility Refresh**: Updating location preferences immediately updates compatibility scores on the `/listings/` feed.
 
 ## Technical Notes
 

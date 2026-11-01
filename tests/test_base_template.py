@@ -78,6 +78,8 @@ class TestNavbarComponent:
         assert "bp-avatar" in rendered
         assert "R" in rendered
         assert "Rimon" in rendered
+        assert "userMenuDropdown" in rendered
+        assert "Account Settings" in rendered
         assert "Log out" in rendered
         assert "bp-verified-pill" not in rendered
 
@@ -105,3 +107,5 @@ class TestNavbarComponent:
         assert "Verify Passport" not in rendered
         assert "T" in rendered
         assert "Tanvir" in rendered
+        assert "userMenuDropdown" in rendered
+        assert "Account Settings" in rendered

@@ -3,15 +3,24 @@ id: 012-account-settings-ui
 unit: 002-account-settings-ui
 intent: 006-account-settings-and-preferences
 type: simple-construction-bolt
-status: planned
+status: complete
 stories:
   - 031-account-settings-hub-and-profile-form-ui
   - 032-location-preference-and-password-change-ui
 created: '2026-11-01T11:46:00Z'
-started: null
-completed: null
-current_stage: planned
-stages_completed: []
+started: '2026-11-01T12:14:00Z'
+completed: '2026-11-01T12:37:00Z'
+current_stage: test
+stages_completed:
+  - name: plan
+    completed: '2026-11-01T12:15:00Z'
+    artifact: implementation-plan.md
+  - name: implement
+    completed: '2026-11-01T12:24:00Z'
+    artifact: implementation-walkthrough.md
+  - name: test
+    completed: '2026-11-01T12:35:00Z'
+    artifact: test-walkthrough.md
 requires_bolts:
   - 011-account-preference-domain
 enables_bolts: []

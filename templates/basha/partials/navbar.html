@@ -30,14 +30,35 @@
               <i class="bi bi-shield-check"></i> Verify Passport
             </a>
           {% endif %}
-          <div class="d-inline-flex align-items-center gap-2 ms-2">
-            <span class="bp-avatar" aria-hidden="true">{{ request.user.display_name|slice:":1"|upper }}</span>
-            <span class="small fw-semibold text-secondary d-none d-sm-inline-block">{{ request.user.display_name }}</span>
+          <div class="dropdown d-inline-block ms-1">
+            <button class="btn btn-link p-0 text-decoration-none dropdown-toggle d-inline-flex align-items-center gap-2 text-secondary" type="button" id="userMenuDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              <span class="bp-avatar" aria-hidden="true">{{ request.user.display_name|slice:":1"|upper }}</span>
+              <span class="small fw-semibold text-secondary d-none d-sm-inline-block">{{ request.user.display_name }}</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm border mt-2" aria-labelledby="userMenuDropdown">
+              <li class="dropdown-header">
+                <div class="fw-bold text-dark">{{ request.user.display_name }}</div>
+                <div class="text-muted small text-truncate" style="max-width: 220px;">{{ request.user.email }}</div>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{% url 'account_settings' %}">
+                  <i class="bi bi-gear-fill text-muted"></i>
+                  <span>Account Settings</span>
+                </a>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <form action="{% url 'logout' %}" method="post" class="m-0 p-0">
+                  {% csrf_token %}
+                  <button type="submit" class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Log out</span>
+                  </button>
+                </form>
+              </li>
+            </ul>
           </div>
-          <form action="{% url 'logout' %}" method="post" class="d-inline ms-1">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-outline-secondary btn-sm">Log out</button>
-          </form>
         {% else %}
           <a class="bp-nav__link d-none d-lg-inline-block" href="/#how">How it works</a>
           <a class="bp-nav__link d-none d-lg-inline-block" href="/#stories">Stories</a>

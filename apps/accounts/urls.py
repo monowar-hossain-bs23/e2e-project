@@ -3,6 +3,7 @@
 from django.urls import path
 
 from apps.accounts.views import (
+    AccountSettingsView,
     LoginView,
     LogoutView,
     PasswordResetCompleteView,
@@ -38,4 +39,5 @@ urlpatterns = [
         PasswordResetCompleteView.as_view(),
         name="password_reset_complete",
     ),
+    path("settings/", AccountSettingsView.as_view(), name="account_settings"),
 ]

@@ -1,0 +1,520 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Account Settings — Basha Pass{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/passports.css' %}?v=1.3">
+<link rel="stylesheet" href="{% static 'css/listings.css' %}?v=1.3">
+<style>
+  .bp-settings-nav .nav-link {
+    color: var(--bp-ink-2);
+    font-weight: 500;
+    padding: 12px 18px;
+    border-radius: 10px;
+    transition: all 0.15s ease;
+    border: 1px solid transparent;
+  }
+  .bp-settings-nav .nav-link:hover {
+    background: var(--bp-surface);
+    color: var(--bp-primary);
+  }
+  .bp-settings-nav .nav-link.active {
+    background: var(--bp-primary-soft);
+    color: var(--bp-primary);
+    font-weight: 600;
+    border-color: rgba(15, 110, 122, 0.2);
+  }
+  .bp-chip--selected {
+    background: var(--bp-primary-soft) !important;
+    border-color: rgba(15, 110, 122, 0.50) !important;
+    color: var(--bp-primary) !important;
+    font-weight: 600 !important;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+{% include "basha/partials/navbar.html" %}
+
+<main class="py-5" style="background: var(--bp-canvas); min-height: 85vh;">
+  <div class="container-xl">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb mb-0 small">
+        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}" class="text-decoration-none">Dashboard</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Account Settings</li>
+      </ol>
+    </nav>
+
+    <!-- Flash message alerts -->
+    {% if messages %}
+      <div class="mb-4">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show d-flex align-items-center justify-content-between" role="alert">
+            <div class="d-flex align-items-center gap-2">
+              {% if message.tags == "success" %}
+                <i class="bi bi-check-circle-fill text-success fs-5"></i>
+              {% elif message.tags == "danger" or message.tags == "error" %}
+                <i class="bi bi-exclamation-triangle-fill text-danger fs-5"></i>
+              {% else %}
+                <i class="bi bi-info-circle-fill text-primary fs-5"></i>
+              {% endif %}
+              <span>{{ message }}</span>
+            </div>
+            <button type="button" class="btn-close ms-3" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Account Header Summary Card -->
+    <div class="bp-card p-4 mb-4">
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <div class="d-flex align-items-center gap-3">
+          <div class="bp-avatar" style="width: 58px; height: 58px; font-size: 22px; font-weight: 700; background: var(--bp-primary); color: #fff; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(15, 110, 122, 0.25);">
+            {{ user.display_name|slice:":1"|upper }}
+          </div>
+          <div>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <h1 class="h4 mb-0 fw-bold text-dark">{{ user.display_name }}</h1>
+              {% if passport and passport.is_verified %}
+                <span class="bp-badge-verified">
+                  <i class="bi bi-patch-check-fill"></i> Verified Tenant
+                </span>
+              {% elif passport and passport.is_in_review %}
+                <span class="badge bg-warning text-dark px-3 py-2 rounded-pill">
+                  <i class="bi bi-hourglass-split me-1"></i> In Review
+                </span>
+              {% else %}
+                <span class="badge bg-secondary text-white px-3 py-2 rounded-pill">
+                  <i class="bi bi-shield me-1"></i> Unverified
+                </span>
+              {% endif %}
+            </div>
+            <p class="text-muted small mb-0 mt-1">
+              <i class="bi bi-envelope me-1"></i> {{ user.email }}
+              <span class="mx-2 text-muted">•</span>
+              <i class="bi bi-calendar-check me-1"></i> Member since {{ user.created_at|date:"F Y" }}
+            </p>
+          </div>
+        </div>
+
+        <div>
+          {% if not passport %}
+            <a href="{% url 'passport_wizard' %}" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+              <i class="bi bi-shield-plus me-1"></i> Create Tenant Passport
+            </a>
+          {% elif not passport.is_verified and not passport.is_in_review %}
+            <a href="{% url 'passport_wizard' %}" class="btn btn-primary btn-sm rounded-pill px-3">
+              <i class="bi bi-patch-check me-1"></i> Verify Passport
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Settings Hub Body -->
+    <div class="row g-4">
+      <!-- Left Tab Navigation Sidebar -->
+      <div class="col-lg-3 col-md-4">
+        <div class="bp-card p-3 sticky-top" style="top: 24px;">
+          <ul class="nav nav-pills flex-column bp-settings-nav gap-1" id="settingsTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link text-start w-100 {% if active_tab == 'profile' %}active{% endif %}" id="profile-tab" data-bs-toggle="pill" data-bs-target="#tab-pane-profile" type="button" role="tab" aria-controls="tab-pane-profile" aria-selected="{% if active_tab == 'profile' %}true{% else %}false{% endif %}">
+                <i class="bi bi-person me-2"></i> Profile Details
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link text-start w-100 {% if active_tab == 'location' %}active{% endif %}" id="location-tab" data-bs-toggle="pill" data-bs-target="#tab-pane-location" type="button" role="tab" aria-controls="tab-pane-location" aria-selected="{% if active_tab == 'location' %}true{% else %}false{% endif %}">
+                <i class="bi bi-geo-alt me-2"></i> Living Preferences
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link text-start w-100 {% if active_tab == 'security' %}active{% endif %}" id="security-tab" data-bs-toggle="pill" data-bs-target="#tab-pane-security" type="button" role="tab" aria-controls="tab-pane-security" aria-selected="{% if active_tab == 'security' %}true{% else %}false{% endif %}">
+                <i class="bi bi-shield-lock me-2"></i> Security
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Right Tab Content -->
+      <div class="col-lg-9 col-md-8">
+        <div class="tab-content" id="settingsTabContent">
+
+          <!-- Tab Pane 1: Profile Details -->
+          <div class="tab-pane fade {% if active_tab == 'profile' %}show active{% endif %}" id="tab-pane-profile" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+            <div class="bp-card p-4">
+              <div class="d-flex align-items-center justify-content-between mb-4 border-bottom pb-3">
+                <div>
+                  <h2 class="h5 fw-bold text-dark mb-1">Profile Details</h2>
+                  <p class="text-muted small mb-0">Manage how your name and contact channels appear across Basha Pass.</p>
+                </div>
+                <span class="badge bg-light text-secondary border">Public Handle</span>
+              </div>
+
+              <form method="post" action="{% url 'account_settings' %}?tab=profile" novalidate>
+                {% csrf_token %}
+                <input type="hidden" name="form_action" value="profile">
+
+                {% if profile_form.non_field_errors %}
+                  <div class="alert alert-danger" role="alert">
+                    {% for err in profile_form.non_field_errors %}{{ err }}<br>{% endfor %}
+                  </div>
+                {% endif %}
+
+                <!-- Email (Read-only) -->
+                <div class="mb-3">
+                  <label class="form-label fw-semibold text-secondary">Registered Email</label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light text-muted"><i class="bi bi-lock-fill"></i></span>
+                    <input type="text" class="form-control bg-light text-muted" value="{{ user.email }}" readonly aria-readonly="true">
+                  </div>
+                  <div class="form-text small">Your primary account email is locked for security and verification integrity.</div>
+                </div>
+
+                <!-- Display Name -->
+                <div class="mb-3">
+                  <label for="{{ profile_form.display_name.id_for_label }}" class="form-label fw-semibold">
+                    Display Name <span class="text-danger">*</span>
+                  </label>
+                  <input type="text"
+                         name="{{ profile_form.display_name.name }}"
+                         id="{{ profile_form.display_name.id_for_label }}"
+                         class="form-control {% if profile_form.display_name.errors %}is-invalid{% endif %}"
+                         value="{{ profile_form.display_name.value|default:'' }}"
+                         required
+                         maxlength="32"
+                         placeholder="e.g. Tanvir H.">
+                  {% if profile_form.display_name.errors %}
+                    <div class="invalid-feedback d-block">
+                      {% for err in profile_form.display_name.errors %}{{ err }}<br>{% endfor %}
+                    </div>
+                  {% endif %}
+                  <div class="form-text small">Visible on listing inquiries, roommate cards, and your public passport summary.</div>
+                </div>
+
+                <!-- Contact Phone Number -->
+                <div class="mb-4">
+                  <label for="{{ profile_form.phone_number.id_for_label }}" class="form-label fw-semibold">
+                    Contact Phone Number
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                    <input type="tel"
+                           name="{{ profile_form.phone_number.name }}"
+                           id="{{ profile_form.phone_number.id_for_label }}"
+                           class="form-control {% if profile_form.phone_number.errors %}is-invalid{% endif %}"
+                           value="{{ profile_form.phone_number.value|default:'' }}"
+                           placeholder="e.g. 01712345678 or +8801712345678">
+                  </div>
+                  {% if profile_form.phone_number.errors %}
+                    <div class="invalid-feedback d-block">
+                      {% for err in profile_form.phone_number.errors %}{{ err }}<br>{% endfor %}
+                    </div>
+                  {% endif %}
+                  <div class="form-text small text-muted mt-2">
+                    <i class="bi bi-shield-lock-fill text-primary me-1"></i>
+                    {{ profile_form.phone_number.help_text }}
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                  <button type="submit" class="btn btn-primary px-4">
+                    <i class="bi bi-check2 me-1"></i> Save Profile Details
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Tab Pane 2: Living Preferences -->
+          <div class="tab-pane fade {% if active_tab == 'location' %}show active{% endif %}" id="tab-pane-location" role="tabpanel" aria-labelledby="location-tab" tabindex="0">
+            <div class="bp-card p-4">
+              <div class="d-flex align-items-center justify-content-between mb-4 border-bottom pb-3">
+                <div>
+                  <h2 class="h5 fw-bold text-dark mb-1">Living & Location Preferences</h2>
+                  <p class="text-muted small mb-0">Customize your search locations and budget to refresh roommate compatibility scores.</p>
+                </div>
+                <span class="badge bg-light text-primary border">Feed Matching</span>
+              </div>
+
+              {% if not has_profile %}
+                <div class="p-4 rounded-4 bg-light text-center border">
+                  <div class="mb-3">
+                    <i class="bi bi-compass text-primary" style="font-size: 2.5rem;"></i>
+                  </div>
+                  <h3 class="h6 fw-bold text-dark">No Lifestyle Profile Configured Yet</h3>
+                  <p class="text-muted small mb-3 mx-auto" style="max-width: 480px;">
+                    To personalize your search zones and unlock the 6-axis compatibility radar on Dhaka listings, set up your Tenant Passport.
+                  </p>
+                  <a href="{% url 'passport_wizard' %}" class="btn btn-primary btn-sm rounded-pill px-4">
+                    <i class="bi bi-arrow-right-circle me-1"></i> Complete Passport Onboarding
+                  </a>
+                </div>
+              {% else %}
+                <div class="alert alert-light border small text-muted mb-4 d-flex align-items-start gap-2">
+                  <i class="bi bi-info-circle-fill text-primary fs-5 mt-1"></i>
+                  <div>
+                    <strong>Decoupled Search Policy:</strong>
+                    Updating your preferred areas and monthly rent budget updates your feed recommendations immediately without affecting your verified passport status.
+                  </div>
+                </div>
+
+                <form method="post" action="{% url 'account_settings' %}?tab=location" novalidate>
+                  {% csrf_token %}
+                  <input type="hidden" name="form_action" value="location">
+
+                  {% if location_form.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {% for err in location_form.non_field_errors %}{{ err }}<br>{% endfor %}
+                    </div>
+                  {% endif %}
+
+                  <!-- Dhaka Sub-Areas (Interactive Chips) -->
+                  <div class="mb-4">
+                    <label class="form-label fw-semibold d-block mb-1">
+                      Preferred Dhaka Sub-Areas <span class="text-danger">*</span>
+                    </label>
+                    <p class="text-muted small mb-3">Choose one or more areas you are actively looking to stay in:</p>
+                    <div class="bp-chipgroup">
+                      {% for choice in location_form.area_preference %}
+                        <label class="bp-chip {% if choice.data.selected %}bp-chip--selected{% endif %}">
+                          {{ choice.tag }}
+                          <span>{{ choice.choice_label }}</span>
+                        </label>
+                      {% endfor %}
+                    </div>
+                    {% if location_form.area_preference.errors %}
+                      <div class="invalid-feedback d-block mt-2">
+                        {% for err in location_form.area_preference.errors %}{{ err }}<br>{% endfor %}
+                      </div>
+                    {% endif %}
+                  </div>
+
+                  <!-- Budget Range Inputs -->
+                  <div class="mb-4">
+                    <label class="form-label fw-semibold d-block mb-2">Monthly Rent Budget (BDT)</label>
+                    <div class="row g-3">
+                      <div class="col-sm-6">
+                        <label for="{{ location_form.budget_min.id_for_label }}" class="form-label small text-muted">
+                          Minimum Monthly Rent (৳) <span class="text-danger">*</span>
+                        </label>
+                        <div class="input-group">
+                          <span class="input-group-text">৳</span>
+                          <input type="number"
+                                 name="{{ location_form.budget_min.name }}"
+                                 id="{{ location_form.budget_min.id_for_label }}"
+                                 class="form-control {% if location_form.budget_min.errors %}is-invalid{% endif %}"
+                                 value="{{ location_form.budget_min.value|default:'' }}"
+                                 min="500"
+                                 max="50000"
+                                 step="500"
+                                 required>
+                        </div>
+                        {% if location_form.budget_min.errors %}
+                          <div class="invalid-feedback d-block">
+                            {% for err in location_form.budget_min.errors %}{{ err }}<br>{% endfor %}
+                          </div>
+                        {% endif %}
+                      </div>
+                      <div class="col-sm-6">
+                        <label for="{{ location_form.budget_max.id_for_label }}" class="form-label small text-muted">
+                          Maximum Monthly Rent (৳) <span class="text-danger">*</span>
+                        </label>
+                        <div class="input-group">
+                          <span class="input-group-text">৳</span>
+                          <input type="number"
+                                 name="{{ location_form.budget_max.name }}"
+                                 id="{{ location_form.budget_max.id_for_label }}"
+                                 class="form-control {% if location_form.budget_max.errors %}is-invalid{% endif %}"
+                                 value="{{ location_form.budget_max.value|default:'' }}"
+                                 min="500"
+                                 max="50000"
+                                 step="500"
+                                 required>
+                        </div>
+                        {% if location_form.budget_max.errors %}
+                          <div class="invalid-feedback d-block">
+                            {% for err in location_form.budget_max.errors %}{{ err }}<br>{% endfor %}
+                          </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary px-4">
+                      <i class="bi bi-check2 me-1"></i> Save Living Preferences
+                    </button>
+                  </div>
+                </form>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Tab Pane 3: Security & Credentials -->
+          <div class="tab-pane fade {% if active_tab == 'security' %}show active{% endif %}" id="tab-pane-security" role="tabpanel" aria-labelledby="security-tab" tabindex="0">
+            <div class="bp-card p-4">
+              <div class="d-flex align-items-center justify-content-between mb-4 border-bottom pb-3">
+                <div>
+                  <h2 class="h5 fw-bold text-dark mb-1">Account Security</h2>
+                  <p class="text-muted small mb-0">Update your account password. Active sessions are automatically preserved.</p>
+                </div>
+                <span class="badge bg-light text-success border"><i class="bi bi-shield-check"></i> Encrypted</span>
+              </div>
+
+              <form method="post" action="{% url 'account_settings' %}?tab=security" novalidate>
+                {% csrf_token %}
+                <input type="hidden" name="form_action" value="password">
+
+                {% if password_form.non_field_errors %}
+                  <div class="alert alert-danger" role="alert">
+                    {% for err in password_form.non_field_errors %}{{ err }}<br>{% endfor %}
+                  </div>
+                {% endif %}
+
+                <!-- Current Password -->
+                <div class="mb-3">
+                  <label for="{{ password_form.current_password.id_for_label }}" class="form-label fw-semibold">
+                    Current Password <span class="text-danger">*</span>
+                  </label>
+                  <div class="input-group">
+                    <input type="password"
+                           name="{{ password_form.current_password.name }}"
+                           id="{{ password_form.current_password.id_for_label }}"
+                           class="form-control {% if password_form.current_password.errors %}is-invalid{% endif %}"
+                           autocomplete="current-password"
+                           required
+                           placeholder="Enter current password">
+                    <button class="btn btn-outline-secondary toggle-pwd-btn" type="button" data-target="{{ password_form.current_password.id_for_label }}" aria-label="Toggle password visibility">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  </div>
+                  {% if password_form.current_password.errors %}
+                    <div class="invalid-feedback d-block">
+                      {% for err in password_form.current_password.errors %}{{ err }}<br>{% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+
+                <!-- New Password -->
+                <div class="mb-3">
+                  <label for="{{ password_form.new_password.id_for_label }}" class="form-label fw-semibold">
+                    New Password <span class="text-danger">*</span>
+                  </label>
+                  <div class="input-group">
+                    <input type="password"
+                           name="{{ password_form.new_password.name }}"
+                           id="{{ password_form.new_password.id_for_label }}"
+                           class="form-control {% if password_form.new_password.errors %}is-invalid{% endif %}"
+                           autocomplete="new-password"
+                           required
+                           placeholder="Enter new strong password">
+                    <button class="btn btn-outline-secondary toggle-pwd-btn" type="button" data-target="{{ password_form.new_password.id_for_label }}" aria-label="Toggle password visibility">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  </div>
+                  {% if password_form.new_password.errors %}
+                    <div class="invalid-feedback d-block">
+                      {% for err in password_form.new_password.errors %}{{ err }}<br>{% endfor %}
+                    </div>
+                  {% endif %}
+                  <div class="form-text small text-muted">
+                    Must be at least 8 characters with uppercase, lowercase, a number, and a special symbol.
+                  </div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="mb-4">
+                  <label for="{{ password_form.confirm_password.id_for_label }}" class="form-label fw-semibold">
+                    Confirm New Password <span class="text-danger">*</span>
+                  </label>
+                  <div class="input-group">
+                    <input type="password"
+                           name="{{ password_form.confirm_password.name }}"
+                           id="{{ password_form.confirm_password.id_for_label }}"
+                           class="form-control {% if password_form.confirm_password.errors %}is-invalid{% endif %}"
+                           autocomplete="new-password"
+                           required
+                           placeholder="Re-enter new password">
+                    <button class="btn btn-outline-secondary toggle-pwd-btn" type="button" data-target="{{ password_form.confirm_password.id_for_label }}" aria-label="Toggle password visibility">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  </div>
+                  {% if password_form.confirm_password.errors %}
+                    <div class="invalid-feedback d-block">
+                      {% for err in password_form.confirm_password.errors %}{{ err }}<br>{% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+
+                <div class="d-flex justify-content-end">
+                  <button type="submit" class="btn btn-primary px-4">
+                    <i class="bi bi-shield-check me-1"></i> Update Password
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Password visibility toggle
+    document.querySelectorAll('.toggle-pwd-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        const targetId = this.getAttribute('data-target');
+        const input = document.getElementById(targetId);
+        if (input) {
+          const icon = this.querySelector('i');
+          if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('bi-eye');
+            icon.classList.add('bi-eye-slash');
+          } else {
+            input.type = 'password';
+            icon.classList.remove('bi-eye-slash');
+            icon.classList.add('bi-eye');
+          }
+        }
+      });
+    });
+
+    // Chip click sync for visual feedback
+    document.querySelectorAll('.bp-chip input[type="checkbox"]').forEach(function(checkbox) {
+      checkbox.addEventListener('change', function() {
+        const chip = this.closest('.bp-chip');
+        if (chip) {
+          if (this.checked) {
+            chip.classList.add('bp-chip--selected');
+          } else {
+            chip.classList.remove('bp-chip--selected');
+          }
+        }
+      });
+    });
+
+    // Update browser URL query string when tab pills change without reloading
+    const tabButtons = document.querySelectorAll('#settingsTab button[data-bs-toggle="pill"]');
+    tabButtons.forEach(function(button) {
+      button.addEventListener('shown.bs.tab', function(event) {
+        let tabName = 'profile';
+        if (event.target.id === 'location-tab') tabName = 'location';
+        else if (event.target.id === 'security-tab') tabName = 'security';
+        const url = new URL(window.location.href);
+        url.searchParams.set('tab', tabName);
+        window.history.replaceState({}, '', url);
+      });
+    });
+  });
+</script>
+{% endblock %}

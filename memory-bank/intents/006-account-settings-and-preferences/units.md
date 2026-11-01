@@ -1,8 +1,8 @@
 ---
 intent: 006-account-settings-and-preferences
 phase: inception
-status: units-defined
-updated: '2026-11-01T11:44:00Z'
+status: complete
+updated: '2026-11-01T12:37:00Z'
 ---
 
 # Units Decomposition: 006-account-settings-and-preferences

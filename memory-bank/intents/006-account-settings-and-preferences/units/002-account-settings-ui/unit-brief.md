@@ -2,7 +2,7 @@
 unit: 002-account-settings-ui
 unit_type: frontend
 default_bolt_type: simple-construction-bolt
-status: planned
+status: complete
 created: '2026-11-01T11:44:00Z'
 ---
 

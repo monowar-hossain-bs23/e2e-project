@@ -330,6 +330,7 @@ class TestDashboardView:
         assert "Verified Tenant" in content
         assert "Gulshan" in content
         assert "৳12000" in content
+        assert reverse("account_settings") in content
 
     def test_htmx_status_partial_view(self, client: Client, tenant: User) -> None:
         client.force_login(tenant)
