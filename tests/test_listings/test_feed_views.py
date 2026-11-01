@@ -140,6 +140,10 @@ class TestListingDiscoveryViews:
         assert "Banani" in response.content.decode()
         # Verify anonymous cards show locked lifestyle hint
         assert "Verify to see lifestyle fit" in response.content.decode()
+        # Verify footer is rendered on public feed
+        templates_used = [t.name for t in response.templates if t.name]
+        assert "basha/partials/footer.html" in templates_used
+        assert "Basha Pass · Dhaka" in response.content.decode()
 
     def test_feed_renders_absolute_media_urls_for_photos(
         self, client: Client, sample_listings: list[Listing]
@@ -269,6 +273,11 @@ class TestListingDiscoveryViews:
         assert "tanvir_feed_ui@example.com" not in content
         assert "+8801712345678" not in content
         assert "01712345678" not in content
+
+        # Verify footer is rendered on public detail page
+        templates_used = [t.name for t in response.templates if t.name]
+        assert "basha/partials/footer.html" in templates_used
+        assert "Basha Pass · Dhaka" in content
 
     def test_unverified_seeker_access_to_detail_locks_contact(
         self,

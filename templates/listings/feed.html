@@ -10,7 +10,7 @@
 {% block content %}
 {% include "basha/partials/navbar.html" %}
 
-<main class="container-xl py-4">
+<main class="container-xl py-4" style="min-height: 70vh;">
   {# Filter offcanvas drawer #}
   {% include "listings/partials/filter_drawer.html" %}
 
@@ -108,6 +108,8 @@
     </div>
   {% endif %}
 </main>
+
+{% include "basha/partials/footer.html" %}
 {% endblock %}
 
 {% block extra_js %}

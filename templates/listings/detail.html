@@ -10,7 +10,7 @@
 {% block content %}
 {% include "basha/partials/navbar.html" %}
 
-<main class="container-xl py-4">
+<main class="container-xl py-4" style="min-height: 70vh;">
   {# Breadcrumbs (Story 028) #}
   <nav aria-label="breadcrumb" class="bp-breadcrumbs">
     <a href="{% url 'listing_feed' %}">Browse</a>
@@ -328,6 +328,8 @@
     </div>
   </div>
 </main>
+
+{% include "basha/partials/footer.html" %}
 {% endblock %}
 
 {% block extra_js %}
