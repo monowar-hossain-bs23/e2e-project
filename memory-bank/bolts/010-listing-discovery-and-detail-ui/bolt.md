@@ -3,15 +3,15 @@ id: 010-listing-discovery-and-detail-ui
 unit: 002-listing-feed-and-detail-ui
 intent: 005-public-listing-feed-and-search
 type: simple-construction-bolt
-status: planned
+status: in-progress
 stories:
   - 026-feed-view-and-filter-ui
   - 027-listing-card-and-compatibility-ui
   - 028-listing-detail-and-gated-contact-ui
 created: '2026-10-31T16:05:00Z'
-started: null
+started: '2026-11-01T01:25:00Z'
 completed: null
-current_stage: null
+current_stage: plan
 stages_completed: []
 requires_bolts:
   - 009-listing-feed-query-and-consent
