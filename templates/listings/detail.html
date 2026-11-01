@@ -27,7 +27,10 @@
       <section class="bp-gallery" aria-label="Listing photo gallery">
         <div class="bp-gallery__main">
           {% if listing.primary_photo_url %}
-            <img id="gallery-main-img" src="{{ listing.primary_photo_url }}" alt="{{ listing.kind_display }} in {{ listing.area }}">
+            <img id="gallery-main-img" src="{{ listing.primary_photo_url }}" alt="{{ listing.kind_display }} in {{ listing.area }}" onerror="this.onerror=null; this.style.display='none'; if (this.nextElementSibling) this.nextElementSibling.classList.remove('d-none');">
+            <div class="bp-listing-card__placeholder h-100 d-none" aria-hidden="true">
+              <i class="bi bi-house-door"></i>
+            </div>
           {% else %}
             <div class="bp-listing-card__placeholder h-100" aria-hidden="true">
               <i class="bi bi-house-door"></i>

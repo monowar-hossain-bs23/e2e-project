@@ -11,7 +11,10 @@
       {% endif %}
 
       {% if item.primary_photo_url %}
-        <img src="{{ item.primary_photo_url }}" alt="{{ item.kind_display }} in {{ item.area }}" class="bp-listing-card__img" loading="lazy">
+        <img src="{{ item.primary_photo_url }}" alt="{{ item.kind_display }} in {{ item.area }}" class="bp-listing-card__img" loading="lazy" onerror="this.onerror=null; this.style.display='none'; if (this.nextElementSibling) this.nextElementSibling.classList.remove('d-none');">
+        <div class="bp-listing-card__placeholder d-none" aria-hidden="true">
+          <i class="bi bi-house-door"></i>
+        </div>
       {% else %}
         <div class="bp-listing-card__placeholder" aria-hidden="true">
           <i class="bi bi-house-door"></i>

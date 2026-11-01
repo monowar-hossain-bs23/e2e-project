@@ -141,6 +141,49 @@ class TestListingDiscoveryViews:
         # Verify anonymous cards show locked lifestyle hint
         assert "Verify to see lifestyle fit" in response.content.decode()
 
+    def test_feed_renders_absolute_media_urls_for_photos(
+        self, client: Client, sample_listings: list[Listing]
+    ) -> None:
+        """Photo URLs on cards are properly prefixed with /media/ (zero 404)."""
+        response = client.get(reverse("listing_feed"))
+        assert response.status_code == 200
+        projections = response.context["projections"]
+        mirpur = next(p for p in projections if p.area == "Mirpur")
+        assert mirpur.primary_photo_url is not None
+        assert mirpur.primary_photo_url.startswith("/media/")
+        assert mirpur.primary_photo_url == "/media/listings/photos/photo1.jpg"
+        assert len(mirpur.photos) == 2
+        assert mirpur.photos[0].url == "/media/listings/photos/photo1.jpg"
+        assert mirpur.photos[1].url == "/media/listings/photos/photo2.jpg"
+
+    def test_media_file_served_via_http_client(
+        self,
+        client: Client,
+        sample_listings: list[Listing],
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """HTTP GET to /media/<photo_path> returns 200 when file exists on disk."""
+        from apps.listings.services.storage import ListingPhotoStorageService
+
+        listing = sample_listings[0]
+        photo = listing.photos.first()
+        assert photo is not None
+
+        # Create physical test file
+        root = ListingPhotoStorageService.get_public_root()
+        file_path = root / photo.photo_path
+        file_path.parent.mkdir(parents=True, exist_ok=True)
+        file_path.write_bytes(b"\xff\xd8\xff\xe0\x00\x10JFIF\x00\x01")
+
+        try:
+            # Enable DEBUG and reload url patterns for static serving
+            monkeypatch.setattr("django.conf.settings.DEBUG", True)
+            response = client.get(photo.url)
+            assert response.status_code == 200
+        finally:
+            if file_path.exists():
+                file_path.unlink()
+
     def test_verified_seeker_views_compatibility_dots(
         self,
         client: Client,

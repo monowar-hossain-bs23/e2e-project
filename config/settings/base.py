@@ -127,12 +127,12 @@ USE_I18N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Media files & PII split (per Architecture Spine AD-9)
-MEDIA_URL = "media/"
+MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_PRIVATE_ROOT = BASE_DIR / "media_private"
 MEDIA_PUBLIC_ROOT = MEDIA_ROOT / "public"

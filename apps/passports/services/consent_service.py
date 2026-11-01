@@ -2,6 +2,7 @@
 
 from typing import Any
 
+from django.conf import settings
 from django.utils import timezone
 
 from apps.listings.projections import ListingProjection, PhotoProjection
@@ -100,6 +101,27 @@ class ConsentService:
         return summary, tuple(chips)
 
     @classmethod
+    def format_photo_url(cls, photo_obj_or_path: Any) -> str:
+        """Format photo relative path into public absolute media URL."""
+        if not photo_obj_or_path:
+            return ""
+        if hasattr(photo_obj_or_path, "url"):
+            return str(photo_obj_or_path.url)
+        val = str(getattr(photo_obj_or_path, "photo_path", photo_obj_or_path))
+        if (
+            val.startswith("http://")
+            or val.startswith("https://")
+            or val.startswith("/")
+        ):
+            return val
+        media_url = getattr(settings, "MEDIA_URL", "/media/")
+        if not media_url.startswith("/"):
+            media_url = f"/{media_url}"
+        if not media_url.endswith("/"):
+            media_url = f"{media_url}/"
+        return f"{media_url}{val}"
+
+    @classmethod
     def render_listing(
         cls,
         viewer: Any,
@@ -146,11 +168,7 @@ class ConsentService:
 
         if hasattr(listing, "photos"):
             for photo in listing.photos.all():
-                url = (
-                    photo.photo_path.url
-                    if hasattr(photo.photo_path, "url")
-                    else str(photo.photo_path)
-                )
+                url = cls.format_photo_url(photo)
                 photos_proj.append(
                     PhotoProjection(id=photo.id, url=url, order=photo.order)
                 )
@@ -158,10 +176,7 @@ class ConsentService:
         if photos_proj:
             primary_url = photos_proj[0].url
         elif listing.primary_photo:
-            p = listing.primary_photo
-            primary_url = (
-                p.photo_path.url if hasattr(p.photo_path, "url") else str(p.photo_path)
-            )
+            primary_url = cls.format_photo_url(listing.primary_photo)
 
         pref_occ = (
             tuple(listing.pref_occupation)

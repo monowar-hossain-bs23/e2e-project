@@ -2,6 +2,7 @@
 
 import uuid
 
+from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -206,3 +207,22 @@ class ListingPhoto(models.Model):
 
     def __str__(self) -> str:
         return f"Photo {self.order} for Listing {self.listing_id}"
+
+    @property
+    def url(self) -> str:
+        """Return public absolute URL for this photo."""
+        if not self.photo_path:
+            return ""
+        val = str(self.photo_path)
+        if (
+            val.startswith("http://")
+            or val.startswith("https://")
+            or val.startswith("/")
+        ):
+            return val
+        media_url = getattr(settings, "MEDIA_URL", "/media/")
+        if not media_url.startswith("/"):
+            media_url = f"/{media_url}"
+        if not media_url.endswith("/"):
+            media_url = f"{media_url}/"
+        return f"{media_url}{val}"
