@@ -124,6 +124,7 @@ body {
   -webkit-backdrop-filter: saturate(180%) blur(12px);
   border-bottom: 1px solid var(--bp-border);
   z-index: 1030;
+  min-height: 64px;
 }
 
 .bp-brand {
@@ -201,11 +202,14 @@ body {
   border: 1px solid rgba(22, 163, 74, 0.25);
   font-size: 12px;
   font-weight: 600;
-  padding: 3px 10px;
+  padding: 4px 10px;
   border-radius: 999px;
+  line-height: 1.25;
+  white-space: nowrap;
 }
 .bp-verified-pill i {
   font-size: 13px;
+  color: #15803D;
 }
 
 /* Global Footer Tokens */

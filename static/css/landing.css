@@ -2,52 +2,6 @@
    Derived from docs/mockups/01-landing.html
 */
 
-/* Top navigation */
-.bp-nav {
-  background: rgba(250, 251, 253, 0.85);
-  backdrop-filter: saturate(180%) blur(12px);
-  -webkit-backdrop-filter: saturate(180%) blur(12px);
-  border-bottom: 1px solid var(--bp-border);
-}
-
-.bp-brand {
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  font-size: 18px;
-  color: var(--bp-ink);
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.bp-brand__mark {
-  width: 32px;
-  height: 32px;
-  background: var(--bp-primary);
-  color: #fff;
-  border-radius: 8px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 16px;
-}
-
-.bp-nav__link {
-  color: var(--bp-ink-2);
-  font-weight: 500;
-  font-size: 15px;
-  padding: 8px 14px;
-  border-radius: 8px;
-  text-decoration: none;
-}
-
-.bp-nav__link:hover {
-  background: var(--bp-surface);
-  color: var(--bp-ink);
-}
-
 /* Hero section */
 .bp-hero {
   position: relative;
@@ -223,22 +177,6 @@
   border-top: 1px dashed var(--bp-border);
   font-size: 13px;
   color: var(--bp-muted);
-}
-
-.bp-verified-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--bp-primary);
-  color: #fff;
-  font-size: 12px;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 999px;
-}
-
-.bp-verified-pill i {
-  font-size: 12px;
 }
 
 /* Floating verification live count badge */
@@ -450,7 +388,7 @@
   gap: 12px;
 }
 
-.bp-avatar {
+.bp-quote__person .bp-avatar {
   width: 40px;
   height: 40px;
   border-radius: 999px;
