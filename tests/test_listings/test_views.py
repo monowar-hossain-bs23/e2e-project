@@ -45,6 +45,7 @@ def verified_user() -> User:
         email="lister_verified@example.com",
         password="Password123!",
         display_name="VerifiedLister",
+        phone_number="+8801712345678",
     )
     Passport.objects.create(
         user=user,
@@ -60,6 +61,7 @@ def other_verified_user() -> User:
         email="other_verified@example.com",
         password="Password123!",
         display_name="OtherLister",
+        phone_number="+8801811111111",
     )
     Passport.objects.create(
         user=user,
@@ -295,6 +297,69 @@ class TestListingCreateView:
         assert listing.photos.count() == 1
         assert listing.is_active is True
 
+    def test_post_create_view_saves_phone_number(
+        self, client: Client, verified_user: User
+    ) -> None:
+        """Submitting a phone number updates the author's User.phone_number."""
+        client.force_login(verified_user)
+        photo = create_mock_photo("phone_test.jpg")
+        post_data = {
+            "kind": ListingKind.SEAT,
+            "rent_bdt": 5000,
+            "rent_unit": RentUnit.PER_SEAT,
+            "area": "Mirpur",
+            "pref_gender": PreferredGender.ANY,
+            "pref_smoking": PreferredSmoking.NO,
+            "pref_sleep": PreferredSleepSchedule.FLEXIBLE,
+            "phone_number": "+8801812345678",
+            "photos": [photo],
+        }
+        response = client.post(reverse("listing_create"), post_data, follow=True)
+        assert response.status_code == 200
+        assert response.redirect_chain[0][0] == reverse("listing_mine")
+
+        verified_user.refresh_from_db()
+        assert verified_user.phone_number == "+8801812345678"
+
+    def test_post_create_view_missing_phone_when_user_has_none(
+        self, client: Client, verified_user: User
+    ) -> None:
+        """When user has no phone and post data omits it, validation fails."""
+        verified_user.phone_number = None
+        verified_user.save(update_fields=["phone_number"])
+        client.force_login(verified_user)
+
+        photo = create_mock_photo("no_phone.jpg")
+        post_data = {
+            "kind": ListingKind.SEAT,
+            "rent_bdt": 5000,
+            "rent_unit": RentUnit.PER_SEAT,
+            "area": "Mirpur",
+            "phone_number": "",
+            "photos": [photo],
+        }
+        response = client.post(reverse("listing_create"), post_data)
+        assert response.status_code == 200
+        assert "phone_number" in response.context["form"].errors
+
+    def test_post_create_view_invalid_phone_format(
+        self, client: Client, verified_user: User
+    ) -> None:
+        """Invalid phone string triggers format validation error."""
+        client.force_login(verified_user)
+        photo = create_mock_photo("invalid_phone.jpg")
+        post_data = {
+            "kind": ListingKind.SEAT,
+            "rent_bdt": 5000,
+            "rent_unit": RentUnit.PER_SEAT,
+            "area": "Mirpur",
+            "phone_number": "12345",
+            "photos": [photo],
+        }
+        response = client.post(reverse("listing_create"), post_data)
+        assert response.status_code == 200
+        assert "phone_number" in response.context["form"].errors
+
 
 @pytest.mark.django_db
 class TestListerDashboardView:
@@ -450,6 +515,29 @@ class TestListingEditView:
         assert authored_listing.body == "Updated description with new terms."
         assert authored_listing.kind == ListingKind.ROOM  # Preserved!
         assert authored_listing.area == "Dhanmondi"  # Preserved!
+
+    def test_edit_view_post_updates_phone_number(
+        self, client: Client, verified_user: User, authored_listing: Listing
+    ) -> None:
+        """Editing listing with a new phone number updates author User.phone_number."""
+        client.force_login(verified_user)
+        url = reverse("listing_edit", kwargs={"pk": authored_listing.pk})
+        post_data = {
+            "rent_bdt": 19000,
+            "rent_unit": RentUnit.PER_ROOM,
+            "body": "Updated with new phone number.",
+            "pref_gender": PreferredGender.ANY,
+            "pref_smoking": PreferredSmoking.NO,
+            "pref_sleep": PreferredSleepSchedule.FLEXIBLE,
+            "pref_occupation": [PreferredOccupation.STUDENT],
+            "phone_number": "+8801999888777",
+        }
+        response = client.post(url, post_data, follow=True)
+        assert response.status_code == 200
+        assert response.redirect_chain[0][0] == reverse("listing_mine")
+
+        verified_user.refresh_from_db()
+        assert verified_user.phone_number == "+8801999888777"
 
 
 @pytest.mark.django_db

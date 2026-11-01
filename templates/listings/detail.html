@@ -115,7 +115,31 @@
           {# UNLOCKED CONTACT: For verified viewers or author #}
           <section class="bp-contact-card" aria-label="Direct contact information">
             <h2 class="bp-contact-card__title">Reach {{ listing.author_display_name }} directly</h2>
-            <p class="bp-contact-card__sub">Off-platform contact — reach out directly via email or phone.</p>
+            <p class="bp-contact-card__sub">Off-platform contact — reach out directly via phone or email.</p>
+
+            {% if listing.lister_phone %}
+              <a href="tel:{{ listing.lister_phone }}" class="bp-contact-row" aria-label="Call {{ listing.author_display_name }}">
+                <span class="bp-contact-icon"><i class="bi bi-telephone"></i></span>
+                <div>
+                  <div class="bp-contact-label">Phone</div>
+                  <div class="bp-contact-val">{{ listing.lister_phone }}</div>
+                </div>
+                <i class="bi bi-chevron-right ms-auto text-muted"></i>
+              </a>
+            {% else %}
+              <div class="bp-contact-row bp-contact-row--disabled" aria-label="Phone not provided">
+                <span class="bp-contact-icon"><i class="bi bi-telephone"></i></span>
+                <div>
+                  <div class="bp-contact-label">Phone</div>
+                  <div class="bp-contact-val text-muted fst-italic">
+                    Not provided by host
+                    {% if is_author %}
+                      · <a href="{% url 'listing_edit' listing.id %}" class="text-decoration-underline text-primary">Add phone</a>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% endif %}
 
             {% if listing.lister_email %}
               <a href="mailto:{{ listing.lister_email }}" class="bp-contact-row" aria-label="Email {{ listing.author_display_name }}">
@@ -128,23 +152,17 @@
               </a>
             {% endif %}
 
-            {% if listing.lister_phone %}
-              <a href="tel:{{ listing.lister_phone }}" class="bp-contact-row" aria-label="Call {{ listing.author_display_name }}">
-                <span class="bp-contact-icon"><i class="bi bi-telephone"></i></span>
-                <div>
-                  <div class="bp-contact-label">Phone</div>
-                  <div class="bp-contact-val">{{ listing.lister_phone }}</div>
-                </div>
-                <i class="bi bi-chevron-right ms-auto text-muted"></i>
-              </a>
-            {% endif %}
-
             <div class="small text-muted mt-3 mb-3">
               <i class="bi bi-info-circle me-1"></i> Off-platform contact. Basha Pass doesn't run in-app messaging.
             </div>
 
             <div class="d-flex gap-2">
-              <button type="button" id="share-listing-btn" class="btn btn-outline-secondary w-100">
+              {% if listing.lister_phone %}
+                <button type="button" id="copy-phone-btn" class="btn btn-outline-primary w-50" data-phone="{{ listing.lister_phone }}">
+                  <i class="bi bi-telephone me-1"></i> Copy phone
+                </button>
+              {% endif %}
+              <button type="button" id="share-listing-btn" class="btn btn-outline-secondary {% if listing.lister_phone %}w-50{% else %}w-100{% endif %}">
                 <i class="bi bi-share me-1"></i> Share listing
               </button>
             </div>

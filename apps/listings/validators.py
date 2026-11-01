@@ -1,5 +1,7 @@
 """Validators for Listing domain invariants and inputs."""
 
+import re
+
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
@@ -20,6 +22,7 @@ __all__ = [
     "validate_kind_and_rent_unit",
     "validate_pref_occupations",
     "validate_listing_body",
+    "validate_phone_number",
 ]
 
 
@@ -72,3 +75,24 @@ def validate_listing_body(value: str | None) -> None:
         raise ValidationError(
             _(f"Listing notes cannot exceed {MAX_BODY_LENGTH} characters.")
         )
+
+
+def validate_phone_number(value: str) -> str:
+    """Validate phone number format for contact revelation.
+
+    Accepts Bangladeshi mobile numbers (e.g. 01712345678, +8801712345678,
+    8801712345678) or international phone numbers (+[country code]...).
+    Returns the sanitized phone string.
+    """
+    if not value or not str(value).strip():
+        raise ValidationError(_("Contact phone number is required."))
+
+    cleaned = re.sub(r"[\s\-()]", "", str(value).strip())
+    if not re.match(r"^(\+?8801[3-9]\d{8}|01[3-9]\d{8}|\+?[1-9]\d{9,14})$", cleaned):
+        raise ValidationError(
+            _(
+                "Please enter a valid phone number "
+                "(e.g., 01712345678 or +8801712345678)."
+            )
+        )
+    return cleaned

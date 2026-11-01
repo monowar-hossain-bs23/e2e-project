@@ -865,6 +865,20 @@
   background-color: var(--bp-primary-soft);
   color: var(--bp-primary);
 }
+.bp-contact-row--disabled {
+  opacity: 0.8;
+  background: var(--bp-canvas);
+  cursor: default;
+}
+.bp-contact-row--disabled:hover {
+  border-color: var(--bp-border);
+  background-color: var(--bp-canvas);
+  color: var(--bp-ink);
+}
+.bp-contact-row--disabled .bp-contact-icon {
+  background: var(--bp-border);
+  color: var(--bp-muted);
+}
 .bp-contact-icon {
   width: 36px;
   height: 36px;

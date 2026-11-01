@@ -34,4 +34,21 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // Copy phone action
+  const copyPhoneBtn = document.getElementById('copy-phone-btn');
+  if (copyPhoneBtn) {
+    copyPhoneBtn.addEventListener('click', () => {
+      const phone = copyPhoneBtn.getAttribute('data-phone');
+      if (phone && navigator.clipboard) {
+        navigator.clipboard.writeText(phone).then(() => {
+          const originalText = copyPhoneBtn.innerHTML;
+          copyPhoneBtn.innerHTML = '<i class="bi bi-check2 me-1"></i> Copied!';
+          setTimeout(() => {
+            copyPhoneBtn.innerHTML = originalText;
+          }, 2000);
+        });
+      }
+    });
+  }
 });

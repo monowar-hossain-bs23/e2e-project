@@ -312,6 +312,9 @@ class TestListingDiscoveryViews:
         # Unlocked contact details
         assert "tanvir_feed_ui@example.com" in content
         assert "+8801712345678" in content
+        assert "tel:+8801712345678" in content
+        assert "copy-phone-btn" in content
+        assert 'data-phone="+8801712345678"' in content
         assert "Off-platform contact" in content
         assert "Reach Tanvir H. directly" in content
 
@@ -384,3 +387,47 @@ class TestListingDiscoveryViews:
             reverse("listing_detail", kwargs={"pk": withdrawn_listing.id})
         )
         assert response.status_code == 404
+
+    def test_verified_seeker_access_to_detail_without_phone_shows_fallback(
+        self,
+        client: Client,
+        lister_user: User,
+        verified_seeker: User,
+        sample_listings: list[Listing],
+    ) -> None:
+        """When host has no phone, verified viewer sees clean fallback message."""
+        lister_user.phone_number = None
+        lister_user.save(update_fields=["phone_number"])
+
+        client.force_login(verified_seeker)
+        listing = sample_listings[0]
+        url = reverse("listing_detail", kwargs={"pk": listing.id})
+        response = client.get(url)
+
+        assert response.status_code == 200
+        content = response.content.decode()
+        assert "tanvir_feed_ui@example.com" in content
+        assert "Not provided by host" in content
+        assert "tel:" not in content
+        assert "copy-phone-btn" not in content
+
+    def test_author_without_phone_sees_add_phone_prompt(
+        self,
+        client: Client,
+        lister_user: User,
+        sample_listings: list[Listing],
+    ) -> None:
+        """Host viewing their listing without phone sees prompt to add one."""
+        lister_user.phone_number = None
+        lister_user.save(update_fields=["phone_number"])
+
+        client.force_login(lister_user)
+        listing = sample_listings[0]
+        url = reverse("listing_detail", kwargs={"pk": listing.id})
+        response = client.get(url)
+
+        assert response.status_code == 200
+        content = response.content.decode()
+        assert "Not provided by host" in content
+        assert "Add phone" in content
+        assert reverse("listing_edit", kwargs={"pk": listing.id}) in content

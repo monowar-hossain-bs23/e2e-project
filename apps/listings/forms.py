@@ -16,7 +16,10 @@ from apps.listings.constants import (
 )
 from apps.listings.models import Listing
 from apps.listings.services.storage import ListingPhotoStorageService
-from apps.listings.validators import validate_kind_and_rent_unit
+from apps.listings.validators import (
+    validate_kind_and_rent_unit,
+    validate_phone_number,
+)
 from apps.passports.validators import DHAKA_SUB_AREAS
 
 
@@ -71,6 +74,23 @@ class ListingCreationForm(forms.ModelForm):
             "Landscape (4:3 or 16:9) recommended."
         ),
     )
+    phone_number = forms.CharField(
+        label=_("Contact Phone Number"),
+        max_length=20,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "e.g. 01712345678 or +8801712345678",
+                "autocomplete": "tel",
+                "required": "required",
+            }
+        ),
+        help_text=_(
+            "Shielded by ConsentService: only verified flat seekers can view "
+            "this phone number. Anonymous visitors cannot see it."
+        ),
+    )
 
     class Meta:
         model = Listing
@@ -110,6 +130,19 @@ class ListingCreationForm(forms.ModelForm):
             "pref_smoking": forms.Select(attrs={"class": "form-select"}),
             "pref_sleep": forms.Select(attrs={"class": "form-select"}),
         }
+
+    def __init__(self, *args: Any, user: Any = None, **kwargs: Any) -> None:
+        self.user = user
+        super().__init__(*args, **kwargs)
+        if self.user and getattr(self.user, "phone_number", None):
+            self.fields["phone_number"].initial = self.user.phone_number
+
+    def clean_phone_number(self) -> str:
+        """Validate phone format and fallback to user's saved phone if blank."""
+        raw = self.cleaned_data.get("phone_number", "").strip()
+        if not raw and self.user and getattr(self.user, "phone_number", None):
+            raw = self.user.phone_number
+        return validate_phone_number(raw)
 
     def clean_photos(self) -> list[Any]:
         """Validate photo batch count and byte integrity."""
@@ -165,6 +198,23 @@ class ListingEditForm(forms.ModelForm):
         required=False,
         help_text=_(f"Add additional photos (up to {MAX_LISTING_PHOTOS} total)."),
     )
+    phone_number = forms.CharField(
+        label=_("Contact Phone Number"),
+        max_length=20,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "e.g. 01712345678 or +8801712345678",
+                "autocomplete": "tel",
+                "required": "required",
+            }
+        ),
+        help_text=_(
+            "Shielded by ConsentService: only verified flat seekers can view "
+            "this phone number. Anonymous visitors cannot see it."
+        ),
+    )
 
     class Meta:
         model = Listing
@@ -207,6 +257,18 @@ class ListingEditForm(forms.ModelForm):
         if self.instance and self.instance.pk:
             if self.instance.pref_occupation:
                 self.fields["pref_occupation"].initial = self.instance.pref_occupation
+            author_user = getattr(getattr(self.instance, "author", None), "user", None)
+            if author_user and getattr(author_user, "phone_number", None):
+                self.fields["phone_number"].initial = author_user.phone_number
+
+    def clean_phone_number(self) -> str:
+        """Validate phone format and fallback to author's saved phone if blank."""
+        raw = self.cleaned_data.get("phone_number", "").strip()
+        if not raw and self.instance and self.instance.pk:
+            author_user = getattr(getattr(self.instance, "author", None), "user", None)
+            if author_user and getattr(author_user, "phone_number", None):
+                raw = author_user.phone_number
+        return validate_phone_number(raw)
 
     def clean_new_photos(self) -> list[Any]:
         """Validate newly added photos against maximum limit and magic bytes."""

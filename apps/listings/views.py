@@ -51,6 +51,11 @@ class ListingCreateView(VerifiedTenantRequiredMixin, FormView):
         )
         return context
 
+    def get_form_kwargs(self) -> dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
     def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         passport = request.user.passport
         active_count = Listing.objects.filter(
@@ -74,6 +79,12 @@ class ListingCreateView(VerifiedTenantRequiredMixin, FormView):
     def form_valid(self, form: ListingCreationForm) -> HttpResponse:
         passport = self.request.user.passport
         photos = form.cleaned_data.get("photos") or []
+        phone_number = form.cleaned_data["phone_number"]
+
+        # Persist contact phone number to author user account
+        if self.request.user.phone_number != phone_number:
+            self.request.user.phone_number = phone_number
+            self.request.user.save(update_fields=["phone_number", "updated_at"])
 
         res = ListingService.create(
             author=passport,
@@ -163,8 +174,14 @@ class ListingEditView(VerifiedTenantRequiredMixin, UpdateView):
     def form_valid(self, form: ListingEditForm) -> HttpResponse:
         listing = self.object
         new_photos = form.cleaned_data.get("new_photos") or []
-
         delete_photo_ids = self.request.POST.getlist("delete_photos")
+        phone_number = form.cleaned_data["phone_number"]
+
+        # Persist contact phone number to author user account
+        author_user = listing.author.user
+        if author_user.phone_number != phone_number:
+            author_user.phone_number = phone_number
+            author_user.save(update_fields=["phone_number", "updated_at"])
 
         fields = {
             "rent_bdt": form.cleaned_data["rent_bdt"],
