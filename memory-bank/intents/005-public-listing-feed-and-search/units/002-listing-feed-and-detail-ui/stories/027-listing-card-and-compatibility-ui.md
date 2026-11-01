@@ -2,11 +2,11 @@
 id: 027-listing-card-and-compatibility-ui
 unit: 002-listing-feed-and-detail-ui
 intent: 005-public-listing-feed-and-search
-status: ready
+status: complete
 priority: must
 created: '2026-10-31T16:00:00Z'
 assigned_bolt: 010-listing-discovery-and-detail-ui
-implemented: false
+implemented: true
 ---
 
 # Story: 027-listing-card-and-compatibility-ui
@@ -19,12 +19,12 @@ implemented: false
 
 ## Acceptance Criteria
 
-- [ ] **Given** a listing in the feed, **When** its card renders, **Then** it features the primary photo (16:10 aspect ratio), kind tag (`SEAT` or `ROOM`), green verified shield badge (`Verified`), rent formatted in BDT (`৳X,XXX`), rent unit (`/ seat` or `/ room`), Dhaka neighborhood, author avatar with tenure, and a "View listing" link matching [Mockup 03](file:///home/bs01496/Documents/LMS/basa-pass/docs/mockups/03-listing-feed.html#L314-L470).
-- [ ] **Given** an authenticated seeker with a verified passport, **When** viewing cards, **Then** the compatibility row renders 6 dots with count label *"matches X of 6 preferences"*:
+- [x] **Given** a listing in the feed, **When** its card renders, **Then** it features the primary photo (16:10 aspect ratio), kind tag (`SEAT` or `ROOM`), green verified shield badge (`Verified`), rent formatted in BDT (`৳X,XXX`), rent unit (`/ seat` or `/ room`), Dhaka neighborhood, author avatar with tenure, and a "View listing" link matching [Mockup 03](file:///home/bs01496/Documents/LMS/basa-pass/docs/mockups/03-listing-feed.html#L314-L470).
+- [x] **Given** an authenticated seeker with a verified passport, **When** viewing cards, **Then** the compatibility row renders 6 dots with count label *"matches X of 6 preferences"*:
   - If $X \ge 4$: green filled dots (`--bp-success`) and success green text (`--bp-success-fg`).
   - If $X < 4$: grey dots and muted text (`--bp-muted`).
-- [ ] **Given** an anonymous visitor or unverified user, **When** viewing cards, **Then** the compatibility row displays empty/neutral dots with the text *"Verify to see lifestyle fit"*.
-- [ ] **Given** a card in hover state, **When** user hovers over it, **Then** a subtle vertical lift (`translateY(-2px)`) and teal elevation shadow appear.
+- [x] **Given** an anonymous visitor or unverified user, **When** viewing cards, **Then** the compatibility row displays empty/neutral dots with the text *"Verify to see lifestyle fit"*.
+- [x] **Given** a card in hover state, **When** user hovers over it, **Then** a subtle vertical lift (`translateY(-2px)`) and teal elevation shadow appear.
 
 ## Technical Notes
 

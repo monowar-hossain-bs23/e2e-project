@@ -1,10 +1,10 @@
 ---
 unit: 002-listing-feed-and-detail-ui
 intent: 005-public-listing-feed-and-search
-phase: inception
-status: ready
+phase: construction
+status: complete
 created: '2026-10-31T15:58:00Z'
-updated: '2026-10-31T15:58:00Z'
+updated: '2026-11-01T08:26:00Z'
 ---
 
 # Unit Brief: 002-listing-feed-and-detail-ui
@@ -92,16 +92,16 @@ Delivers the public discovery feed view, interactive offcanvas filter drawer, re
 ## Success Criteria
 
 ### Functional
-- [ ] Anyone can browse the feed and open listing details without being forced to authenticate.
-- [ ] Filter drawer accurately updates feed results across area, budget, kind, and lifestyle axes.
-- [ ] Verified viewers see clickable email (`mailto:`) and phone (`tel:`) with an audit record created.
-- [ ] Unverified viewers see locked contact panel with clear "Verify your passport" CTA.
-- [ ] Photo gallery displays full photo and allows thumbnail switching.
+- [x] Anyone can browse the feed and open listing details without being forced to authenticate.
+- [x] Filter drawer accurately updates feed results across area, budget, kind, and lifestyle axes.
+- [x] Verified viewers see clickable email (`mailto:`) and phone (`tel:`) with an audit record created.
+- [x] Unverified viewers see locked contact panel with clear "Verify your passport" CTA.
+- [x] Photo gallery displays full photo and allows thumbnail switching.
 
 ### Non-Functional
-- [ ] Fully responsive on mobile (drawer collapses, single-column card stack).
-- [ ] Pixel fidelity aligned with Mockup 03 (`03-listing-feed.html`) and Mockup 04 (`04-listing-detail.html`).
-- [ ] >90% test coverage across view and template rendering tests.
+- [x] Fully responsive on mobile (drawer collapses, single-column card stack).
+- [x] Pixel fidelity aligned with Mockup 03 (`03-listing-feed.html`) and Mockup 04 (`04-listing-detail.html`).
+- [x] >90% test coverage across view and template rendering tests.
 
 ---
 

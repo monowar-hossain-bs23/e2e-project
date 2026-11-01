@@ -1,0 +1,129 @@
+{# Offcanvas filter drawer partial (Story 026, Mockup 03) #}
+<div id="filter-backdrop" class="bp-filter-backdrop"></div>
+
+<aside id="filter-drawer" class="bp-filter-drawer" aria-label="Filters">
+  <div class="bp-filter-drawer__head">
+    <h2>Filter listings</h2>
+    <button type="button" id="close-filters-btn" class="bp-filter-drawer__close" aria-label="Close filters">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  <form id="filter-form" method="get" action="{% url 'listing_feed' %}" class="d-flex flex-column h-100">
+    <input type="hidden" name="sort" value="{{ current_sort }}">
+
+    <div class="bp-filter-drawer__body">
+      {# 1. Dhaka Sub-Areas (13 Canonical Areas) #}
+      <section class="bp-filter-section">
+        <div class="bp-filter-legend">Dhaka Sub-Area</div>
+        <div class="bp-chipgroup">
+          {% for area in dhaka_sub_areas %}
+            <label class="bp-chip-checkbox">
+              <input type="checkbox" name="area" value="{{ area }}" {% if area in selected_areas %}checked{% endif %}>
+              <span>{{ area }}</span>
+            </label>
+          {% endfor %}
+        </div>
+      </section>
+
+      {# 2. Accommodation Kind #}
+      <section class="bp-filter-section">
+        <div class="bp-filter-legend">Accommodation Kind</div>
+        <div class="bp-chipgroup">
+          <label class="bp-chip-radio">
+            <input type="radio" name="kind" value="" {% if not selected_kind %}checked{% endif %}>
+            <span>All types</span>
+          </label>
+          {% for val, label in listing_kinds %}
+            <label class="bp-chip-radio">
+              <input type="radio" name="kind" value="{{ val }}" {% if selected_kind == val %}checked{% endif %}>
+              <span>{{ label }}</span>
+            </label>
+          {% endfor %}
+        </div>
+      </section>
+
+      {# 3. Monthly Budget (BDT) #}
+      <section class="bp-filter-section">
+        <div class="bp-filter-legend">Monthly Budget (BDT)</div>
+        <div class="row g-2 mb-2">
+          <div class="col-6">
+            <label class="small text-muted mb-1" for="budget_min_input">Min (৳)</label>
+            <input type="number" id="budget_min_input" name="budget_min" class="form-control form-control-sm" value="{{ selected_budget_min }}" min="500" max="50000" step="500">
+          </div>
+          <div class="col-6">
+            <label class="small text-muted mb-1" for="budget_max_input">Max (৳)</label>
+            <input type="number" id="budget-max-input" name="budget_max" class="form-control form-control-sm" value="{{ selected_budget_max }}" min="500" max="50000" step="500">
+          </div>
+        </div>
+        <div class="bp-budget__row mt-2">
+          <input type="range" id="budget-max-slider" min="1000" max="50000" step="500" value="{{ selected_budget_max }}" class="w-100" aria-label="Max budget slider">
+        </div>
+        <div class="d-flex justify-content-between small text-muted mt-1">
+          <span>৳500</span>
+          <span id="budget-max-display" class="fw-bold text-dark">৳{{ selected_budget_max }}</span>
+          <span>৳50,000</span>
+        </div>
+      </section>
+
+      {# 4. Roommate Gender Preference #}
+      <section class="bp-filter-section">
+        <div class="bp-filter-legend">Roommate Gender</div>
+        <div class="bp-chipgroup">
+          {% for val, label in gender_choices %}
+            <label class="bp-chip-radio">
+              <input type="radio" name="gender" value="{{ val }}" {% if selected_gender == val %}checked{% endif %}>
+              <span>{{ label }}</span>
+            </label>
+          {% endfor %}
+        </div>
+      </section>
+
+      {# 5. Smoking Habit #}
+      <section class="bp-filter-section">
+        <div class="bp-filter-legend">Smoking Habit</div>
+        <div class="bp-chipgroup">
+          {% for val, label in smoking_choices %}
+            <label class="bp-chip-radio">
+              <input type="radio" name="smoking" value="{{ val }}" {% if selected_smoking == val %}checked{% endif %}>
+              <span>{{ label }}</span>
+            </label>
+          {% endfor %}
+        </div>
+      </section>
+
+      {# 6. Sleep Schedule #}
+      <section class="bp-filter-section">
+        <div class="bp-filter-legend">Sleep Schedule</div>
+        <div class="bp-chipgroup">
+          {% for val, label in sleep_choices %}
+            <label class="bp-chip-radio">
+              <input type="radio" name="sleep" value="{{ val }}" {% if selected_sleep == val %}checked{% endif %}>
+              <span>{{ label }}</span>
+            </label>
+          {% endfor %}
+        </div>
+      </section>
+
+      {# 7. Preferred Occupation #}
+      <section class="bp-filter-section">
+        <div class="bp-filter-legend">Target Occupations</div>
+        <div class="bp-chipgroup">
+          {% for val, label in occupation_choices %}
+            {% if val != "any" %}
+              <label class="bp-chip-checkbox">
+                <input type="checkbox" name="occupation" value="{{ val }}" {% if val in selected_occupations %}checked{% endif %}>
+                <span>{{ label }}</span>
+              </label>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </section>
+    </div>
+
+    <div class="bp-filter-drawer__foot">
+      <button type="button" id="clear-filters-btn" class="bp-filter-drawer__clear">Clear all</button>
+      <button type="submit" class="btn btn-primary px-4">Apply filters</button>
+    </div>
+  </form>
+</aside>

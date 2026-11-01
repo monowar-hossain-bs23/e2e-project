@@ -1,0 +1,314 @@
+{% extends "base.html" %}
+{% load static humanize %}
+
+{% block title %}{{ listing.kind_display }} in {{ listing.area }} — ৳{{ listing.rent_bdt|intcomma }} | Basha Pass{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/listings.css' %}?v=1.4">
+{% endblock %}
+
+{% block content %}
+{% include "basha/partials/navbar.html" %}
+
+<main class="container-xl py-4">
+  {# Breadcrumbs (Story 028) #}
+  <nav aria-label="breadcrumb" class="bp-breadcrumbs">
+    <a href="{% url 'listing_feed' %}">Browse</a>
+    <i class="bi bi-chevron-right small text-muted" aria-hidden="true"></i>
+    <a href="{% url 'listing_feed' %}?area={{ listing.area }}">{{ listing.area }}</a>
+    <i class="bi bi-chevron-right small text-muted" aria-hidden="true"></i>
+    <span class="text-dark fw-semibold">{{ listing.kind_display }}</span>
+  </nav>
+
+  <div class="row g-4">
+    {# LEFT COLUMN: Gallery, Main Details, Host Description, Author Profile #}
+    <div class="col-lg-7">
+      {# Photo Gallery (Story 028) #}
+      <section class="bp-gallery" aria-label="Listing photo gallery">
+        <div class="bp-gallery__main">
+          {% if listing.primary_photo_url %}
+            <img id="gallery-main-img" src="{{ listing.primary_photo_url }}" alt="{{ listing.kind_display }} in {{ listing.area }}">
+          {% else %}
+            <div class="bp-listing-card__placeholder h-100" aria-hidden="true">
+              <i class="bi bi-house-door"></i>
+            </div>
+          {% endif %}
+        </div>
+
+        {% if listing.photos|length > 1 %}
+          <div class="bp-gallery__thumbs" role="tablist" aria-label="Photo thumbnails">
+            {% for photo in listing.photos %}
+              <button type="button" class="bp-gallery__thumb {% if forloop.first %}is-active{% endif %}" data-full-url="{{ photo.url }}" aria-label="View photo {{ forloop.counter }}">
+                <img src="{{ photo.url }}" alt="Thumbnail {{ forloop.counter }}">
+              </button>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </section>
+
+      {# Article Headline & Description #}
+      <article class="bp-detail-box">
+        <div class="bp-headline-meta">
+          <span class="bp-kind-badge">{{ listing.kind_display }}</span>
+          <span><i class="bi bi-geo-alt me-1" aria-hidden="true"></i>{{ listing.area }}, Dhaka</span>
+          {% if listing.created_at %}
+            <span class="text-muted d-none d-sm-inline">·</span>
+            <span class="d-none d-sm-inline"><i class="bi bi-calendar-event me-1" aria-hidden="true"></i>Posted {{ listing.created_at|date:"M d, Y" }}</span>
+          {% endif %}
+        </div>
+
+        <div class="bp-detail-price">
+          ৳{{ listing.rent_bdt|intcomma }} <small>/ {{ listing.rent_unit_display|lower }} / month</small>
+        </div>
+
+        <div class="bp-body-copy">
+          {% if listing.body %}
+            {{ listing.body|linebreaks }}
+          {% else %}
+            <p class="text-muted fst-italic">No additional notes provided by the host.</p>
+          {% endif %}
+        </div>
+      </article>
+
+      {# Lister Author Card (Story 028) #}
+      <section class="bp-detail-box" aria-label="About the lister">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <div class="d-flex align-items-center gap-3">
+            <div class="bp-avatar" style="width:48px;height:48px;font-size:18px;" aria-hidden="true">
+              {{ listing.author_display_name|slice:":1"|upper|default:"L" }}
+            </div>
+            <div>
+              <h2 class="h5 fw-bold mb-0 text-dark">{{ listing.author_display_name }}</h2>
+              <div class="small text-muted">{{ listing.author_tenure_display }}</div>
+            </div>
+          </div>
+          {% if listing.author_is_verified %}
+            <span class="bp-verified-pill">
+              <i class="bi bi-patch-check-fill me-1"></i>Verified
+            </span>
+          {% endif %}
+        </div>
+
+        {% if listing.author_lifestyle_chips %}
+          <div class="d-flex flex-wrap gap-2 mb-2">
+            {% for chip in listing.author_lifestyle_chips %}
+              <span class="bp-status-pill" style="font-size:12px;padding:4px 10px;">{{ chip }}</span>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <p class="small text-muted mb-0">
+          {{ listing.author_lifestyle_summary }}
+        </p>
+      </section>
+    </div>
+
+    {# RIGHT COLUMN: Sticky Gated Contact Panel & Compatibility #}
+    <div class="col-lg-5">
+      <div class="bp-sticky-sidebar">
+
+        {# 1. Gated Contact Section (Story 028, PRD §4.5) #}
+        {% if not listing.is_contact_locked %}
+          {# UNLOCKED CONTACT: For verified viewers or author #}
+          <section class="bp-contact-card" aria-label="Direct contact information">
+            <h2 class="bp-contact-card__title">Reach {{ listing.author_display_name }} directly</h2>
+            <p class="bp-contact-card__sub">Off-platform contact — reach out directly via email or phone.</p>
+
+            {% if listing.lister_email %}
+              <a href="mailto:{{ listing.lister_email }}" class="bp-contact-row" aria-label="Email {{ listing.author_display_name }}">
+                <span class="bp-contact-icon"><i class="bi bi-envelope"></i></span>
+                <div>
+                  <div class="bp-contact-label">Email</div>
+                  <div class="bp-contact-val">{{ listing.lister_email }}</div>
+                </div>
+                <i class="bi bi-chevron-right ms-auto text-muted"></i>
+              </a>
+            {% endif %}
+
+            {% if listing.lister_phone %}
+              <a href="tel:{{ listing.lister_phone }}" class="bp-contact-row" aria-label="Call {{ listing.author_display_name }}">
+                <span class="bp-contact-icon"><i class="bi bi-telephone"></i></span>
+                <div>
+                  <div class="bp-contact-label">Phone</div>
+                  <div class="bp-contact-val">{{ listing.lister_phone }}</div>
+                </div>
+                <i class="bi bi-chevron-right ms-auto text-muted"></i>
+              </a>
+            {% endif %}
+
+            <div class="small text-muted mt-3 mb-3">
+              <i class="bi bi-info-circle me-1"></i> Off-platform contact. Basha Pass doesn't run in-app messaging.
+            </div>
+
+            <div class="d-flex gap-2">
+              <button type="button" id="share-listing-btn" class="btn btn-outline-secondary w-100">
+                <i class="bi bi-share me-1"></i> Share listing
+              </button>
+            </div>
+          </section>
+
+        {% else %}
+          {# LOCKED CONTACT: For unverified or anonymous visitors (Zero PII in DOM) #}
+          <section class="bp-locked-card" aria-label="Gated contact information">
+            <div class="bp-locked-icon" aria-hidden="true">
+              <i class="bi bi-shield-lock"></i>
+            </div>
+            <h2 class="bp-locked-title">Verify to see contact info</h2>
+            <p class="bp-locked-body">
+              {{ listing.author_display_name }}'s email and phone are visible to verified tenants only. Verification usually takes under 24 hours.
+            </p>
+
+            {% if request.user.is_authenticated %}
+              <a href="{% url 'passport_create' %}" class="btn btn-primary w-100 py-2 fw-semibold">
+                Start verification
+              </a>
+            {% else %}
+              <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-primary w-100 py-2 fw-semibold">
+                Log in to verify
+              </a>
+            {% endif %}
+
+            <p class="small text-muted mt-3 mb-0">
+              ~24h review after you submit NID front, back, and a selfie.
+            </p>
+          </section>
+        {% endif %}
+
+        {# 2. 6-Axis Lifestyle Compatibility Card (Story 028) #}
+        <section class="bp-compat-box" aria-label="Lifestyle compatibility match">
+          <div class="bp-compat-head">
+            <h3 class="bp-compat-title">Lifestyle Compatibility</h3>
+            {% if listing.compatibility_hint is not None %}
+              <span class="bp-compat-score-badge">{{ listing.compatibility_hint }} of 6 match</span>
+            {% endif %}
+          </div>
+
+          {% if listing.compatibility_hint is not None %}
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <div class="bp-dots" aria-hidden="true">
+                {% for i in "123456" %}
+                  <span class="bp-dot {% if forloop.counter <= listing.compatibility_hint %}bp-dot--fill{% endif %}" style="width:10px;height:10px;"></span>
+                {% endfor %}
+              </div>
+              <span class="small text-muted">{{ listing.compatibility_hint }} of 6 preferences match</span>
+            </div>
+
+            {% if listing.compatibility_matches %}
+              <ul class="bp-compat-list">
+                <li>
+                  {% if listing.compatibility_matches.gender %}
+                    <i class="bi bi-check-circle-fill bp-compat-check"></i>
+                    <span>Gender aligns</span>
+                  {% else %}
+                    <i class="bi bi-x-circle bp-compat-cross"></i>
+                    <span class="text-muted">Gender differs</span>
+                  {% endif %}
+                </li>
+                <li>
+                  {% if listing.compatibility_matches.smoking %}
+                    <i class="bi bi-check-circle-fill bp-compat-check"></i>
+                    <span>Smoking habit aligns</span>
+                  {% else %}
+                    <i class="bi bi-x-circle bp-compat-cross"></i>
+                    <span class="text-muted">Smoking habit differs</span>
+                  {% endif %}
+                </li>
+                <li>
+                  {% if listing.compatibility_matches.sleep %}
+                    <i class="bi bi-check-circle-fill bp-compat-check"></i>
+                    <span>Sleep schedule aligns</span>
+                  {% else %}
+                    <i class="bi bi-x-circle bp-compat-cross"></i>
+                    <span class="text-muted">Sleep schedule differs</span>
+                  {% endif %}
+                </li>
+                <li>
+                  {% if listing.compatibility_matches.occupation %}
+                    <i class="bi bi-check-circle-fill bp-compat-check"></i>
+                    <span>Target occupation matches</span>
+                  {% else %}
+                    <i class="bi bi-x-circle bp-compat-cross"></i>
+                    <span class="text-muted">Occupation not in host preference</span>
+                  {% endif %}
+                </li>
+                <li>
+                  {% if listing.compatibility_matches.area %}
+                    <i class="bi bi-check-circle-fill bp-compat-check"></i>
+                    <span>Location in your preferred areas</span>
+                  {% else %}
+                    <i class="bi bi-x-circle bp-compat-cross"></i>
+                    <span class="text-muted">Location outside your preferred areas</span>
+                  {% endif %}
+                </li>
+                <li>
+                  {% if listing.compatibility_matches.budget %}
+                    <i class="bi bi-check-circle-fill bp-compat-check"></i>
+                    <span>Rent within your monthly budget</span>
+                  {% else %}
+                    <i class="bi bi-x-circle bp-compat-cross"></i>
+                    <span class="text-muted">Rent exceeds your maximum budget</span>
+                  {% endif %}
+                </li>
+              </ul>
+            {% endif %}
+
+          {% else %}
+            <div class="text-center py-2">
+              <div class="bp-dots justify-content-center mb-2" aria-hidden="true">
+                {% for i in "123456" %}
+                  <span class="bp-dot" style="width:10px;height:10px;"></span>
+                {% endfor %}
+              </div>
+              <p class="small text-muted mb-0">
+                Complete your verified Tenant Passport to see transparent compatibility breakdown for this accommodation.
+              </p>
+            </div>
+          {% endif %}
+        </section>
+
+        {# 3. Host Preferences Summary Table #}
+        <section class="bp-compat-box" aria-label="Host preferences">
+          <h3 class="bp-compat-title mb-3">Host Preferences</h3>
+          <ul class="bp-compat-list">
+            <li>
+              <span class="text-muted">Gender:</span>
+              <span class="fw-semibold ms-auto">{{ listing.pref_gender_display }}</span>
+            </li>
+            <li>
+              <span class="text-muted">Smoking:</span>
+              <span class="fw-semibold ms-auto">{{ listing.pref_smoking_display }}</span>
+            </li>
+            <li>
+              <span class="text-muted">Sleep Schedule:</span>
+              <span class="fw-semibold ms-auto">{{ listing.pref_sleep_display }}</span>
+            </li>
+            <li>
+              <span class="text-muted">Occupations:</span>
+              <span class="fw-semibold ms-auto">
+                {% if "any" in listing.pref_occupations or not listing.pref_occupations %}
+                  Any
+                {% else %}
+                  {{ listing.pref_occupations|join:", "|title }}
+                {% endif %}
+              </span>
+            </li>
+          </ul>
+        </section>
+
+        {# 4. Safety Notice (Story 028) #}
+        <aside class="bp-safety-card">
+          <i class="bi bi-shield-exclamation text-muted fs-5 flex-shrink-0" aria-hidden="true"></i>
+          <div>
+            Safety first · If anything feels suspicious, <a href="mailto:support@bashapass.com?subject=Report%20Listing%20{{ listing.id }}">report this listing</a>.
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/listing-detail.js' %}?v=1.4"></script>
+{% endblock %}

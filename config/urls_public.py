@@ -19,6 +19,8 @@ PUBLIC_URL_NAMES: set[str] = {
     "password_reset_done",
     "password_reset_confirm",
     "password_reset_complete",
+    "listing_feed",
+    "listing_detail",
 }
 
 public_urlpatterns: list[URLPattern] = [

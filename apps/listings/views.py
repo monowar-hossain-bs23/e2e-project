@@ -1,20 +1,30 @@
-"""Views for accommodation listing authoring and management (Story 020–023)."""
+"""Views for listing authoring, management, and discovery (Story 020–028)."""
 
 from typing import Any
 
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
-from django.http import HttpRequest, HttpResponse
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView, TemplateView, UpdateView, View
 
-from apps.listings.constants import MAX_ACTIVE_LISTINGS_PER_USER
+from apps.listings.constants import (
+    MAX_ACTIVE_LISTINGS_PER_USER,
+    ListingKind,
+    PreferredGender,
+    PreferredOccupation,
+    PreferredSleepSchedule,
+    PreferredSmoking,
+    RentUnit,
+)
 from apps.listings.forms import ListingCreationForm, ListingEditForm
 from apps.listings.mixins import VerifiedTenantRequiredMixin
 from apps.listings.models import Listing
+from apps.listings.services.feed_query import ListingFeedQuery
 from apps.listings.services.listing_service import ListingService
+from apps.passports.validators import DHAKA_SUB_AREAS
 
 
 class ListingCreateView(VerifiedTenantRequiredMixin, FormView):
@@ -216,3 +226,148 @@ class ListingWithdrawView(VerifiedTenantRequiredMixin, View):
     def get(self, request: HttpRequest, pk: Any) -> HttpResponse:
         """Redirect GET requests to the lister dashboard."""
         return redirect("listing_mine")
+
+
+class ListingFeedView(TemplateView):
+    """Public accommodation discovery feed with multi-axis filtering and sorting."""
+
+    template_name = "listings/feed.html"
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        req = self.request.GET
+
+        # Multi-value area filter (support ?area=Mirpur or ?areas=Mirpur)
+        areas = req.getlist("area") or req.getlist("areas") or []
+        if not areas and req.get("area"):
+            areas = [req.get("area")]
+        clean_areas = [a for a in areas if a]
+
+        # Budget filters
+        budget_min_raw = req.get("budget_min")
+        budget_max_raw = req.get("budget_max")
+        budget_min: int | None = None
+        budget_max: int | None = None
+        if budget_min_raw and budget_min_raw.isdigit():
+            budget_min = int(budget_min_raw)
+        if budget_max_raw and budget_max_raw.isdigit():
+            budget_max = int(budget_max_raw)
+
+        # Kind & rent unit
+        kind = req.get("kind") or None
+        rent_unit = req.get("rent_unit") or None
+
+        # Lifestyle preferences
+        gender = req.get("gender") or None
+        smoking = req.get("smoking") or None
+        sleep = req.get("sleep") or None
+        occupations = req.getlist("occupation") or req.getlist("occupations") or []
+        if not occupations and req.get("occupation"):
+            occupations = [req.get("occupation")]
+        clean_occupations = [o for o in occupations if o]
+
+        # Sorting
+        sort = req.get("sort", "newest")
+        if sort not in ("newest", "rent_asc", "rent_desc"):
+            sort = "newest"
+
+        # Pagination
+        page_raw = req.get("page", "1")
+        page = int(page_raw) if page_raw.isdigit() else 1
+
+        # Calculate active filters count for badge pill
+        active_filter_count = 0
+        if clean_areas:
+            active_filter_count += len(clean_areas)
+        if budget_min is not None and budget_min > 500:
+            active_filter_count += 1
+        if budget_max is not None and budget_max < 50000:
+            active_filter_count += 1
+        if kind:
+            active_filter_count += 1
+        if rent_unit:
+            active_filter_count += 1
+        if gender and gender != "any":
+            active_filter_count += 1
+        if smoking and smoking != "any":
+            active_filter_count += 1
+        if sleep and sleep != "flexible":
+            active_filter_count += 1
+        if clean_occupations and "any" not in clean_occupations:
+            active_filter_count += len(clean_occupations)
+
+        # Execute query
+        feed_data = ListingFeedQuery.for_viewer(
+            viewer=self.request.user,
+            areas=clean_areas or None,
+            budget_min=budget_min,
+            budget_max=budget_max,
+            kind=kind,
+            rent_unit=rent_unit,
+            gender=gender,
+            smoking=smoking,
+            sleep=sleep,
+            occupations=clean_occupations or None,
+            sort=sort,
+            page=page,
+        )
+
+        context.update(
+            {
+                "projections": feed_data["projections"],
+                "page_obj": feed_data["page_obj"],
+                "paginator": feed_data["paginator"],
+                "total_count": feed_data["total_count"],
+                "active_filter_count": active_filter_count,
+                "current_sort": sort,
+                # Current filter state for inputs
+                "selected_areas": clean_areas,
+                "selected_budget_min": budget_min if budget_min is not None else 500,
+                "selected_budget_max": budget_max if budget_max is not None else 50000,
+                "selected_kind": kind or "",
+                "selected_rent_unit": rent_unit or "",
+                "selected_gender": gender or "any",
+                "selected_smoking": smoking or "any",
+                "selected_sleep": sleep or "flexible",
+                "selected_occupations": clean_occupations,
+                # Choices & Constants
+                "dhaka_sub_areas": DHAKA_SUB_AREAS,
+                "listing_kinds": ListingKind.choices,
+                "rent_units": RentUnit.choices,
+                "gender_choices": PreferredGender.choices,
+                "smoking_choices": PreferredSmoking.choices,
+                "sleep_choices": PreferredSleepSchedule.choices,
+                "occupation_choices": PreferredOccupation.choices,
+            }
+        )
+        return context
+
+
+class ListingDetailView(TemplateView):
+    """Public detail page for an accommodation listing (Story 028).
+
+    Guarantees soft-gated contact shielding via ConsentService and emits
+    an append-only AuditEntry when a verified seeker accesses contact info.
+    """
+
+    template_name = "listings/detail.html"
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        pk = kwargs.get("pk")
+        proj = ListingFeedQuery.get_detail_for_viewer(
+            viewer=self.request.user,
+            listing_id=pk,
+        )
+        if proj is None:
+            raise Http404(_("Listing not found or no longer active."))
+
+        is_author = (
+            self.request.user.is_authenticated
+            and hasattr(self.request.user, "passport")
+            and proj.author_id == self.request.user.passport.id
+        )
+
+        context["listing"] = proj
+        context["is_author"] = is_author
+        return context

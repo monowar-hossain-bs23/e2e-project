@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% load static humanize %}
+
+{% block title %}Browse Accommodation in Dhaka — Basha Pass{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/listings.css' %}?v=1.4">
+{% endblock %}
+
+{% block content %}
+{% include "basha/partials/navbar.html" %}
+
+<main class="container-xl py-4">
+  {# Filter offcanvas drawer #}
+  {% include "listings/partials/filter_drawer.html" %}
+
+  {# Page Head #}
+  <header class="bp-page-head">
+    <h1>Find verified rooms & seats in Dhaka</h1>
+    <p>Browse accommodation with NID-verified listers and transparent lifestyle compatibility.</p>
+  </header>
+
+  {# Result Bar #}
+  <div class="bp-resultbar">
+    <div class="bp-resultbar__count">
+      Showing <strong>{{ total_count }}</strong> active listing{{ total_count|pluralize }}
+    </div>
+
+    <div class="d-flex align-items-center gap-2">
+      {# Filter Trigger Button #}
+      <button type="button" id="open-filters-btn" class="bp-filter-trigger" aria-label="Open filter drawer">
+        <i class="bi bi-sliders" aria-hidden="true"></i>
+        <span>Filters</span>
+        {% if active_filter_count > 0 %}
+          <span class="bp-filter-trigger__count">{{ active_filter_count }}</span>
+        {% endif %}
+      </button>
+
+      {# Sort Dropdown #}
+      <select id="sort-select" class="bp-sort-select" aria-label="Sort listings">
+        <option value="newest" {% if current_sort == "newest" %}selected{% endif %}>Newest first</option>
+        <option value="rent_asc" {% if current_sort == "rent_asc" %}selected{% endif %}>Rent: Low to High</option>
+        <option value="rent_desc" {% if current_sort == "rent_desc" %}selected{% endif %}>Rent: High to Low</option>
+      </select>
+    </div>
+  </div>
+
+  {# 3-Column Card Grid (Story 026) #}
+  {% if projections %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
+      {% for item in projections %}
+        <div class="col">
+          {% include "listings/partials/feed_card.html" with item=item %}
+        </div>
+      {% endfor %}
+    </div>
+
+    {# Pagination #}
+    {% if page_obj.has_other_pages %}
+      <nav aria-label="Listing feed pagination" class="d-flex justify-content-center my-4">
+        <ul class="pagination">
+          {% if page_obj.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+          {% else %}
+            <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+          {% endif %}
+
+          {% for num in paginator.page_range %}
+            {% if page_obj.number == num %}
+              <li class="page-item active" aria-current="page"><span class="page-link">{{ num }}</span></li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ num }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+
+          {% if page_obj.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          {% else %}
+            <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
+
+  {% else %}
+    {# Empty State (Story 026) #}
+    <div class="card p-5 text-center my-4 border-0 shadow-sm rounded-4">
+      <div class="display-5 text-muted mb-3">
+        <i class="bi bi-search"></i>
+      </div>
+      <h3 class="fw-bold text-dark">No listings found matching your criteria</h3>
+      <p class="text-muted mx-auto" style="max-width: 480px;">
+        We couldn't find any accommodation matching your exact filter combination. Try clearing your filters or broadening your budget.
+      </p>
+      <div class="mt-3">
+        <a href="{% url 'listing_feed' %}" class="btn btn-primary px-4">Clear all filters</a>
+      </div>
+    </div>
+  {% endif %}
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/listing-feed.js' %}?v=1.4"></script>
+{% endblock %}

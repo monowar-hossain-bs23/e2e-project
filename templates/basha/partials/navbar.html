@@ -8,6 +8,9 @@
         Basha Pass
       </a>
       <div class="d-flex align-items-center gap-2">
+        <a class="bp-nav__link" href="{% url 'listing_feed' %}">
+          <i class="bi bi-search me-1"></i> Browse
+        </a>
         {% if request.user.is_authenticated %}
           <a class="bp-nav__link" href="{% url 'dashboard' %}">
             <i class="bi bi-grid-fill me-1"></i> Dashboard

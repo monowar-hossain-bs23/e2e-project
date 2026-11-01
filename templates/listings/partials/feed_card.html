@@ -1,0 +1,70 @@
+{% load humanize %}
+{# Reusable listing card partial for public discovery feed (Story 027, AD-5) #}
+<a href="{% url 'listing_detail' item.id %}" class="bp-card-link" aria-label="{{ item.kind_display }} in {{ item.area }} for ৳{{ item.rent_bdt|intcomma }}">
+  <article class="bp-listing-card">
+    <div class="bp-listing-card__media">
+      <span class="bp-kind-badge bp-listing-card__badge-left">{{ item.kind_display }}</span>
+      {% if item.author_is_verified %}
+        <span class="bp-verified-pill bp-listing-card__badge-right" title="Lister identity verified via NID">
+          <i class="bi bi-patch-check-fill me-1"></i>Verified
+        </span>
+      {% endif %}
+
+      {% if item.primary_photo_url %}
+        <img src="{{ item.primary_photo_url }}" alt="{{ item.kind_display }} in {{ item.area }}" class="bp-listing-card__img" loading="lazy">
+      {% else %}
+        <div class="bp-listing-card__placeholder" aria-hidden="true">
+          <i class="bi bi-house-door"></i>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="bp-listing-card__body">
+      <div class="bp-listing-card__price-row">
+        <span class="bp-listing-card__price">৳{{ item.rent_bdt|intcomma }}</span>
+        <span class="bp-listing-card__unit">/ {{ item.rent_unit_display|lower }} / month</span>
+      </div>
+
+      <div class="bp-listing-card__area">
+        <i class="bi bi-geo-alt me-1" aria-hidden="true"></i>{{ item.area }}
+      </div>
+
+      <p class="bp-listing-card__desc">
+        {{ item.body|default:"Spacious accommodation with shared mess facilities." }}
+      </p>
+
+      {# Compatibility score indicator (Story 027) #}
+      <div class="mb-3">
+        {% if item.compatibility_hint is not None %}
+          <div class="bp-dots-row {% if item.compatibility_hint >= 4 %}bp-dots-row--high{% else %}bp-dots-row--low{% endif %}">
+            <span class="bp-dots" aria-hidden="true">
+              {% for i in "123456" %}
+                <span class="bp-dot {% if forloop.counter <= item.compatibility_hint %}bp-dot--fill{% endif %}"></span>
+              {% endfor %}
+            </span>
+            <span>matches {{ item.compatibility_hint }} of 6 preferences</span>
+          </div>
+        {% else %}
+          <div class="bp-dots-row bp-dots-row--low">
+            <span class="bp-dots" aria-hidden="true">
+              {% for i in "123456" %}
+                <span class="bp-dot"></span>
+              {% endfor %}
+            </span>
+            <span class="text-muted">Verify to see lifestyle fit</span>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="bp-listing-card__author">
+        <span class="bp-listing-card__avatar" aria-hidden="true">
+          {{ item.author_display_name|slice:":1"|upper|default:"L" }}
+        </span>
+        <div class="bp-listing-card__author-meta">
+          <p class="bp-listing-card__author-name">{{ item.author_display_name }}</p>
+          <p class="bp-listing-card__author-tenure">{{ item.author_tenure_display }}</p>
+        </div>
+      </div>
+    </div>
+  </article>
+</a>
