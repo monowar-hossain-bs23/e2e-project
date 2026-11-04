@@ -1,0 +1,47 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: basha_pass_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: basha_pass
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d basha_pass"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    # Database port is NOT published to the host machine to expose only the web port
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: basha_pass_web
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    environment:
+      DEBUG: "True"
+      SECRET_KEY: "Q8mK8CkcaTISQI0sU8f5RWHjC/RllnXqF4lEJMbkF6FF2E3shEZ0P76kfz/GFJB3"
+      DATABASE_URL: "postgres://postgres:postgres@db:5432/basha_pass"
+      DJANGO_SETTINGS_MODULE: "config.settings.dev"
+      ALLOWED_HOSTS: "localhost,127.0.0.1,0.0.0.0,web"
+      EMAIL_BACKEND: "django.core.mail.backends.console.EmailBackend"
+      PYTHONUNBUFFERED: "1"
+      PYTHONDONTWRITEBYTECODE: "1"
+    volumes:
+      - .:/app
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py seed_data --clear &&
+             python manage.py runserver 0.0.0.0:8000"
+
+volumes:
+  postgres_data:
